@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Models\Product;
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdateProductRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        /** @var Product|null $product */
+        $product = $this->route('product');
+
+        if (! $product) {
+            return false;
+        }
+
+        return $this->user()?->can('update', $product) ?? false;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function rules(): array
+    {
+        return [
+            'name' => ['sometimes', 'string', 'max:255'],
+            'price' => ['sometimes', 'numeric', 'min:0'],
+            'tax_rate' => ['sometimes', 'numeric', 'min:0', 'max:100'],
+            'unit' => ['sometimes', 'string', 'max:40'],
+            'is_active' => ['sometimes', 'boolean'],
+        ];
+    }
+}

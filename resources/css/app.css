@@ -1,0 +1,265 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource-variable/geist";
+
+@plugin "@tailwindcss/forms";
+
+@custom-variant dark (&:is(.dark, .dark *));
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+
+    --font-sans: "Geist Variable", "Figtree", ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+        sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+
+    --animate-accordion-down: accordion-down 0.2s ease-out;
+    --animate-accordion-up: accordion-up 0.2s ease-out;
+
+    @keyframes accordion-down {
+        from {
+            height: 0;
+        }
+        to {
+            height: var(--radix-accordion-content-height);
+        }
+    }
+    @keyframes accordion-up {
+        from {
+            height: var(--radix-accordion-content-height);
+        }
+        to {
+            height: 0;
+        }
+    }
+}
+
+/* =====================================================================
+ * Sistema Visual Everden v1 (oklch).
+ * - --primary:   Verde Bosque oscuro  (≈ green-950, identidad institucional).
+ * - --accent:    Verde Esmeralda      (≈ emerald-600, vitalidad / acento).
+ * - --ring:      Esmeralda            (≈ emerald-500, focus visible unico).
+ * - --secondary: Esmeralda muy claro  (≈ emerald-50, superficies suaves).
+ * - --muted:     Neutro tibio         (fondo del shell del POS).
+ * - --destructive: rojo conservado.
+ * Dark: --primary se mantiene en Bosque medio para destacar sobre fondo
+ *       oscuro; --ring sube a Esmeralda mas brillante para visibilidad.
+ * ===================================================================== */
+:root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.18 0.015 158);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.18 0.015 158);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.18 0.015 158);
+    --primary: oklch(0.27 0.045 158);
+    --primary-foreground: oklch(0.985 0.005 158);
+    --secondary: oklch(0.96 0.018 158);
+    --secondary-foreground: oklch(0.27 0.045 158);
+    --muted: oklch(0.965 0.008 158);
+    --muted-foreground: oklch(0.5 0.025 158);
+    --accent: oklch(0.6 0.15 162);
+    --accent-foreground: oklch(0.985 0.005 158);
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.985 0 0);
+    --border: oklch(0.91 0.012 158);
+    --input: oklch(0.91 0.012 158);
+    --ring: oklch(0.7 0.17 162);
+    --chart-1: oklch(0.6 0.15 162);
+    --chart-2: oklch(0.7 0.15 200);
+    --chart-3: oklch(0.78 0.13 90);
+    --chart-4: oklch(0.55 0.18 30);
+    --chart-5: oklch(0.45 0.05 158);
+    --radius: 0.625rem;
+    /* Sidebar: blanco del rail = pastillas indistinguibles del fondo */
+    --sidebar: oklch(1 0 0);
+    --sidebar-foreground: oklch(0.22 0.012 264);
+    --sidebar-primary: oklch(0.27 0.045 158);
+    --sidebar-primary-foreground: oklch(0.985 0.005 158);
+    --sidebar-accent: oklch(0.965 0.003 264);
+    --sidebar-accent-foreground: oklch(0.22 0.012 264);
+    --sidebar-border: oklch(0.91 0.004 264);
+    --sidebar-ring: oklch(0.55 0.018 264);
+}
+
+/*
+ * Modo oscuro Everden — legibilidad en app autenticada (POS, dashboard).
+ *
+ * Problema anterior: demasiada croma verde en fondos + --card mas oscuro que el
+ * lienzo, sensacion de peso / bloques "hundidos".
+ *
+ * Enfoque:
+ * - Canvas y muted neutros (zinc frio, baja croma) como Welcome/slate-950.
+ * - Tarjetas y popovers mas claros que el fondo (elevacion real).
+ * - Marca verde solo en primary/accent/ring y acento suave en card/sidebar.
+ */
+.dark {
+    --background: oklch(0.225 0.006 264);
+    --foreground: oklch(0.97 0.006 264);
+    --card: oklch(0.33 0.016 158);
+    --card-foreground: oklch(0.97 0.005 158);
+    --popover: oklch(0.34 0.016 158);
+    --popover-foreground: oklch(0.97 0.005 158);
+    --primary: oklch(0.58 0.14 162);
+    --primary-foreground: oklch(0.14 0.02 158);
+    --secondary: oklch(0.34 0.042 158);
+    --secondary-foreground: oklch(0.97 0.012 158);
+    --muted: oklch(0.28 0.008 264);
+    --muted-foreground: oklch(0.72 0.022 158);
+    --accent: oklch(0.56 0.14 162);
+    --accent-foreground: oklch(0.14 0.02 158);
+    --destructive: oklch(0.704 0.191 22.216);
+    --destructive-foreground: oklch(0.985 0 0);
+    --border: oklch(1 0 0 / 11%);
+    --input: oklch(1 0 0 / 14%);
+    --ring: oklch(0.76 0.15 162);
+    --chart-1: oklch(0.7 0.17 162);
+    --chart-2: oklch(0.78 0.13 200);
+    --chart-3: oklch(0.85 0.13 90);
+    --chart-4: oklch(0.65 0.18 30);
+    --chart-5: oklch(0.55 0.05 158);
+    /* Sidebar oscura: mismo enfoque plano; hover apenas mas claro que el rail */
+    --sidebar: oklch(0.2 0.006 264);
+    --sidebar-foreground: oklch(0.96 0.006 264);
+    --sidebar-primary: oklch(0.58 0.14 162);
+    --sidebar-primary-foreground: oklch(0.14 0.02 158);
+    --sidebar-accent: oklch(0.27 0.006 264);
+    --sidebar-accent-foreground: oklch(0.97 0.006 264);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.55 0.014 264);
+}
+
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-border, currentColor);
+    }
+
+    html {
+        scroll-padding-top: 5rem;
+        font-family: var(--font-sans);
+    }
+
+    body {
+        background-color: var(--color-background);
+        color: var(--color-foreground);
+        -webkit-font-smoothing: antialiased;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
+
+/* =====================================================================
+ * Touch-First Fase 3 (Everden) - utilidades de scroll y gesto.
+ * - .scrollbar-hide: oculta scrollbars sin perder scroll (estetica POS).
+ * - .touch-scroll-y: scroll vertical fluido con momentum en iOS/Safari y
+ *   contencion para evitar pull-to-refresh accidental.
+ * - .swipe-track: pista contenedora del swipe-to-delete (relative+overflow).
+ * - .swipe-deck:  capa frontal con touch-action pan-y para no bloquear
+ *   el scroll vertical mientras se desliza horizontalmente.
+ * ===================================================================== */
+@layer utilities {
+    .scrollbar-hide {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    .touch-scroll-y {
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+
+    .swipe-track {
+        position: relative;
+        overflow: hidden;
+        touch-action: pan-y;
+    }
+
+    .swipe-deck {
+        touch-action: pan-y;
+        will-change: transform;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+}
+
+/*
+ * Sidebar: mismo color que el rail (--sidebar) para anular fondos grises de plugins/navegador.
+ */
+@layer components {
+    [data-sidebar="sidebar"] [data-slot="sidebar-menu-button"],
+    [data-sidebar="sidebar"] [data-slot="sidebar-menu-button"]:hover,
+    [data-sidebar="sidebar"] [data-slot="sidebar-menu-button"]:active,
+    [data-sidebar="sidebar"] [data-slot="sidebar-menu-button"]:focus,
+    [data-sidebar="sidebar"] [data-slot="sidebar-menu-button"]:focus-visible {
+        background-color: var(--sidebar) !important;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    [data-sidebar="sidebar"] [data-sidebar="menu-item"] {
+        background-color: var(--sidebar);
+    }
+}
