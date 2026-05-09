@@ -93,6 +93,7 @@ export default function ProductsIndex({ products, canManage, categories = [] }) 
     const rows = products?.data ?? [];
     const createForm = useForm({
         sku: '',
+        barcode: '',
         name: '',
         price: '',
         tax_rate: 0,
@@ -104,6 +105,7 @@ export default function ProductsIndex({ products, canManage, categories = [] }) 
     const updateForm = useForm({
         id: null,
         name: '',
+        barcode: '',
         price: '',
         tax_rate: '',
         unit: '',
@@ -116,7 +118,7 @@ export default function ProductsIndex({ products, canManage, categories = [] }) 
         createForm.post(route('products.store'), {
             preserveScroll: true,
             onSuccess: () =>
-                createForm.reset('sku', 'name', 'price', 'initial_branch_quantity'),
+                createForm.reset('sku', 'barcode', 'name', 'price', 'initial_branch_quantity'),
         });
     };
 
@@ -124,6 +126,7 @@ export default function ProductsIndex({ products, canManage, categories = [] }) 
         updateForm.setData({
             id: product.id,
             name: product.name,
+            barcode: product.barcode ?? '',
             price: product.price,
             tax_rate: product.tax_rate,
             unit: product.unit,
@@ -222,7 +225,11 @@ export default function ProductsIndex({ products, canManage, categories = [] }) 
                                                         </Badge>
                                                     )}
                                                     <p className="text-sm text-gray-600 dark:text-slate-400">
-                                                        Código: {product.sku} · $
+                                                        SKU: {product.sku}
+                                                        {product.barcode
+                                                            ? ` · Barcode: ${product.barcode}`
+                                                            : ''}
+                                                        {' · $'}
                                                         {product.price} · IVA{' '}
                                                         {product.tax_rate}% · En esta tienda:{' '}
                                                         {product.quantity_at_branch ?? 0} u.
@@ -269,6 +276,29 @@ export default function ProductsIndex({ products, canManage, categories = [] }) 
                                             <InputError
                                                 className="mt-2"
                                                 message={createForm.errors.sku}
+                                            />
+                                        </div>
+                                        <div>
+                                            <InputLabel
+                                                htmlFor="barcode"
+                                                value="Código de barras (opcional)"
+                                            />
+                                            <TextInput
+                                                id="barcode"
+                                                className="mt-1 block w-full"
+                                                value={createForm.data.barcode}
+                                                onChange={(e) =>
+                                                    createForm.setData('barcode', e.target.value)
+                                                }
+                                                placeholder="EAN-13, UPC o código interno"
+                                            />
+                                            <p className="mt-1 text-xs text-gray-500">
+                                                Si el producto trae código impreso de fábrica, captúralo aquí.
+                                                Si no, déjalo vacío y el SKU funcionará como código.
+                                            </p>
+                                            <InputError
+                                                className="mt-2"
+                                                message={createForm.errors.barcode}
                                             />
                                         </div>
                                         <div>
@@ -359,6 +389,22 @@ export default function ProductsIndex({ products, canManage, categories = [] }) 
                                                 onChange={(e) =>
                                                     updateForm.setData('name', e.target.value)
                                                 }
+                                            />
+                                        </div>
+                                        <div>
+                                            <InputLabel htmlFor="edit-barcode" value="Código de barras" />
+                                            <TextInput
+                                                id="edit-barcode"
+                                                className="mt-1 block w-full"
+                                                value={updateForm.data.barcode}
+                                                onChange={(e) =>
+                                                    updateForm.setData('barcode', e.target.value)
+                                                }
+                                                placeholder="Vacío = usar SKU"
+                                            />
+                                            <InputError
+                                                className="mt-2"
+                                                message={updateForm.errors.barcode}
                                             />
                                         </div>
                                         <div>

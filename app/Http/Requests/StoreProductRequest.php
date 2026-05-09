@@ -29,6 +29,15 @@ class StoreProductRequest extends FormRequest
                     $this->user()?->tenant_id
                 ),
             ],
+            'barcode' => [
+                'nullable',
+                'string',
+                'max:100',
+                Rule::unique('products', 'barcode')->where(
+                    'tenant_id',
+                    $this->user()?->tenant_id
+                ),
+            ],
             'name' => ['required', 'string', 'max:255'],
             'price' => ['required', 'numeric', 'min:0'],
             'tax_rate' => ['nullable', 'numeric', 'min:0', 'max:100'],

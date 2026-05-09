@@ -22,6 +22,7 @@ class Product extends Model
         'tenant_id',
         'category_id',
         'sku',
+        'barcode',
         'name',
         'price',
         'tax_rate',

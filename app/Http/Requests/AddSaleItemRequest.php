@@ -43,7 +43,9 @@ class AddSaleItemRequest extends FormRequest
             $product = Product::query()
                 ->where('tenant_id', $tenantId)
                 ->where(function ($q) use ($candidate): void {
-                    $q->where('sku', $candidate)
+                    $q->where('barcode', $candidate)
+                        ->orWhereRaw('LOWER(barcode) = ?', [mb_strtolower($candidate)])
+                        ->orWhere('sku', $candidate)
                         ->orWhereRaw('LOWER(sku) = ?', [mb_strtolower($candidate)]);
                 })
                 ->where('is_active', true)

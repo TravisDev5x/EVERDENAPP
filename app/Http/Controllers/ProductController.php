@@ -37,6 +37,7 @@ class ProductController extends Controller
         $product = DB::transaction(function () use ($validated, $branchStockBootstrap, $inventoryService, $request): Product {
             $product = Product::create([
                 'sku' => $validated['sku'],
+                'barcode' => $validated['barcode'] ?? null,
                 'name' => $validated['name'],
                 'price' => $validated['price'],
                 'tax_rate' => $validated['tax_rate'] ?? 0,
@@ -89,7 +90,7 @@ class ProductController extends Controller
         AuditLogger $auditLogger
     ): JsonResponse|RedirectResponse {
         $validated = $request->validated();
-        $before = $product->only(['name', 'price', 'tax_rate', 'unit', 'is_active', 'category_id']);
+        $before = $product->only(['name', 'price', 'tax_rate', 'unit', 'is_active', 'category_id', 'barcode']);
 
         $product->update($validated);
 
@@ -100,7 +101,7 @@ class ProductController extends Controller
             actor: $request->user(),
             metadata: [
                 'before' => $before,
-                'after' => $product->fresh()->only(['name', 'price', 'tax_rate', 'unit', 'is_active', 'category_id']),
+                'after' => $product->fresh()->only(['name', 'price', 'tax_rate', 'unit', 'is_active', 'category_id', 'barcode']),
             ]
         );
 
