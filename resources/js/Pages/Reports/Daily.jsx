@@ -12,6 +12,7 @@ export default function Daily({
     cashSessions,
     auditLogs,
     inventoryAlerts,
+    salesByCategory = [],
     activeBranchId,
 }) {
     const [waitingReport, setWaitingReport] = useState(false);
@@ -119,6 +120,112 @@ export default function Daily({
                                 ))
                             )}
                         </div>
+                    </div>
+
+                    <div className="rounded-lg bg-white p-6 shadow-xs">
+                        <h3 className="mb-3 text-lg font-semibold">Ventas por categoría</h3>
+                        {salesByCategory.length === 0 ? (
+                            <p className="text-sm text-gray-600">Sin ventas confirmadas en el día.</p>
+                        ) : (
+                            <div className="space-y-3">
+                                {/* Tabla de categorías */}
+                                <div className="overflow-hidden rounded border border-gray-200">
+                                    <table className="w-full text-sm">
+                                        <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-600">
+                                            <tr>
+                                                <th className="px-3 py-2 text-left font-medium">Categoría</th>
+                                                <th className="px-3 py-2 text-right font-medium">Tickets</th>
+                                                <th className="px-3 py-2 text-right font-medium">Unidades</th>
+                                                <th className="px-3 py-2 text-right font-medium">Ingresos</th>
+                                                <th className="px-3 py-2 text-right font-medium">% del total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-200">
+                                            {(() => {
+                                                const totalRevenue = salesByCategory.reduce(
+                                                    (sum, row) => sum + Number(row.revenue ?? 0),
+                                                    0,
+                                                );
+                                                return salesByCategory.map((row) => {
+                                                    const pct =
+                                                        totalRevenue > 0
+                                                            ? (Number(row.revenue) / totalRevenue) * 100
+                                                            : 0;
+                                                    return (
+                                                        <tr key={row.category_id ?? 'uncategorized'}>
+                                                            <td className="px-3 py-2">
+                                                                <span className="inline-flex items-center gap-2">
+                                                                    <span
+                                                                        className="size-2.5 rounded-full"
+                                                                        style={{
+                                                                            backgroundColor:
+                                                                                row.category_color ?? '#94a3b8',
+                                                                        }}
+                                                                        aria-hidden="true"
+                                                                    />
+                                                                    <span className="font-medium text-gray-900">
+                                                                        {row.category_name}
+                                                                    </span>
+                                                                </span>
+                                                            </td>
+                                                            <td className="px-3 py-2 text-right tabular-nums text-gray-700">
+                                                                {row.sales_count}
+                                                            </td>
+                                                            <td className="px-3 py-2 text-right tabular-nums text-gray-700">
+                                                                {row.units_sold}
+                                                            </td>
+                                                            <td className="px-3 py-2 text-right tabular-nums text-gray-900">
+                                                                ${Number(row.revenue).toFixed(2)}
+                                                            </td>
+                                                            <td className="px-3 py-2 text-right tabular-nums text-gray-700">
+                                                                {pct.toFixed(1)}%
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                });
+                                            })()}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                {/* Barras de proporción */}
+                                <div className="space-y-2">
+                                    {(() => {
+                                        const totalRevenue = salesByCategory.reduce(
+                                            (sum, row) => sum + Number(row.revenue ?? 0),
+                                            0,
+                                        );
+                                        return salesByCategory.map((row) => {
+                                            const pct =
+                                                totalRevenue > 0
+                                                    ? (Number(row.revenue) / totalRevenue) * 100
+                                                    : 0;
+                                            return (
+                                                <div key={`bar-${row.category_id ?? 'uncategorized'}`}>
+                                                    <div className="flex justify-between text-xs text-gray-600">
+                                                        <span>{row.category_name}</span>
+                                                        <span className="tabular-nums">
+                                                            ${Number(row.revenue).toFixed(2)}
+                                                        </span>
+                                                    </div>
+                                                    <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-gray-100">
+                                                        <div
+                                                            className="h-full rounded-full"
+                                                            style={{
+                                                                width: `${pct}%`,
+                                                                backgroundColor:
+                                                                    row.category_color ?? '#94a3b8',
+                                                            }}
+                                                            aria-label={`${row.category_name} ${pct.toFixed(1)}%`}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            );
+                                        });
+                                    })()}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="rounded-lg bg-white p-6 shadow-xs">

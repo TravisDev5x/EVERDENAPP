@@ -7,8 +7,10 @@ use App\Models\CashSession;
 use App\Models\InventoryAlert;
 use App\Models\Payment;
 use App\Models\Sale;
+use App\Models\SaleItem;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class DailyReportBuilder
 {
@@ -19,7 +21,8 @@ class DailyReportBuilder
      *   payments: Collection<int, Payment>,
      *   cashSessions: Collection<int, CashSession>,
      *   auditLogs: Collection<int, AuditLog>,
-     *   inventoryAlerts: Collection<int, InventoryAlert>
+     *   inventoryAlerts: Collection<int, InventoryAlert>,
+     *   salesByCategory: \Illuminate\Support\Collection<int, array<string, mixed>>
      * }
      */
     public function build(int $branchId, Carbon $date): array
@@ -90,6 +93,39 @@ class DailyReportBuilder
                 'resolved_at',
             ]);
 
+        // Ventas por categoría — solo ítems de ventas confirmadas/pagadas del día.
+        // Productos sin categoría se agrupan bajo "Sin categoría" (category_id null).
+        $salesByCategory = SaleItem::query()
+            ->select(
+                'products.category_id',
+                'product_categories.name as category_name',
+                'product_categories.color as category_color',
+                DB::raw('COUNT(DISTINCT sale_items.sale_id) as sales_count'),
+                DB::raw('SUM(sale_items.quantity) as units_sold'),
+                DB::raw('SUM(sale_items.line_total) as revenue')
+            )
+            ->join('sales', 'sales.id', '=', 'sale_items.sale_id')
+            ->join('products', 'products.id', '=', 'sale_items.product_id')
+            ->leftJoin('product_categories', 'product_categories.id', '=', 'products.category_id')
+            ->where('sales.branch_id', $branchId)
+            ->where('sales.status', 'confirmed')
+            ->whereRaw(
+                'COALESCE(sales.confirmed_at, sales.created_at) BETWEEN ? AND ?',
+                [$start, $endOfDay]
+            )
+            ->groupBy('products.category_id', 'product_categories.name', 'product_categories.color')
+            ->orderByDesc('revenue')
+            ->get()
+            ->map(fn ($row) => [
+                'category_id' => $row->category_id,
+                'category_name' => $row->category_name ?? 'Sin categoría',
+                'category_color' => $row->category_color,
+                'sales_count' => (int) $row->sales_count,
+                'units_sold' => round((float) $row->units_sold, 3),
+                'revenue' => round((float) $row->revenue, 2),
+            ])
+            ->values();
+
         return [
             'summary' => [
                 'sales_count' => $sales->count(),
@@ -101,12 +137,14 @@ class DailyReportBuilder
                 'cash_closed_count' => $cashSessions->where('status', 'closed')->count(),
                 'audit_events_count' => $auditLogs->count(),
                 'inventory_alerts_open_count' => $inventoryAlerts->where('status', 'open')->count(),
+                'categories_with_sales_count' => $salesByCategory->count(),
             ],
             'sales' => $sales,
             'payments' => $payments,
             'cashSessions' => $cashSessions,
             'auditLogs' => $auditLogs,
             'inventoryAlerts' => $inventoryAlerts,
+            'salesByCategory' => $salesByCategory,
         ];
     }
 

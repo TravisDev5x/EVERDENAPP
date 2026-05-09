@@ -6,6 +6,7 @@ use App\Models\Branch;
 use App\Models\CashRegister;
 use App\Models\CashSession;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\Sale;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -25,7 +26,13 @@ class SalePageController extends Controller
         $products = Product::query()
             ->where('is_active', true)
             ->orderBy('name')
-            ->get(['id', 'sku', 'name', 'price', 'tax_rate', 'unit']);
+            ->get(['id', 'sku', 'name', 'price', 'tax_rate', 'unit', 'category_id']);
+
+        $categories = ProductCategory::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get(['id', 'name', 'slug', 'color']);
 
         $branchId = app('current_branch_id');
         $saleData = null;
@@ -59,6 +66,7 @@ class SalePageController extends Controller
 
         return Inertia::render('Sales/Index', [
             'products' => $products,
+            'categories' => $categories,
             'sale' => $saleData,
             'cashSession' => $cashSession,
             'cashRegisters' => $cashRegisters,

@@ -81,6 +81,7 @@ function PosTopbar({ branches, activeBranchId, onChangeBranch, cashSession }) {
 
 export default function SalesIndex({
     products,
+    categories = [],
     sale,
     cashSession,
     cashRegisters = [],
@@ -100,6 +101,7 @@ export default function SalesIndex({
     const [scannerAlert, setScannerAlert] = useState(null);
     const [scaleAlert, setScaleAlert] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [categoryFilter, setCategoryFilter] = useState(null); // null = todas las categorías
 
     const itemForm = useForm({
         scan_code: '',
@@ -112,6 +114,14 @@ export default function SalesIndex({
         if (!itemForm.data.product_id) return null;
         return products.find((p) => String(p.id) === String(itemForm.data.product_id)) ?? null;
     }, [itemForm.data.product_id, products]);
+
+    const filteredProducts = useMemo(() => {
+        if (categoryFilter === null) return products;
+        if (categoryFilter === 'uncategorized') {
+            return products.filter((p) => p.category_id === null);
+        }
+        return products.filter((p) => p.category_id === categoryFilter);
+    }, [products, categoryFilter]);
 
     const isWeightProduct = useMemo(() => {
         const unit = (selectedProduct?.unit ?? '').toLowerCase();
@@ -709,6 +719,57 @@ export default function SalesIndex({
                                 <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                                     Busqueda manual
                                 </p>
+                                {categories.length > 0 && (
+                                    <div className="mb-3 flex flex-wrap gap-1.5">
+                                        <button
+                                            type="button"
+                                            onClick={() => setCategoryFilter(null)}
+                                            className={cn(
+                                                'rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
+                                                categoryFilter === null
+                                                    ? 'border-foreground bg-foreground text-background'
+                                                    : 'border-border bg-background text-muted-foreground hover:text-foreground',
+                                            )}
+                                        >
+                                            Todas
+                                        </button>
+                                        {categories.map((cat) => {
+                                            const isActive = categoryFilter === cat.id;
+                                            return (
+                                                <button
+                                                    key={cat.id}
+                                                    type="button"
+                                                    onClick={() => setCategoryFilter(cat.id)}
+                                                    className={cn(
+                                                        'rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
+                                                        isActive
+                                                            ? 'border-transparent text-white'
+                                                            : 'border-border bg-background text-muted-foreground hover:text-foreground',
+                                                    )}
+                                                    style={
+                                                        isActive && cat.color
+                                                            ? { backgroundColor: cat.color }
+                                                            : undefined
+                                                    }
+                                                >
+                                                    {cat.name}
+                                                </button>
+                                            );
+                                        })}
+                                        <button
+                                            type="button"
+                                            onClick={() => setCategoryFilter('uncategorized')}
+                                            className={cn(
+                                                'rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
+                                                categoryFilter === 'uncategorized'
+                                                    ? 'border-foreground bg-foreground text-background'
+                                                    : 'border-border bg-background text-muted-foreground hover:text-foreground',
+                                            )}
+                                        >
+                                            Sin categoría
+                                        </button>
+                                    </div>
+                                )}
                                 <Command className="overflow-hidden rounded-lg border border-border bg-background">
                                     <CommandInput
                                         placeholder="Nombre o SKU..."
@@ -722,7 +783,7 @@ export default function SalesIndex({
                                             </CommandEmpty>
                                         )}
                                         <CommandGroup>
-                                            {products.map((product) => (
+                                            {filteredProducts.map((product) => (
                                                 <CommandItem
                                                     key={product.id}
                                                     value={`${product.name} ${product.sku}`}
