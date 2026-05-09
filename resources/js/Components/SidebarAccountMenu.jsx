@@ -71,22 +71,22 @@ export default function SidebarAccountMenu({ user, onNavigate }) {
                     <button
                         type="button"
                         id="sidebar-account-menu-button"
-                        className="flex w-full items-center gap-3 rounded-xl border border-transparent bg-sidebar p-2 text-left hover:bg-sidebar focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring/35 focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar"
+                        className="flex w-full items-center gap-3 rounded-xl border border-transparent bg-sidebar p-2 text-left hover:bg-sidebar focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring/35 focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:p-1.5"
                         aria-haspopup="menu"
                     >
                         <div
-                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground"
+                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:text-[0.65rem]"
                             aria-hidden
                         >
                             {(user.name?.slice(0, 2) ?? '?').toUpperCase()}
                         </div>
-                        <div className="min-w-0 flex-1">
+                        <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
                             <p className="truncate text-sm font-semibold text-sidebar-foreground">
                                 {user.name}
                             </p>
                             <p className="truncate text-xs text-sidebar-foreground/60">{user.email}</p>
                         </div>
-                        <IconChevronUpDown />
+                        <IconChevronUpDown className="group-data-[collapsible=icon]:hidden" />
                     </button>
                 </Dropdown.Trigger>
                 <Dropdown.Content

@@ -175,8 +175,22 @@ const ACCENT_STYLES = {
  * Landing pública — identidad EVERDEN.
  * Misión: infraestructura tecnológica sólida que convierte la complejidad en control y crecimiento.
  */
+function ziggyRouteExists(name) {
+    try {
+        return typeof route === 'function' && route().has(name);
+    } catch {
+        return false;
+    }
+}
+
+/**
+ * Landing servida por Laravel + @routes (Ziggy). Abrí siempre la URL de la app (p.ej. APP_URL o vhost de Laragon),
+ * no el puerto de Vite (5173/5174): ahí no hay props Inertia ni Ziggy completos.
+ */
 export default function Welcome({ canLogin, canRegister }) {
     const { auth, appName, siteUrl } = usePage().props;
+    const canLoginUi = Boolean(canLogin) || ziggyRouteExists('login');
+    const canRegisterUi = Boolean(canRegister) || ziggyRouteExists('register');
     const isPlatformOperator = auth.isPlatformOperator ?? false;
     const panelHref = isPlatformOperator ? route('platform.tenants.index') : route('dashboard');
     const panelLabel = isPlatformOperator ? 'Entrar a plataforma' : 'Entrar al panel';
@@ -308,12 +322,12 @@ export default function Welcome({ canLogin, canRegister }) {
                                         </Button>
                                     ) : (
                                         <>
-                                            {canLogin && (
+                                            {canLoginUi && (
                                                 <Button variant="ghost" size="lg" asChild className="min-h-11 rounded-xl">
                                                     <Link href={route('login')}>Iniciar sesión</Link>
                                                 </Button>
                                             )}
-                                            {canRegister && (
+                                            {canRegisterUi && (
                                                 <Button
                                                     size="lg"
                                                     asChild
@@ -373,7 +387,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                     ventas y reportes alineados por sucursal, en un ecosistema diseñado para durar.
                                 </p>
                                 <div className="mt-10 flex flex-wrap items-center gap-4">
-                                    {canRegister && !auth.user && (
+                                    {canRegisterUi && !auth.user && (
                                         <Button
                                             size="lg"
                                             asChild
@@ -382,7 +396,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                             <Link href={route('register')}>Empezar mi operación</Link>
                                         </Button>
                                     )}
-                                    {canLogin && !auth.user && (
+                                    {canLoginUi && !auth.user && (
                                         <Button variant="outline" size="lg" asChild className="h-12 rounded-xl px-7 text-base font-semibold">
                                             <Link href={route('login')}>Ya tengo cuenta</Link>
                                         </Button>
@@ -845,7 +859,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                         ecosistema. {brand} convierte la complejidad en control absoluto.
                                     </p>
                                     <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-                                        {canRegister && !auth.user && (
+                                        {canRegisterUi && !auth.user && (
                                             <Button
                                                 size="lg"
                                                 asChild
@@ -854,7 +868,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                                 <Link href={route('register')}>Empezar mi operación</Link>
                                             </Button>
                                         )}
-                                        {canLogin && !auth.user && (
+                                        {canLoginUi && !auth.user && (
                                             <Button
                                                 variant="outline"
                                                 size="lg"
@@ -923,7 +937,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                         Acceso
                                     </p>
                                     <ul className="mt-4 space-y-2 text-sm">
-                                        {canLogin && (
+                                        {canLoginUi && (
                                             <li>
                                                 <Link
                                                     href={route('login')}
@@ -933,7 +947,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                                 </Link>
                                             </li>
                                         )}
-                                        {canRegister && (
+                                        {canRegisterUi && (
                                             <li>
                                                 <Link
                                                     href={route('register')}

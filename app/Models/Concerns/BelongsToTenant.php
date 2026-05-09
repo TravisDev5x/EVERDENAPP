@@ -4,37 +4,78 @@ namespace App\Models\Concerns;
 
 use App\Services\TenantContext;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use LogicException;
 
 trait BelongsToTenant
 {
     protected static function bootBelongsToTenant(): void
     {
-        static::creating(function ($model): void {
-            /** @var TenantContext $tenantContext */
-            $tenantContext = app(TenantContext::class);
+        static::creating(function (Model $model): void {
+            $tenantId = self::resolveTenantId();
 
-            if (! $model->tenant_id && $tenantContext->hasTenant()) {
-                $model->tenant_id = $tenantContext->tenantId();
-            } elseif (! $model->tenant_id && app()->bound('current_tenant_id')) {
-                $model->tenant_id = app('current_tenant_id');
+            if ($tenantId === null) {
+                if (! app()->runningInConsole()) {
+                    throw new LogicException(
+                        sprintf('Cannot create [%s] without a resolved tenant_id.', static::class)
+                    );
+                }
+                return;
+            }
+
+            if (! $model->tenant_id) {
+                $model->tenant_id = $tenantId;
             }
         });
 
         static::addGlobalScope('tenant', function (Builder $builder): void {
-            /** @var TenantContext $tenantContext */
-            $tenantContext = app(TenantContext::class);
+            $tenantId = self::resolveTenantId();
 
-            if ($tenantContext->hasTenant()) {
-                $builder->where(
-                    $builder->getModel()->getTable().'.tenant_id',
-                    $tenantContext->tenantId()
-                );
-            } elseif (app()->bound('current_tenant_id')) {
-                $builder->where(
-                    $builder->getModel()->getTable().'.tenant_id',
-                    app('current_tenant_id')
-                );
+            if ($tenantId === null) {
+                if (! app()->runningInConsole()) {
+                    $builder->whereRaw('1 = 0');
+                }
+                return;
             }
+
+            $builder->where(
+                $builder->getModel()->getTable().'.tenant_id',
+                $tenantId
+            );
         });
+    }
+
+    private static function resolveTenantId(): int|string|null
+    {
+        /** @var TenantContext $ctx */
+        $ctx = app(TenantContext::class);
+
+        if ($ctx->hasTenant()) {
+            return $ctx->tenantId();
+        }
+
+        if (app()->bound('current_tenant_id')) {
+            return app('current_tenant_id');
+        }
+
+        return null;
+    }
+
+    public function belongsToCurrentTenant(): bool
+    {
+        $tenantId = self::resolveTenantId();
+
+        if ($tenantId === null) {
+            return false;
+        }
+
+        return (int) $this->tenant_id === (int) $tenantId;
+    }
+
+    public function assertBelongsToCurrentTenant(): void
+    {
+        if (! $this->belongsToCurrentTenant()) {
+            abort(403, 'Resource does not belong to the current tenant.');
+        }
     }
 }

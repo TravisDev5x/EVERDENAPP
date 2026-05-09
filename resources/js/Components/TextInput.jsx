@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 /**
@@ -36,10 +37,11 @@ export default forwardRef(function TextInput(
             {...props}
             type={type}
             data-size={size}
-            className={
-                `${sizing} text-foreground placeholder:text-muted-foreground transition-colors focus:border-ring focus:outline-hidden focus:ring-3 focus:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50 ` +
-                className
-            }
+            className={cn(
+                sizing,
+                'text-foreground placeholder:text-muted-foreground transition-colors focus:border-ring focus:outline-hidden focus:ring-3 focus:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50',
+                className,
+            )}
             ref={localRef}
         />
     );

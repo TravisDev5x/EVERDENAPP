@@ -59,10 +59,11 @@ export default function AppSidebar({
 
     return (
         <Sidebar collapsible="icon" variant="sidebar">
-            <SidebarHeader className="border-b border-sidebar-border">
-                <div className="flex h-14 shrink-0 items-center gap-3 px-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-amber-200">
-                        <ApplicationLogo className="block h-7 w-auto fill-white opacity-95" />
+            {/* Borde en la fila h-14: si va en SidebarHeader, el bloque mide 56px + borde y no coincide con el header del inset (h-14 incluye borde). */}
+            <SidebarHeader className="gap-0 p-0">
+                <div className="flex h-14 shrink-0 items-center gap-3 border-b border-border px-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:px-1.5">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-amber-200 group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-8">
+                        <ApplicationLogo className="block h-7 w-auto max-h-full max-w-full fill-white opacity-95 group-data-[collapsible=icon]:h-6 group-data-[collapsible=icon]:w-auto" />
                     </div>
                     <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
                         <p className="truncate text-sm font-semibold text-sidebar-foreground">
@@ -193,7 +194,7 @@ export default function AppSidebar({
                 )}
             </SidebarContent>
 
-            <SidebarFooter className="border-t border-sidebar-border px-3 py-2">
+            <SidebarFooter className="border-t border-sidebar-border px-3 py-2 group-data-[collapsible=icon]:px-1.5">
                 <SidebarAccountMenu user={user} onNavigate={() => setOpenMobile(false)} />
             </SidebarFooter>
 

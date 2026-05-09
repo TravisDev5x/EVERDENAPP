@@ -29,6 +29,8 @@ use App\Http\Controllers\Platform\TenantDirectoryController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+require __DIR__.'/auth.php';
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -112,5 +114,3 @@ Route::middleware(['auth', 'tenant'])->group(function (): void {
     Route::post('/team/roles/{role}/permissions', [TeamRoleController::class, 'syncPermissions'])->name('team.roles.permissions.sync');
     Route::patch('/active-branch/{branch}', [ActiveBranchController::class, 'update'])->name('active-branch.update');
 });
-
-require __DIR__.'/auth.php';

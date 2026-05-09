@@ -57,7 +57,7 @@ export default function AuthenticatedLayout({ header, children }) {
                         'bg-background outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:ring-offset-4 focus-visible:ring-offset-background',
                     )}
                 >
-                    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/95 px-3 backdrop-blur-sm md:hidden">
+                    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-border bg-background px-3">
                         <SidebarTrigger className="min-h-[44px] min-w-[44px] shrink-0" />
                         <span className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground">
                             {tenantTitle}

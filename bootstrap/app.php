@@ -34,6 +34,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenant' => EnsureTenantContext::class,
             'platform' => EnsurePlatformOperator::class,
         ]);
+
+        $middleware->prependToPriorityList(
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            EnsureTenantContext::class,
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

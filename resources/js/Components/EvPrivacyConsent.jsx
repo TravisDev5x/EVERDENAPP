@@ -33,22 +33,17 @@ export default function EvPrivacyConsent({ sale }) {
 
     return (
         <section className="rounded-xl border border-green-900/15 bg-green-50/80 p-4 shadow-xs dark:border-green-500/20 dark:bg-green-950/20">
-            <div className="flex items-start justify-between gap-3">
-                <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-green-900/70 dark:text-green-300/80">
-                        Custodia Everden
-                    </p>
-                    <h3 className="mt-1 text-base font-semibold text-green-950 dark:text-green-50">
-                        Consentimiento de privacidad
-                    </h3>
-                    <p className="mt-1 text-xs leading-relaxed text-green-900/75 dark:text-green-100/75">
-                        Registra al cliente solo si acepta el Aviso de Privacidad. El ticket puede seguir como venta
-                        general si no se capturan datos personales.
-                    </p>
-                </div>
-                <span className="rounded-full bg-green-900 px-2.5 py-1 text-[11px] font-semibold text-white dark:bg-green-400 dark:text-green-950">
-                    Verde Bosque
-                </span>
+            <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-green-900/70 dark:text-green-300/80">
+                    Custodia Everden
+                </p>
+                <h3 className="mt-1 text-base font-semibold text-green-950 dark:text-green-50">
+                    Consentimiento de privacidad
+                </h3>
+                <p className="mt-1 text-xs leading-relaxed text-green-900/75 dark:text-green-100/75">
+                    Registra al cliente solo si acepta el Aviso de Privacidad. El ticket puede seguir como venta
+                    general si no se capturan datos personales.
+                </p>
             </div>
 
             <form className="mt-4 space-y-3" onSubmit={submit}>

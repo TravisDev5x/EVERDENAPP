@@ -2,6 +2,8 @@
  * Etiqueta de input Everden (sistema unificado v1).
  * Tokenizada para light/dark; sin clases hardcoded.
  */
+import { cn } from '@/lib/utils';
+
 export default function InputLabel({
     value,
     className = '',
@@ -11,9 +13,7 @@ export default function InputLabel({
     return (
         <label
             {...props}
-            className={
-                `block text-sm font-medium text-foreground/80 ` + className
-            }
+            className={cn('block text-sm font-medium text-foreground/80', className)}
         >
             {value ? value : children}
         </label>

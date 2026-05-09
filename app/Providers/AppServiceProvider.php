@@ -16,6 +16,7 @@ use App\Policies\ProductPolicy;
 use App\Policies\SalePolicy;
 use App\Services\TenantContext;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
@@ -46,5 +47,19 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(CashRegister::class, CashRegisterPolicy::class);
         Gate::policy(CashSession::class, CashSessionPolicy::class);
         Gate::policy(Payment::class, PaymentPolicy::class);
+
+        // Route model binding sin global scope de tenant.
+        // El scope protege listados y queries directas.
+        // Para recursos individuales por ruta, los Policies y abort_unless
+        // son la barrera de seguridad (lanzan 403, no 404).
+        Route::bind('product', function (string $value): Product {
+            return Product::withoutGlobalScope('tenant')
+                ->findOrFail($value);
+        });
+
+        Route::bind('sale', function (string $value): Sale {
+            return Sale::withoutGlobalScope('tenant')
+                ->findOrFail($value);
+        });
     }
 }
