@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPageController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InventoryPageController;
+use App\Http\Controllers\InventoryTransferController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ActiveBranchController;
 use App\Http\Controllers\BranchController;
@@ -86,6 +87,10 @@ Route::middleware(['auth', 'tenant'])->group(function (): void {
         ->name('product-categories.destroy');
     Route::post('/inventory/products/{product}/adjust', [InventoryController::class, 'adjustStock'])->name('inventory.adjust');
     Route::patch('/inventory/products/{product}/policy', [InventoryController::class, 'updatePolicy'])->name('inventory.policy.update');
+    Route::get('/inventory/transfers', [InventoryTransferController::class, 'index'])
+        ->name('inventory.transfers.index');
+    Route::post('/inventory/transfers', [InventoryTransferController::class, 'store'])
+        ->name('inventory.transfers.store');
     Route::post('/inventory/alerts/{alert}/acknowledge', [InventoryController::class, 'acknowledgeAlert'])->name('inventory.alerts.ack');
     Route::post('/branches', [BranchController::class, 'store'])->name('branches.store');
     Route::patch('/branches/{branch}', [BranchController::class, 'update'])->name('branches.update');
