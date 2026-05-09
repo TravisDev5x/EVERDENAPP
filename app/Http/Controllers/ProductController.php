@@ -42,6 +42,7 @@ class ProductController extends Controller
                 'tax_rate' => $validated['tax_rate'] ?? 0,
                 'unit' => $validated['unit'] ?? 'pieza',
                 'is_active' => $validated['is_active'] ?? true,
+                'category_id' => $validated['category_id'] ?? null,
             ]);
 
             $branchStockBootstrap->ensureStocksForProduct($product);
@@ -88,7 +89,7 @@ class ProductController extends Controller
         AuditLogger $auditLogger
     ): JsonResponse|RedirectResponse {
         $validated = $request->validated();
-        $before = $product->only(['name', 'price', 'tax_rate', 'unit', 'is_active']);
+        $before = $product->only(['name', 'price', 'tax_rate', 'unit', 'is_active', 'category_id']);
 
         $product->update($validated);
 
@@ -99,7 +100,7 @@ class ProductController extends Controller
             actor: $request->user(),
             metadata: [
                 'before' => $before,
-                'after' => $product->fresh()->only(['name', 'price', 'tax_rate', 'unit', 'is_active']),
+                'after' => $product->fresh()->only(['name', 'price', 'tax_rate', 'unit', 'is_active', 'category_id']),
             ]
         );
 

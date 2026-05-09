@@ -5,12 +5,19 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\EnsurePlatformOperator;
 use App\Http\Middleware\EnsureTenantContext;
+use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
+        then: function (): void {
+            Route::bind('product_category', function (string $value): \App\Models\ProductCategory {
+                return \App\Models\ProductCategory::withoutGlobalScope('tenant')
+                    ->findOrFail($value);
+            });
+        },
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $proxies = env('TRUSTED_PROXIES');

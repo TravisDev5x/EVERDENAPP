@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Product;
+use App\Rules\BelongsToCurrentTenant;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -34,6 +35,11 @@ class StoreProductRequest extends FormRequest
             'unit' => ['nullable', 'string', 'max:40'],
             'initial_branch_quantity' => ['nullable', 'numeric', 'min:0'],
             'is_active' => ['nullable', 'boolean'],
+            'category_id' => [
+                'nullable',
+                'integer',
+                new BelongsToCurrentTenant('product_categories'),
+            ],
         ];
     }
 }

@@ -28,6 +28,7 @@ import {
     Shield,
     ShoppingBag,
     ShoppingCart,
+    Tags,
     Users,
 } from 'lucide-react';
 
@@ -110,6 +111,12 @@ export default function AppSidebar({
                                         active={route().current('products.page')}
                                         label="Catálogo"
                                         icon={ShoppingBag}
+                                    />
+                                    <NavLink
+                                        href={route('product-categories.page')}
+                                        active={route().current('product-categories.page')}
+                                        label="Categorías"
+                                        icon={Tags}
                                     />
                                     <NavLink
                                         href={route('sales.page')}

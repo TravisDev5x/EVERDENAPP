@@ -20,6 +20,7 @@ class Product extends Model
      */
     protected $fillable = [
         'tenant_id',
+        'category_id',
         'sku',
         'name',
         'price',
@@ -34,5 +35,10 @@ class Product extends Model
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(ProductCategory::class, 'category_id');
     }
 }

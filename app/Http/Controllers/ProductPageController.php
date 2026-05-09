@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BranchProductStock;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -16,7 +17,14 @@ class ProductPageController extends Controller
 
         $branchId = (int) app('current_branch_id');
 
+        $categories = ProductCategory::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get(['id', 'name', 'slug', 'color']);
+
         $paginator = Product::query()
+            ->with('category:id,name,slug,color')
             ->orderBy('name')
             ->paginate(20)
             ->withQueryString();
@@ -38,6 +46,7 @@ class ProductPageController extends Controller
         return Inertia::render('Products/Index', [
             'products' => $paginator,
             'canManage' => $request->user()?->hasPermission(\App\Support\Permissions::CATALOG_PRODUCTS_MANAGE) ?? false,
+            'categories' => $categories,
         ]);
     }
 }

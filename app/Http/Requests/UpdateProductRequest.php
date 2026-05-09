@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Product;
+use App\Rules\BelongsToCurrentTenant;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateProductRequest extends FormRequest
@@ -30,6 +31,12 @@ class UpdateProductRequest extends FormRequest
             'tax_rate' => ['sometimes', 'numeric', 'min:0', 'max:100'],
             'unit' => ['sometimes', 'string', 'max:40'],
             'is_active' => ['sometimes', 'boolean'],
+            'category_id' => [
+                'sometimes',
+                'nullable',
+                'integer',
+                new BelongsToCurrentTenant('product_categories'),
+            ],
         ];
     }
 }

@@ -1,12 +1,95 @@
+import CategoryManager from '@/Components/CategoryManager';
 import Pagination from '@/Components/Pagination';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, useForm } from '@inertiajs/react';
+import { Badge } from '@/Components/ui/badge';
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from '@/Components/ui/command';
+import { Button } from '@/Components/ui/button';
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from '@/Components/ui/sheet';
+import { Head, router, useForm } from '@inertiajs/react';
+import { Tags } from 'lucide-react';
+import { useState } from 'react';
 
-export default function ProductsIndex({ products, canManage }) {
+function CategorySelector({ categories, value, onChange, error, label = 'Categoría' }) {
+    const [search, setSearch] = useState('');
+    const selected = categories.find((c) => c.id === value) ?? null;
+
+    return (
+        <div>
+            <InputLabel value={label + ' (opcional)'} />
+            <div className="mt-1 rounded-md border border-gray-300 dark:border-slate-600">
+                <Command className="rounded-md">
+                    <CommandInput
+                        placeholder="Buscar categoría..."
+                        value={search}
+                        onValueChange={setSearch}
+                    />
+                    <CommandList className="max-h-40">
+                        {search.length > 0 && (
+                            <CommandEmpty>Sin resultados.</CommandEmpty>
+                        )}
+                        <CommandGroup>
+                            <CommandItem
+                                value="__none__"
+                                onSelect={() => {
+                                    onChange(null);
+                                    setSearch('');
+                                }}
+                            >
+                                <span className="text-muted-foreground">Sin categoría</span>
+                            </CommandItem>
+                            {categories.map((cat) => (
+                                <CommandItem
+                                    key={cat.id}
+                                    value={cat.name + ' ' + cat.slug}
+                                    onSelect={() => {
+                                        onChange(cat.id);
+                                        setSearch('');
+                                    }}
+                                >
+                                    <div className="flex flex-1 items-center justify-between">
+                                        <span>{cat.name}</span>
+                                        {cat.color && (
+                                            <span
+                                                className="size-3 rounded-full"
+                                                style={{ backgroundColor: cat.color }}
+                                            />
+                                        )}
+                                    </div>
+                                </CommandItem>
+                            ))}
+                        </CommandGroup>
+                    </CommandList>
+                </Command>
+            </div>
+            {selected && (
+                <p className="mt-1 text-xs text-muted-foreground">
+                    Seleccionada: <span className="font-medium">{selected.name}</span>
+                </p>
+            )}
+            <InputError className="mt-2" message={error} />
+        </div>
+    );
+}
+
+export default function ProductsIndex({ products, canManage, categories = [] }) {
     const rows = products?.data ?? [];
     const createForm = useForm({
         sku: '',
@@ -15,6 +98,7 @@ export default function ProductsIndex({ products, canManage }) {
         tax_rate: 0,
         unit: 'pieza',
         initial_branch_quantity: 0,
+        category_id: null,
     });
 
     const updateForm = useForm({
@@ -24,6 +108,7 @@ export default function ProductsIndex({ products, canManage }) {
         tax_rate: '',
         unit: '',
         is_active: true,
+        category_id: null,
     });
 
     const submitCreate = (e) => {
@@ -43,6 +128,7 @@ export default function ProductsIndex({ products, canManage }) {
             tax_rate: product.tax_rate,
             unit: product.unit,
             is_active: product.is_active,
+            category_id: product.category_id ?? null,
         });
     };
 
@@ -57,9 +143,38 @@ export default function ProductsIndex({ products, canManage }) {
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-slate-100">
-                    Catálogo de productos
-                </h2>
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold leading-tight text-foreground">
+                        Catálogo de productos
+                    </h2>
+                    {canManage && (
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                    <Tags className="size-4" />
+                                    Gestionar categorías
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent side="right" className="w-full sm:max-w-2xl overflow-y-auto">
+                                <SheetHeader>
+                                    <SheetTitle>Categorías de productos</SheetTitle>
+                                    <SheetDescription>
+                                        Crea, edita o elimina categorías. Los cambios se reflejan
+                                        automáticamente en el catálogo.
+                                    </SheetDescription>
+                                </SheetHeader>
+                                <div className="px-4 pb-4">
+                                    <CategoryManager
+                                        categories={categories}
+                                        canManage={canManage}
+                                        onMutate={() => router.reload({ only: ['categories'] })}
+                                        compact
+                                    />
+                                </div>
+                            </SheetContent>
+                        </Sheet>
+                    )}
+                </div>
             }
         >
             <Head title="Catálogo" />
@@ -87,6 +202,25 @@ export default function ProductsIndex({ products, canManage }) {
                                                     <p className="font-medium text-gray-900 dark:text-slate-100">
                                                         {product.name}
                                                     </p>
+                                                    {product.category && (
+                                                        <Badge
+                                                            className="mt-1"
+                                                            style={
+                                                                product.category.color
+                                                                    ? {
+                                                                          backgroundColor:
+                                                                              product.category.color + '20',
+                                                                          color: product.category.color,
+                                                                          borderColor:
+                                                                              product.category.color + '40',
+                                                                      }
+                                                                    : undefined
+                                                            }
+                                                            variant="outline"
+                                                        >
+                                                            {product.category.name}
+                                                        </Badge>
+                                                    )}
                                                     <p className="text-sm text-gray-600 dark:text-slate-400">
                                                         Código: {product.sku} · $
                                                         {product.price} · IVA{' '}
@@ -192,6 +326,12 @@ export default function ProductsIndex({ products, canManage }) {
                                                 message={createForm.errors.initial_branch_quantity}
                                             />
                                         </div>
+                                        <CategorySelector
+                                            categories={categories}
+                                            value={createForm.data.category_id}
+                                            onChange={(id) => createForm.setData('category_id', id)}
+                                            error={createForm.errors.category_id}
+                                        />
                                         <PrimaryButton disabled={createForm.processing}>
                                             Guardar
                                         </PrimaryButton>
@@ -235,6 +375,12 @@ export default function ProductsIndex({ products, canManage }) {
                                                 }
                                             />
                                         </div>
+                                        <CategorySelector
+                                            categories={categories}
+                                            value={updateForm.data.category_id}
+                                            onChange={(id) => updateForm.setData('category_id', id)}
+                                            error={updateForm.errors.category_id}
+                                        />
                                         <PrimaryButton disabled={updateForm.processing}>
                                             Actualizar
                                         </PrimaryButton>

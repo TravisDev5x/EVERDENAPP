@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductCategoryPageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPageController;
 use App\Http\Controllers\InventoryController;
@@ -63,6 +65,8 @@ Route::middleware(['auth', 'platform'])->prefix('platform')->name('platform.')->
 
 Route::middleware(['auth', 'tenant'])->group(function (): void {
     Route::get('/catalog/products', [ProductPageController::class, 'index'])->name('products.page');
+    Route::get('/catalog/categories', [ProductCategoryPageController::class, 'index'])
+        ->name('product-categories.page');
     Route::get('/inventory', [InventoryPageController::class, 'index'])->name('inventory.page');
     Route::get('/branches', [BranchPageController::class, 'index'])->name('branches.page');
     Route::get('/cash-registers', [CashRegisterPageController::class, 'index'])->name('cash-registers.page');
@@ -72,6 +76,14 @@ Route::middleware(['auth', 'tenant'])->group(function (): void {
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+    Route::get('/product-categories', [ProductCategoryController::class, 'index'])
+        ->name('product-categories.index');
+    Route::post('/product-categories', [ProductCategoryController::class, 'store'])
+        ->name('product-categories.store');
+    Route::patch('/product-categories/{product_category}', [ProductCategoryController::class, 'update'])
+        ->name('product-categories.update');
+    Route::delete('/product-categories/{product_category}', [ProductCategoryController::class, 'destroy'])
+        ->name('product-categories.destroy');
     Route::post('/inventory/products/{product}/adjust', [InventoryController::class, 'adjustStock'])->name('inventory.adjust');
     Route::patch('/inventory/products/{product}/policy', [InventoryController::class, 'updatePolicy'])->name('inventory.policy.update');
     Route::post('/inventory/alerts/{alert}/acknowledge', [InventoryController::class, 'acknowledgeAlert'])->name('inventory.alerts.ack');

@@ -15,6 +15,10 @@ class BelongsToCurrentTenant implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        if ($value === null || $value === '') {
+            return;
+        }
+
         $tenantId = $this->resolveTenantId();
 
         if ($tenantId === null) {
