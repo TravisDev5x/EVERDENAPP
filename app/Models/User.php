@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['tenant_id', 'branch_id', 'role_id', 'name', 'email', 'password', 'google_id', 'is_platform_operator'])]
+#[Fillable(['tenant_id', 'branch_id', 'role_id', 'name', 'email', 'password', 'google_id', 'is_platform_operator', 'suspended_at', 'suspension_reason'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -29,6 +29,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_platform_operator' => 'boolean',
+            'suspended_at' => 'datetime',
         ];
     }
 
@@ -89,7 +90,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @param list<string> $permissions
+     * @param  list<string>  $permissions
      */
     public function hasAnyPermission(array $permissions): bool
     {

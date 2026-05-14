@@ -40,6 +40,10 @@ class EnsureTenantContext
             return redirect()->route('account.suspended');
         }
 
+        if ($user->suspended_at !== null) {
+            return redirect()->route('account.suspended');
+        }
+
         // BelongsToTenant resuelve el tenant vía TenantContext o current_tenant_id. Sin esto,
         // el global scope devuelve 0 filas y crear Branch dispara LogicException antes de setear contexto.
         app()->instance('current_tenant_id', (int) $user->tenant_id);

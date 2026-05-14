@@ -1,14 +1,8 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import AppearanceToggle from '@/Components/AppearanceToggle';
 import SkipToContent from '@/Components/SkipToContent';
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from '@/Components/ui/badge';
+import { Button } from '@/Components/ui/button';
 import {
     Card,
     CardContent,
@@ -16,8 +10,8 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+} from '@/Components/ui/card';
+import { Separator } from '@/Components/ui/separator';
 import { cn } from '@/lib/utils';
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
@@ -284,14 +278,15 @@ export default function Welcome({ canLogin, canRegister }) {
             <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
                 <SkipToContent />
                 <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden>
-                    <div className="absolute -left-40 top-0 h-[28rem] w-[28rem] rounded-full bg-emerald-400/25 blur-3xl dark:bg-emerald-500/12" />
-                    <div className="absolute -right-24 top-1/4 h-96 w-96 rounded-full bg-teal-400/20 blur-3xl dark:bg-teal-500/10" />
-                    <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-green-700/15 blur-3xl dark:bg-green-700/15" />
-                    <div className="absolute bottom-1/4 right-1/4 h-48 w-48 rounded-full bg-emerald-500/10 blur-2xl dark:bg-emerald-500/10" />
+                    {/* Capas decorativas con blur moderado: menos costo de pintura que blur-3xl masivo */}
+                    <div className="absolute -left-40 top-0 h-[28rem] w-[28rem] rounded-full bg-emerald-400/20 blur-2xl dark:bg-emerald-500/10" />
+                    <div className="absolute -right-24 top-1/4 h-96 w-96 rounded-full bg-teal-400/15 blur-2xl dark:bg-teal-500/10" />
+                    <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-green-700/12 blur-2xl dark:bg-green-700/12" />
+                    <div className="absolute bottom-1/4 right-1/4 h-48 w-48 rounded-full bg-emerald-500/8 blur-xl dark:bg-emerald-500/8" />
                 </div>
 
                 <div className="relative">
-                    <header className="sticky top-0 z-40 border-b border-slate-200/90 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85">
+                    <header className="sticky top-0 z-40 border-b border-slate-200/90 bg-white/92 backdrop-blur-md dark:border-white/10 dark:bg-slate-950/92 supports-[backdrop-filter]:bg-white/80 supports-[backdrop-filter]:dark:bg-slate-950/80">
                         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
                             <div className="flex flex-wrap items-center justify-between gap-4">
                                 <a
@@ -369,10 +364,10 @@ export default function Welcome({ canLogin, canRegister }) {
                                     variant="outline"
                                     className="inline-flex items-center gap-2 rounded-full border-emerald-500/35 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium normal-case text-emerald-900 dark:border-emerald-500/25 dark:text-emerald-300"
                                 >
-                                    <span className="relative flex h-2 w-2">
-                                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                                        <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-                                    </span>
+                                    <span
+                                        className="inline-flex h-2 w-2 rounded-full bg-emerald-500 motion-safe:animate-pulse"
+                                        aria-hidden
+                                    />
                                     Ecosistema activo · Infraestructura en operación
                                 </Badge>
                                 <h1 className="mt-6 text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
@@ -750,7 +745,7 @@ export default function Welcome({ canLogin, canRegister }) {
                             </div>
                         </section>
 
-                        {/* FAQ */}
+                        {/* FAQ — <details> nativo evita cargar Radix Accordion en esta página */}
                         <section
                             id="faq"
                             className={`border-t border-slate-200 bg-slate-50/80 py-20 dark:border-white/10 dark:bg-slate-950/50 ${SECTION_SCROLL_CLASS}`}
@@ -763,19 +758,28 @@ export default function Welcome({ canLogin, canRegister }) {
                                     Lo que tu equipo debería saber antes de poner en marcha la operación en {brand}.
                                 </p>
                                 <Card className="mt-10 border-slate-200 bg-white dark:border-white/10 dark:bg-slate-900/60">
-                                    <CardContent className="px-2 pt-6 sm:px-4">
-                                        <Accordion type="single" collapsible className="w-full">
-                                            {FAQ_ITEMS.map((item, index) => (
-                                                <AccordionItem key={item.q} value={`faq-${index}`}>
-                                                    <AccordionTrigger className="px-2 text-left font-semibold text-slate-900 dark:text-white">
-                                                        {item.q}
-                                                    </AccordionTrigger>
-                                                    <AccordionContent className="px-2 text-slate-600 dark:text-slate-400">
-                                                        {item.a}
-                                                    </AccordionContent>
-                                                </AccordionItem>
-                                            ))}
-                                        </Accordion>
+                                    <CardContent className="space-y-2 px-2 pt-6 sm:px-4">
+                                        {FAQ_ITEMS.map((item) => (
+                                            <details
+                                                key={item.q}
+                                                className="group rounded-lg border border-slate-200 bg-slate-50/50 px-3 py-1 open:bg-white open:shadow-xs dark:border-white/10 dark:bg-slate-950/40 dark:open:bg-slate-900/80"
+                                            >
+                                                <summary className="cursor-pointer list-none py-3 pr-8 font-semibold text-slate-900 outline-none marker:hidden [&::-webkit-details-marker]:hidden dark:text-white">
+                                                    <span className="relative flex items-start justify-between gap-3">
+                                                        <span className="min-w-0 flex-1">{item.q}</span>
+                                                        <span
+                                                            className="mt-0.5 shrink-0 text-slate-400 text-xs tabular-nums dark:text-slate-500"
+                                                            aria-hidden
+                                                        >
+                                                            +
+                                                        </span>
+                                                    </span>
+                                                </summary>
+                                                <div className="border-t border-slate-100 pb-4 pt-2 text-sm leading-relaxed text-slate-600 dark:border-white/10 dark:text-slate-400">
+                                                    {item.a}
+                                                </div>
+                                            </details>
+                                        ))}
                                     </CardContent>
                                 </Card>
                             </div>

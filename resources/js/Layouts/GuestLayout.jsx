@@ -1,10 +1,10 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import AppearanceToggle from '@/Components/AppearanceToggle';
 import SkipToContent from '@/Components/SkipToContent';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/Components/ui/alert';
+import { Badge } from '@/Components/ui/badge';
+import { Button } from '@/Components/ui/button';
+import { Card, CardContent } from '@/Components/ui/card';
 import { cn } from '@/lib/utils';
 import { Link, usePage } from '@inertiajs/react';
 

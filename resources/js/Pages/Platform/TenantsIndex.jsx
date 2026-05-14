@@ -1,11 +1,11 @@
 import Pagination from '@/Components/Pagination';
-import PlatformLayout from '@/Layouts/PlatformLayout';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, router, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import { Fragment, useState } from 'react';
 
 function limitLabel(v) {
@@ -103,13 +103,13 @@ export default function TenantsIndex({ tenants }) {
     };
 
     return (
-        <PlatformLayout
+        <AuthenticatedLayout
             header={
                 <div>
-                    <h1 className="text-xl font-semibold text-gray-900 dark:text-slate-100">
+                    <h1 className="text-xl font-semibold text-foreground">
                         Directorio de negocios
                     </h1>
-                    <p className="mt-1 text-sm text-gray-600 dark:text-slate-400">
+                    <p className="mt-1 text-sm text-muted-foreground">
                         Datos generales, plan y límites. Si suspendes un negocio, nadie de ese equipo podrá entrar
                         hasta que lo reactives.
                     </p>
@@ -213,6 +213,12 @@ export default function TenantsIndex({ tenants }) {
                                                 >
                                                     Editar datos
                                                 </SecondaryButton>
+                                                <Link
+                                                    href={route('platform.tenants.users', t.id)}
+                                                    className="inline-flex items-center rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground shadow-xs hover:bg-muted"
+                                                >
+                                                    Usuarios
+                                                </Link>
                                                 <SecondaryButton
                                                     type="button"
                                                     className="text-xs"
@@ -352,6 +358,6 @@ export default function TenantsIndex({ tenants }) {
                 </div>
                 <Pagination className="mt-6" resource={tenants} />
             </div>
-        </PlatformLayout>
+        </AuthenticatedLayout>
     );
 }

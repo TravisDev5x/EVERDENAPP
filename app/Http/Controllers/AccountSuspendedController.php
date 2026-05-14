@@ -26,6 +26,14 @@ class AccountSuspendedController extends Controller
             abort(403);
         }
 
+        if ($user->suspended_at !== null) {
+            return Inertia::render('Account/Suspended', [
+                'suspensionScope' => 'user',
+                'tenantDisplayName' => null,
+                'suspensionReason' => $user->suspension_reason,
+            ]);
+        }
+
         $tenant = Tenant::query()->find($user->tenant_id);
 
         if ($tenant === null) {
@@ -37,6 +45,7 @@ class AccountSuspendedController extends Controller
         }
 
         return Inertia::render('Account/Suspended', [
+            'suspensionScope' => 'tenant',
             'tenantDisplayName' => $tenant->trade_name ?? $tenant->name,
             'suspensionReason' => $tenant->suspension_reason,
         ]);

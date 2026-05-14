@@ -1,10 +1,10 @@
 import InputError from '@/Components/InputError';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/Components/ui/button';
+import { Card, CardContent } from '@/Components/ui/card';
+import { Checkbox } from '@/Components/ui/checkbox';
+import { Input } from '@/Components/ui/input';
+import { Label } from '@/Components/ui/label';
 import { cn } from '@/lib/utils';
 import { Head, Link, useForm } from '@inertiajs/react';
 

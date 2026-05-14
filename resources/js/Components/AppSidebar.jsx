@@ -13,9 +13,10 @@ import {
     SidebarMenuItem,
     SidebarRail,
     useSidebar,
-} from '@/components/ui/sidebar';
+} from '@/Components/ui/sidebar';
 import { Link } from '@inertiajs/react';
 import {
+    ArrowLeftRight,
     BarChart3,
     Building2,
     Coins,
@@ -29,6 +30,7 @@ import {
     ShoppingBag,
     ShoppingCart,
     Tags,
+    TrendingUp,
     Users,
 } from 'lucide-react';
 
@@ -77,13 +79,23 @@ export default function AppSidebar({
             <SidebarContent>
                 {isPlatformOperator ? (
                     <SidebarGroup>
+                        <SidebarGroupLabel>Plataforma</SidebarGroupLabel>
                         <SidebarGroupContent>
                             <SidebarMenu>
                                 <NavLink
                                     href={route('platform.tenants.index')}
-                                    active={route().current('platform.tenants.index')}
-                                    label="Plataforma"
+                                    active={
+                                        route().current('platform.tenants.index') ||
+                                        route().current('platform.tenants.users')
+                                    }
+                                    label="Negocios"
                                     icon={Building2}
+                                />
+                                <NavLink
+                                    href={route('platform.finance.plans')}
+                                    active={route().current('platform.finance.plans')}
+                                    label="Planes e ingresos"
+                                    icon={TrendingUp}
                                 />
                             </SidebarMenu>
                         </SidebarGroupContent>
@@ -138,6 +150,12 @@ export default function AppSidebar({
                                             icon={Landmark}
                                         />
                                     ) : null}
+                                    <NavLink
+                                        href={route('inventory.transfers.page')}
+                                        active={route().current('inventory.transfers.page')}
+                                        label="Transferencias"
+                                        icon={ArrowLeftRight}
+                                    />
                                     <NavLink
                                         href={route('reports.daily')}
                                         active={route().current('reports.daily')}

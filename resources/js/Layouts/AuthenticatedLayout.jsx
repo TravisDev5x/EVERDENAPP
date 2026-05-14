@@ -6,8 +6,8 @@ import {
     SidebarProvider,
     SidebarTrigger,
     useSidebar,
-} from '@/components/ui/sidebar';
-import { TooltipProvider } from '@/components/ui/tooltip';
+} from '@/Components/ui/sidebar';
+import { TooltipProvider } from '@/Components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
@@ -32,7 +32,7 @@ export default function AuthenticatedLayout({ header, children }) {
     const canViewTeamRoles = permissionKeys.includes('team.roles.view');
     const canViewBranches = permissionKeys.includes('branches.view');
     const canViewCustody = permissionKeys.includes('customer-custody.view');
-    const tenantTitle = props.tenant?.name ?? 'Tu tienda';
+    const tenantTitle = isPlatformOperator ? 'Plataforma' : (props.tenant?.name ?? 'Tu tienda');
     const flash = props.flash ?? {};
 
     return (

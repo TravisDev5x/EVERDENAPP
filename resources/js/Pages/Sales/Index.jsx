@@ -8,6 +8,9 @@ import EvSwipeAction from '@/Components/EvSwipeAction';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
+import PosStepsProgress from '@/Pages/Sales/PosStepsProgress';
+import PosTopbar from '@/Pages/Sales/PosTopbar';
+import { salePayloadForBroadcast } from '@/Pages/Sales/saleBroadcast';
 import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/Components/ui/collapsible';
@@ -18,7 +21,6 @@ import { cn } from '@/lib/utils';
 import { formatMxn } from '@/lib/money';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import {
-    Check,
     ChevronDown,
     MoreHorizontal,
     Printer,
@@ -27,57 +29,6 @@ import {
     Trash2,
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-
-function salePayloadForBroadcast(s) {
-    if (!s) return null;
-    return {
-        id: s.id,
-        status: s.status,
-        payment_status: s.payment_status,
-        subtotal: s.subtotal,
-        tax_total: s.tax_total,
-        total: s.total,
-        items: (s.items || []).map((i) => ({
-            id: i.id,
-            product_name: i.product_name,
-            product_sku: i.product_sku,
-            quantity: i.quantity,
-            line_total: i.line_total,
-        })),
-    };
-}
-
-function PosTopbar({ branches, activeBranchId, onChangeBranch, cashSession }) {
-    const registerName = cashSession?.cash_register?.name ?? 'Caja';
-
-    return (
-        <div className="flex h-12 shrink-0 items-center gap-3 border-b border-border bg-background px-4">
-            <select
-                aria-label="Tienda activa"
-                className="h-8 rounded-md border border-border bg-background px-2 text-sm text-foreground shadow-xs focus:outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40"
-                value={activeBranchId}
-                onChange={onChangeBranch}
-            >
-                {branches.map((branch) => (
-                    <option key={branch.id} value={branch.id}>
-                        {branch.name}
-                        {branch.city ? ` - ${branch.city}` : ''}
-                        {branch.is_main ? ' (Matriz)' : ''}
-                    </option>
-                ))}
-            </select>
-            <div className="flex-1" />
-            {cashSession ? (
-                <Badge variant="secondary" className="gap-1.5">
-                    <span className="inline-block size-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-                    Turno #{cashSession.id} · {registerName}
-                </Badge>
-            ) : (
-                <Badge variant="destructive">Caja cerrada</Badge>
-            )}
-        </div>
-    );
-}
 
 export default function SalesIndex({
     products,
@@ -384,13 +335,6 @@ export default function SalesIndex({
               ? 3
               : 1;
 
-    const steps = [
-        { num: 1, label: 'Escanear' },
-        { num: 2, label: 'Confirmar' },
-        { num: 3, label: 'Cobrar' },
-        { num: 4, label: 'Listo' },
-    ];
-
     return (
         <AuthenticatedLayout>
             <Head title="Punto de venta" />
@@ -405,56 +349,7 @@ export default function SalesIndex({
 
                 <div className="grid flex-1 overflow-hidden lg:grid-cols-[1fr_360px]">
                     <div className="flex min-w-0 flex-col overflow-hidden">
-                        <div className="flex items-center gap-2 border-b border-border px-4 py-2">
-                            {steps.map((step, i) => {
-                                const done = step.num < activeStep;
-                                const active = step.num === activeStep;
-                                return (
-                                    <div key={step.num} className="flex items-center gap-2">
-                                        {i > 0 ? (
-                                            <div className="h-px w-6 shrink-0 bg-border" aria-hidden="true" />
-                                        ) : null}
-                                        {done && (
-                                            <div className="flex items-center gap-1.5">
-                                                <div
-                                                    className="flex size-5 items-center justify-center rounded-full bg-primary"
-                                                    aria-hidden="true"
-                                                >
-                                                    <Check className="size-3 text-primary-foreground" />
-                                                </div>
-                                            </div>
-                                        )}
-                                        {active && (
-                                            <div className="flex items-center gap-1.5">
-                                                <div
-                                                    className="flex size-5 items-center justify-center rounded-full bg-primary"
-                                                    aria-hidden="true"
-                                                >
-                                                    <span className="text-xs font-medium text-primary-foreground">
-                                                        {step.num}
-                                                    </span>
-                                                </div>
-                                                <span className="text-sm font-medium text-foreground">
-                                                    {step.label}
-                                                </span>
-                                            </div>
-                                        )}
-                                        {!done && !active && (
-                                            <div className="flex items-center">
-                                                <div
-                                                    className="flex size-5 items-center justify-center rounded-full border border-border"
-                                                    aria-hidden="true"
-                                                >
-                                                    <span className="text-xs text-muted-foreground">
-                                                        {step.num}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
+                        <PosStepsProgress activeStep={activeStep} />
 
                         <div className="flex-1 overflow-y-auto" data-slot="cart-list">
                             {!sale ? (

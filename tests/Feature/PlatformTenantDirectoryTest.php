@@ -26,6 +26,52 @@ class PlatformTenantDirectoryTest extends TestCase
         $this->actingAs($user)->get(route('platform.tenants.index'))->assertForbidden();
     }
 
+    public function test_platform_can_view_plan_finance_dashboard(): void
+    {
+        Tenant::factory()->create([
+            'is_active' => true,
+            'plan_slug' => 'standard',
+        ]);
+        Tenant::factory()->create([
+            'is_active' => true,
+            'plan_slug' => 'pro',
+        ]);
+        $platform = User::factory()->platformOperator()->create();
+
+        $this->actingAs($platform)->get(route('platform.finance.plans'))->assertOk();
+    }
+
+    public function test_tenant_user_cannot_access_platform_finance(): void
+    {
+        $tenant = Tenant::factory()->create();
+        $user = User::factory()->forRoleSlug('admin')->create(['tenant_id' => $tenant->id]);
+
+        $this->actingAs($user)->get(route('platform.finance.plans'))->assertForbidden();
+    }
+
+    public function test_platform_can_list_tenant_users_and_suspend_member(): void
+    {
+        $tenant = Tenant::factory()->create(['is_active' => true]);
+        $member = User::factory()->forRoleSlug('cajero')->create(['tenant_id' => $tenant->id]);
+        $platform = User::factory()->platformOperator()->create();
+
+        $this->actingAs($platform)->get(route('platform.tenants.users', $tenant->id))->assertOk();
+
+        $this->actingAs($platform)->patch(route('platform.tenants.users.suspend', [$tenant->id, $member->id]), [
+            'reason' => 'Incumplimiento interno',
+        ])->assertRedirect();
+
+        $member->refresh();
+        $this->assertNotNull($member->suspended_at);
+
+        $this->actingAs($member)->get(route('dashboard'))->assertRedirect(route('account.suspended'));
+
+        $this->actingAs($platform)->patch(route('platform.tenants.users.activate', [$tenant->id, $member->id]))->assertRedirect();
+
+        $member->refresh();
+        $this->assertNull($member->suspended_at);
+    }
+
     public function test_suspended_tenant_user_is_redirected_from_dashboard_to_suspended_screen(): void
     {
         $tenant = Tenant::factory()->create(['is_active' => true]);

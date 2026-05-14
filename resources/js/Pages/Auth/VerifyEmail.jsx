@@ -1,6 +1,6 @@
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/Components/ui/alert';
+import { Button } from '@/Components/ui/button';
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function VerifyEmail({ status }) {

@@ -1,9 +1,9 @@
 import InputError from '@/Components/InputError';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/Components/ui/alert';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
+import { Label } from '@/Components/ui/label';
 import { cn } from '@/lib/utils';
 import { Head, Link, useForm } from '@inertiajs/react';
 
