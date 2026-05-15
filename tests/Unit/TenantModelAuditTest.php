@@ -13,6 +13,9 @@ class TenantModelAuditTest extends TestCase
         \App\Models\User::class,
         \App\Models\Tenant::class,
         \App\Models\Permission::class,
+        // Plan: modelo global de plataforma, los planes no pertenecen
+        // a ningún tenant — son compartidos por todos los negocios.
+        \App\Models\Plan::class,
     ];
 
     #[Test]
