@@ -57,7 +57,7 @@ export default function TeamRoles({
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                <h2 className="text-xl font-semibold leading-tight text-foreground">
                     Equipo · Roles y matriz
                 </h2>
             }
@@ -66,8 +66,8 @@ export default function TeamRoles({
 
             <div className="py-8">
                 <div className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
-                    <div className="rounded-lg bg-white p-6 shadow-xs">
-                        <p className="text-sm text-gray-600">
+                    <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
+                        <p className="text-sm text-muted-foreground">
                             Matriz de permisos por rol. Los permisos se definen en codigo (
                             <code className="text-xs">App\Support\Permissions</code>
                             ) y se asignan a cada rol. Version demo: edicion completa si tienes permiso.
@@ -75,8 +75,8 @@ export default function TeamRoles({
                     </div>
 
                     {canManageRoles && (
-                        <div className="rounded-lg bg-white p-6 shadow-xs">
-                            <h3 className="mb-3 text-lg font-semibold">Crear rol personalizado</h3>
+                        <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
+                            <h3 className="mb-3 text-lg font-semibold text-foreground">Crear rol personalizado</h3>
                             <form className="grid gap-3 sm:grid-cols-2" onSubmit={submitCreate}>
                                 <div>
                                     <InputLabel value="Nombre" />
@@ -113,16 +113,18 @@ export default function TeamRoles({
                         </div>
                     )}
 
-                    <div className="overflow-x-auto rounded-lg bg-white p-6 shadow-xs">
-                        <h3 className="mb-4 text-lg font-semibold">Matriz permisos × roles</h3>
-                        <table className="min-w-full border-collapse text-left text-xs">
+                    <div className="overflow-x-auto rounded-xl border border-border bg-card p-6 shadow-xs">
+                        <h3 className="mb-4 text-lg font-semibold text-foreground">Matriz permisos × roles</h3>
+                        <table className="min-w-full border-collapse border border-border text-left text-xs">
                             <thead>
                                 <tr>
-                                    <th className="sticky left-0 border bg-white p-2">Permiso</th>
+                                    <th className="sticky left-0 z-20 border border-border border-r-2 border-r-border bg-card p-2">
+                                        Permiso
+                                    </th>
                                     {matrix.map((role) => (
                                         <th
                                             key={role.id}
-                                            className="min-w-[160px] max-w-[220px] border p-2 align-top text-left"
+                                            className="min-w-[160px] max-w-[220px] border border-border p-2 align-top text-left"
                                         >
                                             <RoleColumnHeader
                                                 role={role}
@@ -139,22 +141,22 @@ export default function TeamRoles({
                                         <tr>
                                             <td
                                                 colSpan={matrix.length + 1}
-                                                className="bg-gray-50 p-2 font-semibold text-gray-800"
+                                                className="bg-muted/80 p-2 font-semibold text-foreground"
                                             >
                                                 {group}
                                             </td>
                                         </tr>
                                         {(permissionsGrouped[group] || []).map((perm) => (
                                             <tr key={perm.key}>
-                                                <td className="sticky left-0 border bg-white p-2">
-                                                    <div className="font-medium text-gray-800">{perm.label}</div>
-                                                    <div className="text-[10px] text-gray-500">{perm.key}</div>
+                                                <td className="sticky left-0 z-10 border border-border border-r-2 border-r-border bg-card p-2">
+                                                    <div className="font-medium text-foreground">{perm.label}</div>
+                                                    <div className="text-[10px] text-muted-foreground">{perm.key}</div>
                                                 </td>
                                                 {matrix.map((role) => (
-                                                    <td key={`${role.id}-${perm.key}`} className="border p-1 text-center">
+                                                    <td key={`${role.id}-${perm.key}`} className="border border-border p-1 text-center">
                                                         <input
                                                             type="checkbox"
-                                                            className="rounded border-gray-300"
+                                                            className="rounded border-border text-primary focus:ring-ring"
                                                             checked={(selections[role.id] || []).includes(perm.key)}
                                                             onChange={() => togglePerm(role.id, perm.key)}
                                                             disabled={!canManageRoles}
@@ -169,8 +171,8 @@ export default function TeamRoles({
                         </table>
                     </div>
 
-                    <div className="rounded-lg bg-white p-6 shadow-xs text-xs text-gray-500">
-                        <p className="font-semibold text-gray-700">Modularidad</p>
+                    <div className="rounded-xl border border-border bg-card p-6 text-xs text-muted-foreground shadow-xs">
+                        <p className="font-semibold text-foreground">Modularidad</p>
                         <ul className="mt-2 list-inside list-disc space-y-1">
                             <li>Catalogo de permisos centralizado en backend.</li>
                             <li>Roles por tenant; roles de sistema no se eliminan.</li>
@@ -230,7 +232,7 @@ function RoleColumnHeader({ role, canManageRoles, onSavePermissions }) {
                     <div>
                         <InputLabel value="Descripcion" className="text-[10px]" />
                         <textarea
-                            className="mt-0.5 w-full rounded-md border-gray-300 text-xs shadow-xs focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
+                            className="mt-0.5 w-full rounded-lg border border-border bg-background px-2 py-1.5 text-xs text-foreground shadow-xs focus-visible:border-ring focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40"
                             rows={2}
                             value={form.data.description}
                             onChange={(e) => form.setData('description', e.target.value)}
@@ -262,14 +264,14 @@ function RoleColumnHeader({ role, canManageRoles, onSavePermissions }) {
             {canManageRoles && role.is_system && (
                 <form className="space-y-1" onSubmit={submitMeta}>
                     <div className="text-center">
-                        <div className="font-semibold text-gray-900">{role.name}</div>
-                        <div className="font-normal text-gray-500">{role.slug}</div>
+                        <div className="font-semibold text-foreground">{role.name}</div>
+                        <div className="font-normal text-muted-foreground">{role.slug}</div>
                         <span className="text-[10px] text-amber-700">sistema</span>
                     </div>
                     <div>
                         <InputLabel value="Descripcion" className="text-[10px]" />
                         <textarea
-                            className="mt-0.5 w-full rounded-md border-gray-300 text-xs shadow-xs focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"
+                            className="mt-0.5 w-full rounded-lg border border-border bg-background px-2 py-1.5 text-xs text-foreground shadow-xs focus-visible:border-ring focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40"
                             rows={2}
                             value={form.data.description}
                             onChange={(e) => form.setData('description', e.target.value)}
@@ -297,8 +299,8 @@ function RoleColumnHeader({ role, canManageRoles, onSavePermissions }) {
 
             {!canManageRoles && (
                 <div className="text-center">
-                    <div className="font-semibold text-gray-900">{role.name}</div>
-                    <div className="font-normal text-gray-500">{role.slug}</div>
+                    <div className="font-semibold text-foreground">{role.name}</div>
+                    <div className="font-normal text-muted-foreground">{role.slug}</div>
                     {role.is_system && <span className="text-[10px] text-amber-700">sistema</span>}
                 </div>
             )}

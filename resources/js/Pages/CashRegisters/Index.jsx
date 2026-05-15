@@ -64,7 +64,7 @@ export default function CashRegistersIndex({ cashRegisters, activeBranchId, canM
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                <h2 className="text-xl font-semibold leading-tight text-foreground">
                     Cajas registradoras
                 </h2>
             }
@@ -73,19 +73,19 @@ export default function CashRegistersIndex({ cashRegisters, activeBranchId, canM
 
             <div className="py-8">
                 <div className="mx-auto max-w-5xl space-y-6 px-4 sm:px-6 lg:px-8">
-                    <div className="rounded-lg bg-white p-6 shadow-xs">
-                        <p className="text-sm text-gray-600">
+                    <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
+                        <p className="text-sm text-muted-foreground">
                             Cajas de la sucursal activa (#{activeBranchId}). Los cobros en punto de venta usan una de
                             estas cajas.
                         </p>
                         {errors?.delete && (
-                            <p className="mt-2 text-sm text-red-600">{errors.delete}</p>
+                            <p className="mt-2 text-sm font-medium text-destructive">{errors.delete}</p>
                         )}
                     </div>
 
                     {canManage && (
-                        <div className="rounded-lg bg-white p-6 shadow-xs">
-                            <h3 className="mb-3 text-lg font-semibold text-gray-900">Nueva caja</h3>
+                        <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
+                            <h3 className="mb-3 text-lg font-semibold text-foreground">Nueva caja</h3>
                             <form className="grid gap-3 sm:grid-cols-2" onSubmit={submitCreate}>
                                 <div className="sm:col-span-2">
                                     <InputLabel value="Nombre" />
@@ -127,7 +127,7 @@ export default function CashRegistersIndex({ cashRegisters, activeBranchId, canM
                                         checked={createForm.data.is_active}
                                         onChange={(e) => createForm.setData('is_active', e.target.checked)}
                                     />
-                                    <label htmlFor="cr-new-active" className="text-sm text-gray-700">
+                                    <label htmlFor="cr-new-active" className="text-sm text-foreground">
                                         Activa
                                     </label>
                                 </div>
@@ -140,22 +140,22 @@ export default function CashRegistersIndex({ cashRegisters, activeBranchId, canM
                         </div>
                     )}
 
-                    <div className="overflow-hidden rounded-lg bg-white shadow-xs">
-                        <div className="border-b border-gray-100 px-6 py-4">
-                            <h3 className="text-lg font-semibold text-gray-900">Listado</h3>
+                    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-xs">
+                        <div className="border-b border-border px-6 py-4">
+                            <h3 className="text-lg font-semibold text-foreground">Listado</h3>
                         </div>
-                        <ul className="divide-y divide-gray-100">
+                        <ul className="divide-y divide-border">
                             {cashRegisters.map((row) => (
                                 <li key={row.id} className="px-6 py-4">
                                     <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                                         <div>
-                                            <p className="font-medium text-gray-900">{row.name}</p>
-                                            <p className="text-xs text-gray-500">
+                                            <p className="font-medium text-foreground">{row.name}</p>
+                                            <p className="text-xs text-muted-foreground">
                                                 Código: {row.code || '—'} · Orden: {row.sort_order} ·{' '}
                                                 {row.is_active ? (
-                                                    <span className="text-emerald-700">Activa</span>
+                                                    <span className="text-primary">Activa</span>
                                                 ) : (
-                                                    <span className="text-gray-600">Inactiva</span>
+                                                    <span className="text-muted-foreground">Inactiva</span>
                                                 )}
                                             </p>
                                         </div>
@@ -176,8 +176,8 @@ export default function CashRegistersIndex({ cashRegisters, activeBranchId, canM
                     </div>
 
                     {canManage && updateForm.data.id && (
-                        <div className="rounded-lg border border-indigo-100 bg-indigo-50/40 p-6 shadow-xs">
-                            <h3 className="mb-3 text-lg font-semibold text-gray-900">Editar caja #{updateForm.data.id}</h3>
+                        <div className="rounded-xl border border-primary/25 bg-primary/5 p-6 shadow-xs">
+                            <h3 className="mb-3 text-lg font-semibold text-foreground">Editar caja #{updateForm.data.id}</h3>
                             <form className="grid gap-3 sm:grid-cols-2" onSubmit={submitUpdate}>
                                 <div className="sm:col-span-2">
                                     <InputLabel value="Nombre" />
@@ -217,7 +217,7 @@ export default function CashRegistersIndex({ cashRegisters, activeBranchId, canM
                                         checked={updateForm.data.is_active}
                                         onChange={(e) => updateForm.setData('is_active', e.target.checked)}
                                     />
-                                    <label htmlFor="cr-edit-active" className="text-sm text-gray-700">
+                                    <label htmlFor="cr-edit-active" className="text-sm text-foreground">
                                         Activa
                                     </label>
                                 </div>

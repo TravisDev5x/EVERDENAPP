@@ -24,7 +24,7 @@ import { Trash2 } from 'lucide-react';
  */
 const TONE_CLASSES = {
     destructive: 'bg-red-600 text-white',
-    confirm: 'bg-emerald-600 text-white',
+    confirm: 'bg-primary text-primary-foreground',
     warning: 'bg-amber-500 text-amber-950',
 };
 

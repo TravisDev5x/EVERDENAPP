@@ -27,15 +27,14 @@ export default function GuestLayout({
         'EVERDEN';
 
     const linkClass = cn(
-        'font-medium text-emerald-700 underline-offset-4 hover:text-emerald-600 hover:underline',
-        'dark:text-emerald-400 dark:hover:text-emerald-300',
+        'font-medium text-primary underline-offset-4 hover:text-primary/90 hover:underline',
     );
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
             <SkipToContent />
             <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden>
-                <div className="absolute -left-40 top-0 h-[28rem] w-[28rem] rounded-full bg-emerald-400/25 blur-3xl dark:bg-emerald-500/12" />
+                <div className="absolute -left-40 top-0 h-[28rem] w-[28rem] rounded-full bg-slate-400/20 blur-3xl dark:bg-slate-600/15" />
                 <div className="absolute -right-24 top-1/4 h-96 w-96 rounded-full bg-cyan-400/20 blur-3xl dark:bg-cyan-500/10" />
                 <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-indigo-400/15 blur-3xl dark:bg-indigo-500/10" />
             </div>
@@ -45,7 +44,7 @@ export default function GuestLayout({
                     <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
                         <Link
                             href="/"
-                            className="flex min-w-0 items-center gap-3 rounded-xl outline-hidden ring-emerald-500/0 transition focus-visible:ring-2 focus-visible:ring-emerald-500"
+                            className="flex min-w-0 items-center gap-3 rounded-xl outline-hidden ring-ring/0 transition focus-visible:ring-2 focus-visible:ring-ring"
                         >
                             <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 shadow-lg shadow-emerald-500/25 ring-1 ring-white/20 dark:ring-white/10">
                                 <ApplicationLogo className="h-8 w-8 fill-white opacity-95" />
@@ -72,7 +71,7 @@ export default function GuestLayout({
                     <div className="mb-10 hidden lg:flex lg:mb-0 lg:w-[42%] lg:flex-col lg:justify-center">
                         <Badge
                             variant="outline"
-                            className="w-fit rounded-full border-emerald-500/35 bg-emerald-500/10 px-3 py-1 text-xs font-medium normal-case text-emerald-900 dark:border-emerald-500/25 dark:text-emerald-300"
+                            className="w-fit rounded-full border-primary/25 bg-primary/10 px-3 py-1 text-xs font-medium normal-case text-foreground"
                         >
                             Acceso seguro
                         </Badge>
@@ -85,7 +84,7 @@ export default function GuestLayout({
                         <ul className="mt-10 space-y-4 text-sm text-slate-600 dark:text-slate-400">
                             <li className="flex gap-3">
                                 <span
-                                    className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-emerald-500"
+                                    className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary"
                                     aria-hidden
                                 />
                                 Misma cuenta para todas las pantallas del negocio.
@@ -117,11 +116,11 @@ export default function GuestLayout({
                             </p>
                         </div>
                         <div className="relative">
-                            <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-emerald-500/15 via-transparent to-cyan-500/15 opacity-80 dark:from-emerald-500/10" />
+                            <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-border/80 via-transparent to-muted/40 opacity-80 dark:from-white/5 dark:to-muted/20" />
                             <Card
                                 id="main-content"
                                 tabIndex={-1}
-                                className="relative gap-0 overflow-hidden rounded-2xl border-border bg-card/95 p-0 shadow-xl shadow-slate-900/5 outline-hidden ring-1 ring-border backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-4 focus-visible:ring-offset-background dark:shadow-slate-950/40"
+                                className="relative gap-0 overflow-hidden rounded-2xl border-border bg-card/95 p-0 shadow-xl shadow-slate-900/5 outline-hidden ring-1 ring-border backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background dark:shadow-slate-950/40"
                             >
                                 <CardContent className="p-6 sm:p-8">
                                     {flash?.error ? (
@@ -131,7 +130,7 @@ export default function GuestLayout({
                                     ) : null}
                                     {flash?.success ? (
                                         <Alert
-                                            className="mb-6 border-emerald-500/30 bg-emerald-500/10 text-emerald-900 dark:text-emerald-200"
+                                            className="mb-6 border-primary/25 bg-primary/5 text-foreground dark:border-primary/20 dark:bg-primary/10"
                                             role="status"
                                         >
                                             <AlertDescription className="text-current">

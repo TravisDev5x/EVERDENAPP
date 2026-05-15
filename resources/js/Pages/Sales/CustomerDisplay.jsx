@@ -73,7 +73,7 @@ export default function CustomerDisplay({
 
             <div className="flex min-h-screen flex-col bg-slate-950 text-slate-100">
                 <header className="border-b border-white/10 px-6 py-4 text-center sm:py-6">
-                    <p className="text-sm font-medium uppercase tracking-widest text-emerald-400/90">
+                    <p className="text-sm font-medium uppercase tracking-widest text-slate-300">
                         {storeTitle}
                     </p>
                     {branchName ? (
@@ -89,7 +89,7 @@ export default function CustomerDisplay({
 
                 <main className="flex flex-1 flex-col items-center justify-center px-4 py-8">
                     <p
-                        className="text-center font-black tabular-nums tracking-tight text-emerald-400"
+                        className="text-center font-black tabular-nums tracking-tight text-white"
                         style={{ fontSize: 'clamp(3rem, 14vw, 9rem)', lineHeight: 1 }}
                     >
                         {formatMoney(sale.total)}
@@ -118,7 +118,7 @@ export default function CustomerDisplay({
                                         <p className="tabular-nums text-slate-300">
                                             × {item.quantity}
                                         </p>
-                                        <p className="tabular-nums text-emerald-400/90">
+                                        <p className="tabular-nums text-slate-200">
                                             {formatMoney(item.line_total)}
                                         </p>
                                     </div>

@@ -33,6 +33,8 @@ class ProductController extends Controller
         InventoryService $inventoryService
     ): JsonResponse|RedirectResponse {
         $validated = $request->validated();
+        $redirectTo = $validated['redirect_to'] ?? 'products';
+        unset($validated['redirect_to']);
 
         $product = DB::transaction(function () use ($validated, $branchStockBootstrap, $inventoryService, $request): Product {
             $product = Product::create([
@@ -78,7 +80,11 @@ class ProductController extends Controller
         );
 
         if (! $request->expectsJson()) {
-            return to_route('products.page');
+            $flash = ['success' => 'Producto creado correctamente.'];
+
+            return $redirectTo === 'inventory'
+                ? to_route('inventory.page')->with($flash)
+                : to_route('products.page')->with($flash);
         }
 
         return response()->json($product, 201);

@@ -1,10 +1,6 @@
 /**
- * Boton primario Everden (sistema unificado v1).
- *
- * Identidad:
- *  - Verde Bosque (--primary) como color institucional.
- *  - Esmeralda (--ring) como anillo de foco unico para todo el sistema.
- *  - Tipografia minuscula con peso semibold (alineada con shadcn).
+ * Botón primario (tokens `--primary` / `--ring` del tema global).
+ * El color lo define `resources/css/app.css` (preset neutral shadcn).
  *
  * Touch-First (Fase 1):
  *  - Sin `size`: comportamiento estandar para escritorio.

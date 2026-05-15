@@ -365,7 +365,7 @@ function SidebarGroup({
     <div
       data-slot="sidebar-group"
       data-sidebar="group"
-      className={cn("relative flex w-full min-w-0 flex-col gap-1 px-3 py-2", className)}
+      className={cn("relative flex w-full min-w-0 flex-col gap-1 px-3 py-2 group-data-[collapsible=icon]:px-0", className)}
       {...props}
     />
   );
@@ -436,7 +436,10 @@ function SidebarMenu({
     <ul
       data-slot="sidebar-menu"
       data-sidebar="menu"
-      className={cn("flex w-full min-w-0 flex-col gap-0.5", className)}
+      className={cn(
+        "flex w-full min-w-0 flex-col gap-0.5 group-data-[collapsible=icon]:items-center",
+        className,
+      )}
       {...props}
     />
   );
@@ -450,7 +453,10 @@ function SidebarMenuItem({
     <li
       data-slot="sidebar-menu-item"
       data-sidebar="menu-item"
-      className={cn("group/menu-item relative", className)}
+      className={cn(
+        "group/menu-item relative group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center",
+        className,
+      )}
       {...props}
     />
   );
@@ -458,7 +464,7 @@ function SidebarMenuItem({
 
 /* Mismo token que el rail (bg-sidebar): evita pastillas grises vs transparent/forms */
 const sidebarMenuButtonVariants = cva(
-  "peer/menu-button flex w-full appearance-none items-center gap-3 overflow-hidden rounded-lg bg-sidebar px-2 py-2 text-left text-sm font-normal text-sidebar-foreground outline-hidden transition-[width,height,padding] hover:bg-sidebar hover:text-sidebar-foreground active:bg-sidebar focus-visible:bg-sidebar focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:font-semibold data-[active=true]:text-sidebar-foreground data-[active=true]:[&>svg]:text-sidebar-foreground data-[state=open]:hover:bg-sidebar group-data-[collapsible=icon]:!size-9 group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:[&>span:last-child]:sr-only [&>span:last-child]:truncate [&>svg]:size-[18px] [&>svg]:shrink-0 [&>svg]:text-sidebar-foreground [&>svg]:stroke-[1.5]",
+  "peer/menu-button flex w-full appearance-none items-center gap-3 overflow-hidden rounded-lg bg-sidebar px-2 py-2 text-left text-sm font-normal text-sidebar-foreground outline-hidden transition-[width,height,padding] hover:bg-sidebar hover:text-sidebar-foreground active:bg-sidebar focus-visible:bg-sidebar focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:font-semibold data-[active=true]:text-sidebar-foreground data-[active=true]:[&>svg]:text-sidebar-foreground data-[state=open]:hover:bg-sidebar group-data-[collapsible=icon]:!size-9 group-data-[collapsible=icon]:!p-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:[&>span:last-child]:sr-only [&>span:last-child]:truncate [&>svg]:size-[18px] [&>svg]:shrink-0 [&>svg]:text-sidebar-foreground [&>svg]:stroke-[1.5]",
   {
     variants: {
       variant: {

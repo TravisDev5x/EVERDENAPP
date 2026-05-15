@@ -26,7 +26,7 @@ function StatusPill({ customer }) {
 
     if (customer.privacy_accepted_at) {
         return (
-            <span className="rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-900 dark:bg-green-500/20 dark:text-green-200">
+            <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-foreground">
                 Consentimiento vigente
             </span>
         );
@@ -84,14 +84,14 @@ function EvArcoManager({ customer, canManageCustody }) {
 
     return (
         <article className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xs dark:border-slate-700 dark:bg-slate-900/80">
-            <div className="border-b border-gray-100 bg-gradient-to-r from-green-950 via-green-900 to-emerald-900 p-4 text-white dark:border-slate-800">
+            <div className="border-b border-gray-100 bg-gradient-to-r from-slate-900 via-slate-800 to-zinc-900 p-4 text-white dark:border-slate-800">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-green-100/80">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/75">
                             Ciclo de la Confianza
                         </p>
                         <h3 className="mt-1 text-lg font-semibold">{customer.name}</h3>
-                        <p className="mt-1 text-sm text-green-50/80">
+                        <p className="mt-1 text-sm text-white/80">
                             {customer.email || 'Sin correo'} · {customer.phone || 'Sin telefono'}
                         </p>
                     </div>
@@ -203,8 +203,8 @@ export default function Custody({ customers, filters, canManageCustody, privacyV
 
             <div className="py-8">
                 <div className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
-                    <section className="rounded-2xl border border-green-900/15 bg-white p-6 shadow-xs dark:border-green-500/20 dark:bg-slate-900/80">
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-green-900/70 dark:text-green-300/80">
+                    <section className="rounded-2xl border border-border bg-card p-6 shadow-xs dark:bg-card">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                             El Ciclo de la Confianza
                         </p>
                         <h1 className="mt-2 text-2xl font-bold text-gray-950 dark:text-white">

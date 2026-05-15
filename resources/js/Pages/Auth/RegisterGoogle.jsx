@@ -8,9 +8,8 @@ import { Label } from '@/Components/ui/label';
 import { cn } from '@/lib/utils';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-const linkEmerald = cn(
-    'font-semibold text-emerald-700 underline-offset-2 hover:text-emerald-600 hover:underline',
-    'dark:text-emerald-400 dark:hover:text-emerald-300',
+const linkPrimary = cn(
+    'font-semibold text-primary underline-offset-2 hover:text-primary/90 hover:underline',
 );
 
 const inputAuth =
@@ -39,7 +38,7 @@ export default function RegisterGoogle({ prefill }) {
             <div className="mb-6">
                 <p className="text-sm text-muted-foreground">
                     ¿Prefieres otro método?{' '}
-                    <Button variant="link" asChild className={cn('h-auto p-0 text-sm', linkEmerald)}>
+                    <Button variant="link" asChild className={cn('h-auto p-0 text-sm', linkPrimary)}>
                         <Link href={route('register')}>Registro con correo</Link>
                     </Button>
                 </p>
@@ -132,7 +131,7 @@ export default function RegisterGoogle({ prefill }) {
                                     He leído y acepto el{' '}
                                     <Link
                                         href={route('legal.privacy')}
-                                        className="font-semibold text-emerald-700 underline-offset-2 hover:underline dark:text-emerald-400"
+                                        className="font-semibold text-primary underline-offset-2 hover:underline"
                                         target="_blank"
                                         rel="noreferrer"
                                     >
@@ -141,7 +140,7 @@ export default function RegisterGoogle({ prefill }) {
                                     y los{' '}
                                     <Link
                                         href={route('legal.terms')}
-                                        className="font-semibold text-emerald-700 underline-offset-2 hover:underline dark:text-emerald-400"
+                                        className="font-semibold text-primary underline-offset-2 hover:underline"
                                         target="_blank"
                                         rel="noreferrer"
                                     >
@@ -160,7 +159,7 @@ export default function RegisterGoogle({ prefill }) {
                         type="submit"
                         size="lg"
                         disabled={processing}
-                        className="w-full rounded-xl bg-emerald-600 px-6 text-base font-semibold text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-600/90 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400 sm:w-auto"
+                        className="w-full rounded-xl px-6 text-base font-semibold sm:w-auto"
                     >
                         Crear tenant y entrar al panel
                     </Button>

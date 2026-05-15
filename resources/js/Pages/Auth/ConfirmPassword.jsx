@@ -50,7 +50,7 @@ export default function ConfirmPassword() {
                         type="submit"
                         size="lg"
                         disabled={processing}
-                        className="w-full rounded-xl bg-emerald-600 px-6 text-base font-semibold text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-600/90 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400 sm:w-auto"
+                        className="w-full rounded-xl px-6 text-base font-semibold sm:w-auto"
                     >
                         Confirmar y continuar
                     </Button>

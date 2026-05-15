@@ -22,7 +22,7 @@ export default function PosTopbar({ branches, activeBranchId, onChangeBranch, ca
             <div className="flex-1" />
             {cashSession ? (
                 <Badge variant="secondary" className="gap-1.5">
-                    <span className="inline-block size-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                    <span className="inline-block size-1.5 rounded-full bg-primary" aria-hidden="true" />
                     Turno #{cashSession.id} · {registerName}
                 </Badge>
             ) : (

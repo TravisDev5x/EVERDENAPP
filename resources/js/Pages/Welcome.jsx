@@ -51,7 +51,7 @@ const NAV_LINKS = [
 
 /**
  * El Ciclo de la Confianza — los 4 pilares de la filosofía EVERDEN.
- * Cada uno mapea a una capacidad concreta del producto y se viste con un acento de color.
+ * Cada uno mapea a una capacidad concreta del producto; acentos neutros en tarjetas.
  */
 const TRUST_CYCLE_PILLARS = [
     {
@@ -60,7 +60,7 @@ const TRUST_CYCLE_PILLARS = [
         title: 'Robustez',
         kicker: 'La base',
         body: 'La seguridad de los datos es la base que sostiene todo el sistema. Auditoría, roles granulares y aislamiento por tenant: cada movimiento queda registrado, cada acceso está justificado.',
-        accent: 'forest',
+        accent: 'slate',
     },
     {
         key: 'vitalidad',
@@ -68,7 +68,7 @@ const TRUST_CYCLE_PILLARS = [
         title: 'Vitalidad',
         kicker: 'El flujo',
         body: 'Impulsamos un flujo de ventas constante. Caja, inventario y catálogo respiran al mismo ritmo: cada cobro alimenta el ecosistema sin fricción.',
-        accent: 'emerald',
+        accent: 'zinc',
     },
     {
         key: 'equilibrio',
@@ -76,7 +76,7 @@ const TRUST_CYCLE_PILLARS = [
         title: 'Equilibrio',
         kicker: 'El balance',
         body: 'Estabilidad multitenant para que cada negocio crezca a su ritmo. Una sola plataforma, infinitas razones sociales y sucursales, sin que ninguna pise a otra.',
-        accent: 'teal',
+        accent: 'stone',
     },
     {
         key: 'permanencia',
@@ -84,7 +84,7 @@ const TRUST_CYCLE_PILLARS = [
         title: 'Permanencia',
         kicker: 'La duración',
         body: 'Herramientas diseñadas para durar y proteger el patrimonio que construyes. Decisiones técnicas pensadas para acompañarte años, no temporadas.',
-        accent: 'forest',
+        accent: 'neutral',
     },
 ];
 
@@ -143,25 +143,31 @@ const PLAN_CARDS = [
     },
 ];
 
-/** Mapeo de acentos -> clases Tailwind. Verde Bosque para seguridad/raíces; Esmeralda para flujo. */
+/** Acentos neutros (slate/zinc/stone) — el verde queda solo en el contenedor del logo. */
 const ACCENT_STYLES = {
-    forest: {
+    slate: {
         iconWrap:
-            'bg-green-900/10 ring-1 ring-green-900/20 dark:bg-green-500/15 dark:ring-green-500/25',
-        icon: 'text-green-900 dark:text-green-300',
-        kicker: 'text-green-900/80 dark:text-green-300/80',
+            'bg-slate-500/10 ring-1 ring-slate-500/20 dark:bg-slate-500/15 dark:ring-slate-400/25',
+        icon: 'text-slate-700 dark:text-slate-300',
+        kicker: 'text-slate-700/85 dark:text-slate-300/85',
     },
-    emerald: {
+    zinc: {
         iconWrap:
-            'bg-emerald-500/15 ring-1 ring-emerald-500/25 dark:bg-emerald-500/20 dark:ring-emerald-400/25',
-        icon: 'text-emerald-700 dark:text-emerald-300',
-        kicker: 'text-emerald-700/85 dark:text-emerald-300/85',
+            'bg-zinc-500/10 ring-1 ring-zinc-500/20 dark:bg-zinc-500/15 dark:ring-zinc-400/25',
+        icon: 'text-zinc-700 dark:text-zinc-300',
+        kicker: 'text-zinc-700/85 dark:text-zinc-300/85',
     },
-    teal: {
+    stone: {
         iconWrap:
-            'bg-teal-500/15 ring-1 ring-teal-500/25 dark:bg-teal-500/20 dark:ring-teal-400/25',
-        icon: 'text-teal-700 dark:text-teal-300',
-        kicker: 'text-teal-700/85 dark:text-teal-300/85',
+            'bg-stone-500/10 ring-1 ring-stone-500/20 dark:bg-stone-500/15 dark:ring-stone-400/25',
+        icon: 'text-stone-700 dark:text-stone-300',
+        kicker: 'text-stone-700/85 dark:text-stone-300/85',
+    },
+    neutral: {
+        iconWrap:
+            'bg-neutral-500/10 ring-1 ring-neutral-500/20 dark:bg-neutral-500/15 dark:ring-neutral-400/25',
+        icon: 'text-neutral-700 dark:text-neutral-300',
+        kicker: 'text-neutral-700/85 dark:text-neutral-300/85',
     },
 };
 
@@ -279,10 +285,10 @@ export default function Welcome({ canLogin, canRegister }) {
                 <SkipToContent />
                 <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden>
                     {/* Capas decorativas con blur moderado: menos costo de pintura que blur-3xl masivo */}
-                    <div className="absolute -left-40 top-0 h-[28rem] w-[28rem] rounded-full bg-emerald-400/20 blur-2xl dark:bg-emerald-500/10" />
-                    <div className="absolute -right-24 top-1/4 h-96 w-96 rounded-full bg-teal-400/15 blur-2xl dark:bg-teal-500/10" />
-                    <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-green-700/12 blur-2xl dark:bg-green-700/12" />
-                    <div className="absolute bottom-1/4 right-1/4 h-48 w-48 rounded-full bg-emerald-500/8 blur-xl dark:bg-emerald-500/8" />
+                    <div className="absolute -left-40 top-0 h-[28rem] w-[28rem] rounded-full bg-slate-400/18 blur-2xl dark:bg-slate-600/12" />
+                    <div className="absolute -right-24 top-1/4 h-96 w-96 rounded-full bg-slate-300/15 blur-2xl dark:bg-slate-500/10" />
+                    <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-zinc-400/12 blur-2xl dark:bg-zinc-600/10" />
+                    <div className="absolute bottom-1/4 right-1/4 h-48 w-48 rounded-full bg-slate-400/10 blur-xl dark:bg-slate-600/8" />
                 </div>
 
                 <div className="relative">
@@ -291,7 +297,7 @@ export default function Welcome({ canLogin, canRegister }) {
                             <div className="flex flex-wrap items-center justify-between gap-4">
                                 <a
                                     href="#inicio"
-                                    className="flex min-w-0 items-center gap-3 rounded-xl outline-hidden ring-emerald-500/0 transition focus-visible:ring-2 focus-visible:ring-emerald-500"
+                                    className="flex min-w-0 items-center gap-3 rounded-xl outline-hidden ring-ring/0 transition focus-visible:ring-2 focus-visible:ring-ring"
                                 >
                                     <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-green-700 via-emerald-600 to-teal-600 shadow-lg shadow-emerald-500/25 ring-1 ring-white/20 dark:ring-white/10">
                                         <ApplicationLogo className="h-8 w-8 fill-white opacity-95" />
@@ -326,7 +332,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                                 <Button
                                                     size="lg"
                                                     asChild
-                                                    className="min-h-11 rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-600/90 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400"
+                                                    className="min-h-11 rounded-xl"
                                                 >
                                                     <Link href={route('register')}>Crear cuenta</Link>
                                                 </Button>
@@ -352,7 +358,7 @@ export default function Welcome({ canLogin, canRegister }) {
                     <main
                         id="main-content"
                         tabIndex={-1}
-                        className="outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-500/30 focus-visible:ring-offset-4 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950"
+                        className="outline-hidden focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-offset-4 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950"
                     >
                         {/* Hero */}
                         <section
@@ -362,17 +368,17 @@ export default function Welcome({ canLogin, canRegister }) {
                             <div className="max-w-xl flex-1 lg:max-w-none">
                                 <Badge
                                     variant="outline"
-                                    className="inline-flex items-center gap-2 rounded-full border-emerald-500/35 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium normal-case text-emerald-900 dark:border-emerald-500/25 dark:text-emerald-300"
+                                    className="inline-flex items-center gap-2 rounded-full border-primary/25 bg-primary/10 px-3 py-1.5 text-xs font-medium normal-case text-foreground"
                                 >
                                     <span
-                                        className="inline-flex h-2 w-2 rounded-full bg-emerald-500 motion-safe:animate-pulse"
+                                        className="inline-flex h-2 w-2 rounded-full bg-primary motion-safe:animate-pulse"
                                         aria-hidden
                                     />
                                     Ecosistema activo · Infraestructura en operación
                                 </Badge>
                                 <h1 className="mt-6 text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
                                     Construye un negocio sólido con{' '}
-                                    <span className="bg-gradient-to-r from-green-800 via-emerald-600 to-teal-600 bg-clip-text text-transparent dark:from-green-400 dark:via-emerald-400 dark:to-teal-400">
+                                    <span className="bg-gradient-to-r from-slate-800 via-slate-600 to-slate-500 bg-clip-text text-transparent dark:from-slate-200 dark:via-slate-100 dark:to-white">
                                         control duradero
                                     </span>
                                 </h1>
@@ -386,7 +392,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                         <Button
                                             size="lg"
                                             asChild
-                                            className="h-12 rounded-xl bg-emerald-600 px-7 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 hover:bg-emerald-600/90 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400"
+                                            className="h-12 rounded-xl px-7 text-base font-semibold"
                                         >
                                             <Link href={route('register')}>Empezar mi operación</Link>
                                         </Button>
@@ -400,7 +406,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                         <Button
                                             size="lg"
                                             asChild
-                                            className="h-12 rounded-xl bg-emerald-600 px-7 text-base font-semibold text-white shadow-lg shadow-emerald-500/25 hover:bg-emerald-600/90 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400"
+                                            className="h-12 rounded-xl px-7 text-base font-semibold"
                                         >
                                             <Link href={panelHref}>
                                                 {isPlatformOperator ? 'Ir a administración' : 'Ir a mi panel'}
@@ -416,11 +422,11 @@ export default function Welcome({ canLogin, canRegister }) {
                             {/* Mock UI */}
                             <div className="mt-14 flex flex-1 justify-center lg:mt-0 lg:justify-end">
                                 <div className="relative w-full max-w-md">
-                                    <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-green-700/20 via-emerald-500/15 to-teal-500/20 blur-sm dark:from-green-700/15" />
+                                    <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-slate-400/15 via-slate-300/10 to-zinc-400/15 blur-sm dark:from-slate-700/25 dark:via-slate-600/15" />
                                     <Card className="relative overflow-hidden rounded-2xl border-slate-200/80 bg-white/90 shadow-2xl shadow-slate-900/10 backdrop-blur dark:border-white/10 dark:bg-slate-900/90">
                                         <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 pb-4 dark:border-white/10">
                                             <div className="flex items-center gap-2">
-                                                <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                                                <span className="h-2 w-2 rounded-full bg-primary" />
                                                 <CardTitle className="text-xs font-medium text-slate-600 dark:text-slate-300">
                                                     Ecosistema en mostrador
                                                 </CardTitle>
@@ -432,7 +438,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                         <CardContent className="space-y-4">
                                             <div className="flex gap-2">
                                                 <div className="h-9 flex-1 rounded-lg bg-slate-100 dark:bg-slate-800" />
-                                                <div className="h-9 w-24 rounded-lg bg-emerald-500/80 dark:bg-emerald-600/80" />
+                                                <div className="h-9 w-24 rounded-lg bg-primary/85 dark:bg-primary/90" />
                                             </div>
                                             <div className="space-y-2 rounded-xl border border-slate-100 p-3 dark:border-white/10">
                                                 <div className="flex justify-between text-[11px] text-slate-500">
@@ -466,26 +472,26 @@ export default function Welcome({ canLogin, canRegister }) {
                         {/* Misión */}
                         <section
                             id="mision"
-                            className={`relative overflow-hidden border-y border-green-900/15 bg-gradient-to-br from-green-900 via-green-800 to-emerald-900 py-20 text-white dark:border-green-500/15 dark:from-green-950 dark:via-green-900 dark:to-emerald-950 ${SECTION_SCROLL_CLASS}`}
+                            className={`relative overflow-hidden border-y border-slate-800/40 bg-gradient-to-br from-slate-900 via-slate-800 to-zinc-900 py-20 text-white dark:border-white/10 dark:from-slate-950 dark:via-zinc-950 dark:to-slate-900 ${SECTION_SCROLL_CLASS}`}
                         >
                             <div className="pointer-events-none absolute inset-0 opacity-40">
-                                <div className="absolute -top-32 left-1/4 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl" />
-                                <div className="absolute -bottom-24 right-1/4 h-72 w-72 rounded-full bg-teal-400/15 blur-3xl" />
+                                <div className="absolute -top-32 left-1/4 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+                                <div className="absolute -bottom-24 right-1/4 h-72 w-72 rounded-full bg-slate-400/10 blur-3xl" />
                             </div>
                             <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
                                 <Badge
                                     variant="outline"
-                                    className="inline-flex rounded-full border-emerald-300/40 bg-emerald-300/10 px-3 py-1 text-xs font-medium normal-case text-emerald-100"
+                                    className="inline-flex rounded-full border-white/25 bg-white/10 px-3 py-1 text-xs font-medium normal-case text-white/95"
                                 >
                                     Nuestra misión
                                 </Badge>
                                 <h2 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">
                                     Infraestructura tecnológica{' '}
-                                    <span className="bg-gradient-to-r from-emerald-200 via-teal-200 to-emerald-300 bg-clip-text text-transparent">
+                                    <span className="bg-gradient-to-r from-white via-slate-100 to-slate-200 bg-clip-text text-transparent">
                                         sólida y vital
                                     </span>
                                 </h2>
-                                <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-emerald-50/90">
+                                <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/85">
                                     Convertimos la complejidad operativa en control absoluto y crecimiento
                                     sostenible. {brand} no es un sistema más: es la base tecnológica que
                                     sostiene tu negocio hoy y lo proyecta hacia los próximos años.
@@ -513,7 +519,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                 <div className="mx-auto max-w-2xl text-center">
                                     <Badge
                                         variant="outline"
-                                        className="inline-flex rounded-full border-green-700/30 bg-green-700/10 px-3 py-1 text-xs font-medium normal-case text-green-900 dark:border-green-500/25 dark:bg-green-500/10 dark:text-green-300"
+                                        className="inline-flex rounded-full border-slate-600/40 bg-slate-800/30 px-3 py-1 text-xs font-medium normal-case text-slate-100 dark:border-white/15 dark:bg-white/10 dark:text-white"
                                     >
                                         Filosofía
                                     </Badge>
@@ -528,7 +534,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                 <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                                     {TRUST_CYCLE_PILLARS.map((pillar) => {
                                         const Icon = pillar.icon;
-                                        const styles = ACCENT_STYLES[pillar.accent] ?? ACCENT_STYLES.emerald;
+                                        const styles = ACCENT_STYLES[pillar.accent] ?? ACCENT_STYLES.slate;
                                         return (
                                             <Card
                                                 key={pillar.key}
@@ -590,14 +596,14 @@ export default function Welcome({ canLogin, canRegister }) {
                                         <Card className="flex h-full flex-col border-slate-200 bg-white shadow-xs dark:border-white/10 dark:bg-slate-900/60">
                                             {i < steps.length - 1 && (
                                                 <div
-                                                    className="absolute -right-4 top-1/2 hidden h-px w-8 -translate-y-1/2 bg-gradient-to-r from-emerald-400/50 to-transparent md:block"
+                                                    className="absolute -right-4 top-1/2 hidden h-px w-8 -translate-y-1/2 bg-gradient-to-r from-slate-300/60 to-transparent md:block dark:from-slate-600/50"
                                                     aria-hidden
                                                 />
                                             )}
                                             <CardHeader className="pb-2">
                                                 <Badge
                                                     variant="outline"
-                                                    className="w-fit font-mono text-xs font-bold normal-case text-emerald-700 dark:text-emerald-400"
+                                                    className="w-fit font-mono text-xs font-bold normal-case text-slate-700 dark:text-slate-300"
                                                 >
                                                     {s.n}
                                                 </Badge>
@@ -625,7 +631,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                 <div className="max-w-2xl">
                                     <Badge
                                         variant="outline"
-                                        className="inline-flex rounded-full border-emerald-500/35 bg-emerald-500/10 px-3 py-1 text-xs font-medium normal-case text-emerald-900 dark:border-emerald-500/25 dark:text-emerald-300"
+                                        className="inline-flex rounded-full border-primary/25 bg-primary/10 px-3 py-1 text-xs font-medium normal-case text-foreground"
                                     >
                                         Ecosistema de ventas
                                     </Badge>
@@ -644,12 +650,12 @@ export default function Welcome({ canLogin, canRegister }) {
                                         return (
                                             <Card
                                                 key={item.title}
-                                                className="group flex flex-col border-slate-200 bg-white shadow-xs transition hover:border-emerald-400/40 hover:shadow-md dark:border-white/10 dark:bg-slate-950/50 dark:hover:border-emerald-500/35"
+                                                className="group flex flex-col border-slate-200 bg-white shadow-xs transition hover:border-primary/30 hover:shadow-md dark:border-white/10 dark:bg-slate-950/50 dark:hover:border-primary/25"
                                             >
                                                 <CardHeader className="pb-2">
-                                                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/10 dark:bg-emerald-500/15">
+                                                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-muted dark:bg-muted/80">
                                                         <Icon
-                                                            className="h-6 w-6 text-emerald-600 dark:text-emerald-400"
+                                                            className="h-6 w-6 text-foreground"
                                                             aria-hidden
                                                         />
                                                     </div>
@@ -690,12 +696,12 @@ export default function Welcome({ canLogin, canRegister }) {
                                         className={cn(
                                             'relative flex h-full flex-col overflow-visible bg-card py-6 shadow-md ring-1 ring-border',
                                             plan.highlight
-                                                ? 'border-2 border-emerald-500/45 bg-gradient-to-b from-emerald-500/[0.12] to-card pt-9 dark:border-emerald-500/35 dark:from-emerald-500/10'
+                                                ? 'border-2 border-primary/35 bg-gradient-to-b from-primary/[0.08] to-card pt-9 dark:border-primary/30 dark:from-primary/10'
                                                 : 'border border-border',
                                         )}
                                     >
                                         {plan.highlight ? (
-                                            <Badge className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 bg-emerald-500 px-3 py-1 text-xs font-semibold normal-case text-white shadow-xs hover:bg-emerald-500">
+                                            <Badge className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 bg-primary px-3 py-1 text-xs font-semibold normal-case text-primary-foreground shadow-xs hover:bg-primary/90">
                                                 Recomendado
                                             </Badge>
                                         ) : null}
@@ -715,7 +721,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                                 {plan.bullets.map((b) => (
                                                     <li key={b} className="flex gap-2.5 leading-snug">
                                                         <span
-                                                            className="mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400"
+                                                            className="mt-0.5 shrink-0 text-primary"
                                                             aria-hidden
                                                         >
                                                             ✓
@@ -730,7 +736,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                                 <Button
                                                     size="lg"
                                                     asChild
-                                                    className="w-full rounded-xl bg-emerald-600 text-white hover:bg-emerald-600/90 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400"
+                                                    className="w-full rounded-xl"
                                                 >
                                                     <Link href={route('register')}>Solicitar información</Link>
                                                 </Button>
@@ -792,7 +798,7 @@ export default function Welcome({ canLogin, canRegister }) {
                         >
                             <Card className="gap-0 overflow-hidden rounded-3xl border-border p-0 shadow-lg ring-1 ring-border">
                                 <div className="grid lg:grid-cols-2 lg:items-stretch">
-                                    <div className="flex h-full min-h-[240px] flex-col justify-center bg-gradient-to-br from-green-800/20 via-emerald-700/15 to-teal-600/20 px-8 py-10 sm:px-10 dark:from-green-950/60 dark:via-emerald-950/40 dark:to-teal-950/40">
+                                    <div className="flex h-full min-h-[240px] flex-col justify-center bg-gradient-to-br from-slate-100 via-slate-50 to-zinc-100 px-8 py-10 sm:px-10 dark:from-slate-900/80 dark:via-slate-950/60 dark:to-zinc-950/50">
                                         <h2 className="text-2xl font-semibold tracking-tight text-card-foreground">
                                             Hablemos de tu ecosistema
                                         </h2>
@@ -814,7 +820,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                                     <Button
                                                         variant="link"
                                                         asChild
-                                                        className="h-auto min-h-0 p-0 text-base font-semibold text-emerald-700 hover:text-emerald-600 dark:text-emerald-400"
+                                                        className="h-auto min-h-0 p-0 text-base font-semibold text-primary hover:text-primary/90"
                                                     >
                                                         <a href="mailto:contacto@everden.mx">contacto@everden.mx</a>
                                                     </Button>
@@ -852,13 +858,13 @@ export default function Welcome({ canLogin, canRegister }) {
                             id="cta-final"
                             className={`mx-auto max-w-6xl px-4 pb-24 pt-4 sm:px-6 lg:px-8 ${SECTION_SCROLL_CLASS}`}
                         >
-                            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-green-950 via-green-900 to-emerald-900 px-8 py-16 text-center shadow-2xl dark:from-slate-950 dark:via-green-950 dark:to-emerald-950">
+                            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-zinc-900 px-8 py-16 text-center shadow-2xl dark:from-slate-950 dark:via-zinc-950 dark:to-slate-900">
                                 <div className="pointer-events-none absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.03\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-90" />
                                 <div className="relative">
                                     <h2 className="text-3xl font-bold text-white sm:text-4xl">
                                         ¿Listo para construir un negocio sólido?
                                     </h2>
-                                    <p className="mx-auto mt-5 max-w-xl text-base text-emerald-50/90">
+                                    <p className="mx-auto mt-5 max-w-xl text-base text-white/85">
                                         Empieza con la cuenta de demostración o entra si ya formas parte del
                                         ecosistema. {brand} convierte la complejidad en control absoluto.
                                     </p>
@@ -867,7 +873,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                             <Button
                                                 size="lg"
                                                 asChild
-                                                className="h-12 rounded-xl bg-emerald-400 px-8 text-base font-semibold text-slate-950 shadow-lg hover:bg-emerald-300"
+                                                className="h-12 rounded-xl px-8 text-base font-semibold"
                                             >
                                                 <Link href={route('register')}>Empezar mi operación</Link>
                                             </Button>
@@ -886,7 +892,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                             <Button
                                                 size="lg"
                                                 asChild
-                                                className="h-12 rounded-xl bg-emerald-400 px-8 text-base font-semibold text-slate-950 shadow-lg hover:bg-emerald-300"
+                                                className="h-12 rounded-xl px-8 text-base font-semibold"
                                             >
                                                 <Link href={panelHref}>Continuar al panel</Link>
                                             </Button>
@@ -921,7 +927,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                         <li>
                                             <Link
                                                 href={route('legal.privacy')}
-                                                className="text-emerald-700 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300"
+                                                className="text-primary hover:text-primary/90"
                                             >
                                                 Aviso de privacidad
                                             </Link>
@@ -929,7 +935,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                         <li>
                                             <Link
                                                 href={route('legal.terms')}
-                                                className="text-emerald-700 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300"
+                                                className="text-primary hover:text-primary/90"
                                             >
                                                 Términos del servicio
                                             </Link>

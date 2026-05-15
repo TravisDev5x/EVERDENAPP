@@ -119,54 +119,54 @@ export default function TenantsIndex({ tenants }) {
             <Head title="Plataforma · Negocios" />
 
             <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-                <div className="overflow-x-auto rounded-lg bg-white shadow-xs dark:bg-slate-900/80 dark:ring-1 dark:ring-slate-700">
-                    <table className="min-w-full divide-y divide-gray-200 text-left text-sm dark:divide-slate-700">
-                        <thead className="bg-gray-50 dark:bg-slate-800/90">
+                <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-xs">
+                    <table className="min-w-full divide-y divide-border text-left text-sm">
+                        <thead className="bg-muted/50">
                             <tr>
-                                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-slate-200">
+                                <th className="px-4 py-3 font-semibold text-muted-foreground">
                                     Negocio
                                 </th>
-                                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-slate-200">
+                                <th className="px-4 py-3 font-semibold text-muted-foreground">
                                     Nombre legal / clave
                                 </th>
-                                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-slate-200">
+                                <th className="px-4 py-3 font-semibold text-muted-foreground">
                                     Personas
                                 </th>
-                                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-slate-200">
+                                <th className="px-4 py-3 font-semibold text-muted-foreground">
                                     Perfiles en uso
                                 </th>
-                                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-slate-200">Plan</th>
-                                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-slate-200">
+                                <th className="px-4 py-3 font-semibold text-muted-foreground">Plan</th>
+                                <th className="px-4 py-3 font-semibold text-muted-foreground">
                                     Límites
                                 </th>
-                                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-slate-200">Estado</th>
-                                <th className="px-4 py-3 font-semibold text-gray-700 dark:text-slate-200">
+                                <th className="px-4 py-3 font-semibold text-muted-foreground">Estado</th>
+                                <th className="px-4 py-3 font-semibold text-muted-foreground">
                                     Acciones
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100 dark:divide-slate-700 dark:bg-slate-900/40">
+                        <tbody className="divide-y divide-border">
                             {tenantRows.map((t) => (
                                 <Fragment key={t.id}>
-                                    <tr className="align-top dark:text-slate-200">
+                                    <tr className="align-top text-foreground">
                                         <td className="px-4 py-3">
-                                            <div className="font-medium text-gray-900 dark:text-slate-100">
+                                            <div className="font-medium text-foreground">
                                                 {t.trade_name || t.name}
                                             </div>
                                             {t.trade_name && (
-                                                <div className="text-xs text-gray-500 dark:text-slate-400">
+                                                <div className="text-xs text-muted-foreground">
                                                     Razón social: {t.name}
                                                 </div>
                                             )}
                                         </td>
-                                        <td className="px-4 py-3 text-gray-700 dark:text-slate-300">
+                                        <td className="px-4 py-3 text-muted-foreground">
                                             <div>{t.name}</div>
-                                            <div className="text-xs text-gray-500">{t.slug}</div>
+                                            <div className="text-xs text-muted-foreground">{t.slug}</div>
                                         </td>
-                                        <td className="px-4 py-3 text-gray-800 dark:text-slate-200">
+                                        <td className="px-4 py-3 text-foreground">
                                             {t.users_count}
                                         </td>
-                                        <td className="px-4 py-3 text-xs text-gray-700 dark:text-slate-300">
+                                        <td className="px-4 py-3 text-xs text-muted-foreground">
                                             <ul className="list-inside list-disc space-y-0.5">
                                                 {t.roles_breakdown.map((r) => (
                                                     <li key={r.slug}>
@@ -174,21 +174,21 @@ export default function TenantsIndex({ tenants }) {
                                                     </li>
                                                 ))}
                                                 {t.users_without_role > 0 && (
-                                                    <li className="text-amber-800 dark:text-amber-300">
+                                                    <li className="text-amber-800 dark:text-amber-200">
                                                         Sin perfil: {t.users_without_role}
                                                     </li>
                                                 )}
                                             </ul>
                                         </td>
-                                        <td className="px-4 py-3 text-gray-800 dark:text-slate-200">{t.plan_slug}</td>
-                                        <td className="px-4 py-3 text-xs text-gray-700 dark:text-slate-300">
+                                        <td className="px-4 py-3 text-foreground">{t.plan_slug}</td>
+                                        <td className="px-4 py-3 text-xs text-muted-foreground">
                                             Usuarios: {limitLabel(t.max_users)}
                                             <br />
                                             Sucursales: {limitLabel(t.max_branches)}
                                         </td>
                                         <td className="px-4 py-3">
                                             {t.is_active ? (
-                                                <span className="rounded bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-900 dark:bg-emerald-900/40 dark:text-emerald-100">
+                                                <span className="rounded bg-muted px-2 py-0.5 text-xs font-medium text-foreground">
                                                     Activo
                                                 </span>
                                             ) : (
@@ -197,7 +197,7 @@ export default function TenantsIndex({ tenants }) {
                                                         Suspendido
                                                     </span>
                                                     {t.suspension_reason && (
-                                                        <p className="mt-1 max-w-xs text-xs text-gray-600 dark:text-slate-400">
+                                                        <p className="mt-1 max-w-xs text-xs text-muted-foreground">
                                                             {t.suspension_reason}
                                                         </p>
                                                     )}
@@ -247,13 +247,13 @@ export default function TenantsIndex({ tenants }) {
                                         </td>
                                     </tr>
                                     {editingId === t.id && (
-                                        <tr className="border-t border-gray-100 bg-slate-50">
+                                        <tr className="border-t border-border bg-muted/30">
                                             <td colSpan={8} className="px-4 py-4">
                                                 <form
                                                     className="mx-auto max-w-xl space-y-3"
                                                     onSubmit={(e) => submitEdit(e, t.id)}
                                                 >
-                                                    <p className="text-xs font-medium text-gray-700">
+                                                    <p className="text-xs font-medium text-muted-foreground">
                                                         Visible en directorio; no modifica productos ni finanzas.
                                                     </p>
                                                     <div>
@@ -274,7 +274,7 @@ export default function TenantsIndex({ tenants }) {
                                                             value={form.data.trade_name}
                                                             onChange={(e) => form.setData('trade_name', e.target.value)}
                                                         />
-                                                        <p className="mt-1 text-xs text-gray-500">
+                                                        <p className="mt-1 text-xs text-muted-foreground">
                                                             Si lo dejas vacío, se muestra el nombre legal en listados.
                                                         </p>
                                                         <InputError className="mt-1" message={form.errors.trade_name} />
@@ -292,13 +292,13 @@ export default function TenantsIndex({ tenants }) {
                                         </tr>
                                     )}
                                     {editingPlanId === t.id && (
-                                        <tr className="border-t border-gray-100 bg-indigo-50/40">
+                                        <tr className="border-t border-border bg-primary/5">
                                             <td colSpan={8} className="px-4 py-4">
                                                 <form
                                                     className="mx-auto max-w-xl space-y-3"
                                                     onSubmit={(e) => submitPlan(e, t.id)}
                                                 >
-                                                    <p className="text-xs font-medium text-gray-700 dark:text-slate-300">
+                                                    <p className="text-xs font-medium text-muted-foreground">
                                                         Referencia interna del plan. Si dejas los límites vacíos, no hay
                                                         tope explícito.
                                                     </p>

@@ -49,6 +49,8 @@ class StoreProductRequest extends FormRequest
                 'integer',
                 new BelongsToCurrentTenant('product_categories'),
             ],
+            /** Tras crear, redirigir a inventario o al catálogo (solo Inertia / formularios HTML). */
+            'redirect_to' => ['nullable', 'string', Rule::in(['inventory', 'products'])],
         ];
     }
 }

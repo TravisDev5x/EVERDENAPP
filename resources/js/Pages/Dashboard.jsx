@@ -178,7 +178,7 @@ export default function Dashboard({
                                 <dl className="mt-3 space-y-1 text-xs text-gray-600 dark:text-slate-400">
                                     <div className="flex justify-between gap-2">
                                         <dt>Estado</dt>
-                                        <dd className="font-medium text-emerald-700 dark:text-emerald-400">
+                                        <dd className="font-medium text-primary">
                                             Abierta
                                         </dd>
                                     </div>
@@ -436,14 +436,14 @@ export default function Dashboard({
                                     {revPrevLine}
                                 </p>
                             )}
-                            <div className="mt-4 rounded-lg bg-emerald-50 px-3 py-2 dark:bg-emerald-950/30">
-                                <p className="text-xs font-medium text-emerald-900 dark:text-emerald-200">
+                            <div className="mt-4 rounded-lg bg-muted px-3 py-2">
+                                <p className="text-xs font-medium text-muted-foreground">
                                     Hoy
                                 </p>
-                                <p className="text-lg font-semibold tabular-nums text-emerald-800 dark:text-emerald-100">
+                                <p className="text-lg font-semibold tabular-nums text-foreground">
                                     {formatMoney(kpis?.revenue_today ?? 0, currency)}
                                 </p>
-                                <p className="text-xs text-emerald-800/90 dark:text-emerald-200/90">
+                                <p className="text-xs text-muted-foreground">
                                     {kpis?.paid_sales_today ?? 0} cobros registrados
                                 </p>
                             </div>
@@ -687,7 +687,7 @@ export default function Dashboard({
                         </Link>
                         <Link
                             href={route('sales.page')}
-                            className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
+                            className="rounded-lg border border-border bg-muted/50 px-3 py-2 text-sm font-medium text-foreground hover:bg-muted dark:border-border"
                         >
                             Ventas
                         </Link>
@@ -696,7 +696,7 @@ export default function Dashboard({
                                 href={route('reports.daily')}
                                 className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
                             >
-                                Actividad del día
+                                Reporte diario
                             </Link>
                         )}
                         <Link

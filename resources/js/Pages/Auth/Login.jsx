@@ -9,9 +9,8 @@ import { Label } from '@/Components/ui/label';
 import { cn } from '@/lib/utils';
 import { Head, Link, useForm } from '@inertiajs/react';
 
-const linkEmerald = cn(
-    'font-semibold text-emerald-700 underline-offset-2 hover:text-emerald-600 hover:underline',
-    'dark:text-emerald-400 dark:hover:text-emerald-300',
+const linkPrimary = cn(
+    'font-semibold text-primary underline-offset-2 hover:text-primary/90 hover:underline',
 );
 
 export default function Login({ status, canResetPassword }) {
@@ -39,7 +38,7 @@ export default function Login({ status, canResetPassword }) {
             <div className="mb-6">
                 <p className="text-sm text-muted-foreground">
                     ¿Aún no tienes cuenta?{' '}
-                    <Button variant="link" asChild className={cn('h-auto p-0 text-sm', linkEmerald)}>
+                    <Button variant="link" asChild className={cn('h-auto p-0 text-sm', linkPrimary)}>
                         <Link href={route('register')}>Crear cuenta de demo</Link>
                     </Button>
                 </p>
@@ -47,7 +46,7 @@ export default function Login({ status, canResetPassword }) {
 
             {status ? (
                 <Alert
-                    className="mb-6 border-emerald-500/30 bg-emerald-500/10 text-emerald-900 dark:text-emerald-200"
+                    className="mb-6 border-primary/25 bg-primary/5 text-foreground dark:border-primary/20 dark:bg-primary/10"
                     role="status"
                 >
                     <AlertDescription className="text-current">{status}</AlertDescription>
@@ -112,7 +111,7 @@ export default function Login({ status, canResetPassword }) {
                     </div>
 
                     {canResetPassword ? (
-                        <Button variant="link" asChild className={cn('h-auto p-0 text-sm', linkEmerald)}>
+                        <Button variant="link" asChild className={cn('h-auto p-0 text-sm', linkPrimary)}>
                             <Link href={route('password.request')}>¿Olvidaste tu contraseña?</Link>
                         </Button>
                     ) : null}
@@ -123,7 +122,7 @@ export default function Login({ status, canResetPassword }) {
                         type="submit"
                         size="lg"
                         disabled={processing}
-                        className="w-full rounded-xl bg-emerald-600 px-6 text-base font-semibold text-white shadow-md shadow-emerald-500/20 hover:bg-emerald-600/90 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400 sm:w-auto"
+                        className="w-full rounded-xl px-6 text-base font-semibold sm:w-auto"
                     >
                         Entrar al panel
                     </Button>

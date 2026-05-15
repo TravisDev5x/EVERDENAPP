@@ -11,6 +11,24 @@ function formatMxn(amount, currency = 'MXN') {
     }).format(amount);
 }
 
+/** KPI con el mismo ritmo: etiqueta arriba, valor con salto seguro, todo alineado a la izquierda */
+function KpiCard({ label, value }) {
+    return (
+        <Card className="min-w-0 gap-0 border-border/80 py-0 shadow-xs">
+            <CardHeader className="flex flex-col items-start gap-3 space-y-0 px-5 py-5 text-left">
+                <CardDescription className="text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    {label}
+                </CardDescription>
+                <div className="min-w-0 max-w-full">
+                    <p className="text-left text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-3xl">
+                        <span className="block break-words tabular-nums">{value}</span>
+                    </p>
+                </div>
+            </CardHeader>
+        </Card>
+    );
+}
+
 export default function PlanFinance({
     currency_code: currencyCode,
     plan_rows: planRows,
@@ -44,51 +62,28 @@ export default function PlanFinance({
                         Resumen
                     </h2>
 
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-                        <Card className="border-border/80 shadow-xs">
-                            <CardHeader className="space-y-1 pb-3">
-                                <CardDescription className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                                    MRR total ({currencyCode})
-                                </CardDescription>
-                                <CardTitle className="text-3xl font-semibold tabular-nums tracking-tight text-foreground sm:text-4xl">
-                                    {formatMxn(totalMrrMxn, currencyCode)}
-                                </CardTitle>
-                            </CardHeader>
-                        </Card>
+                    <div className="grid grid-cols-1 gap-6 min-[520px]:grid-cols-2 min-[900px]:grid-cols-3 lg:gap-8">
+                        <KpiCard label={`MRR total (${currencyCode})`} value={formatMxn(totalMrrMxn, currencyCode)} />
 
-                        <Card className="border-border/80 shadow-xs">
-                            <CardHeader className="space-y-1 pb-3">
-                                <CardDescription className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                                    Negocios activos
-                                </CardDescription>
-                                <CardTitle className="text-3xl font-semibold tabular-nums tracking-tight text-foreground sm:text-4xl">
-                                    {activeTenants}
-                                </CardTitle>
-                            </CardHeader>
-                        </Card>
+                        <KpiCard label="Negocios activos" value={String(activeTenants)} />
 
-                        <Card className="border-border/80 shadow-xs sm:col-span-2 lg:col-span-1">
-                            <CardHeader className="space-y-3 pb-2">
-                                <CardDescription className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        <Card className="min-w-0 gap-0 border-border/80 py-0 shadow-xs min-[520px]:col-span-2 min-[900px]:col-span-1">
+                            <CardHeader className="flex flex-col items-start gap-4 space-y-0 px-5 py-5 text-left">
+                                <CardDescription className="text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
                                     Suspendidos (negocio / usuario)
                                 </CardDescription>
-                                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-8 lg:flex-col lg:gap-3">
-                                    <div>
-                                        <p className="text-3xl font-semibold tabular-nums text-foreground sm:text-4xl">
+                                <div className="grid w-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
+                                    <div className="min-w-0 text-left">
+                                        <p className="text-2xl font-semibold leading-tight tabular-nums text-foreground sm:text-3xl">
                                             {suspendedTenants}
                                         </p>
-                                        <p className="mt-0.5 text-xs text-muted-foreground">negocios</p>
+                                        <p className="mt-1.5 text-xs text-muted-foreground">Negocios</p>
                                     </div>
-                                    <Separator
-                                        orientation="vertical"
-                                        decorative
-                                        className="hidden h-12 w-px shrink-0 bg-border sm:block lg:hidden"
-                                    />
-                                    <div>
-                                        <p className="text-3xl font-semibold tabular-nums text-foreground sm:text-4xl">
+                                    <div className="min-w-0 text-left">
+                                        <p className="text-2xl font-semibold leading-tight tabular-nums text-foreground sm:text-3xl">
                                             {suspendedUsers}
                                         </p>
-                                        <p className="mt-0.5 text-xs text-muted-foreground">usuarios</p>
+                                        <p className="mt-1.5 text-xs text-muted-foreground">Usuarios</p>
                                     </div>
                                 </div>
                             </CardHeader>

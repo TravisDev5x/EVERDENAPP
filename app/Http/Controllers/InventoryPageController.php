@@ -7,6 +7,7 @@ use App\Models\InventoryAlert;
 use App\Models\InventoryMovement;
 use App\Models\InventoryPolicy;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Support\Permissions;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -30,6 +31,7 @@ class InventoryPageController extends Controller
 
         $products = Product::query()
             ->where('is_active', true)
+            ->with(['category:id,name'])
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($nested) use ($search): void {
                     $nested->where('name', 'like', "%{$search}%")
@@ -37,7 +39,7 @@ class InventoryPageController extends Controller
                 });
             })
             ->orderBy('name')
-            ->get(['id', 'sku', 'name', 'unit']);
+            ->get(['id', 'sku', 'name', 'unit', 'price', 'category_id']);
 
         $productIds = $products->pluck('id');
 
@@ -95,6 +97,12 @@ class InventoryPageController extends Controller
             ->paginate(20)
             ->withQueryString();
 
+        $categories = ProductCategory::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get(['id', 'name', 'slug', 'color']);
+
         return Inertia::render('Inventory/Index', [
             'products' => $productRows,
             'alerts' => $alerts,
@@ -110,6 +118,8 @@ class InventoryPageController extends Controller
             ],
             'activeBranchId' => $branchId,
             'canManage' => $request->user()?->hasPermission(Permissions::INVENTORY_MANAGE) ?? false,
+            'categories' => $categories,
+            'canCreateProduct' => $request->user()?->can('create', Product::class) ?? false,
         ]);
     }
 }

@@ -1,4 +1,6 @@
 import { useAppearance } from '@/Contexts/AppearanceContext';
+import { cn } from '@/lib/utils';
+import { Monitor, Moon, Sun } from 'lucide-react';
 
 const cycle = ['system', 'light', 'dark'];
 
@@ -7,6 +9,17 @@ const labels = {
     light: 'Claro',
     dark: 'Oscuro',
 };
+
+function ThemeIcon({ theme }) {
+    const common = 'size-[18px] shrink-0 stroke-[1.5]';
+    if (theme === 'dark') {
+        return <Moon className={common} aria-hidden />;
+    }
+    if (theme === 'light') {
+        return <Sun className={common} aria-hidden />;
+    }
+    return <Monitor className={common} aria-hidden />;
+}
 
 export default function AppearanceToggle({ className = '' }) {
     const { theme, setTheme } = useAppearance();
@@ -17,25 +30,24 @@ export default function AppearanceToggle({ className = '' }) {
         setTheme(next);
     };
 
+    const label = labels[theme] ?? theme;
+
     return (
         <button
             type="button"
             onClick={rotate}
-            title={`Tema: ${labels[theme] ?? theme}. Clic para cambiar.`}
-            aria-label={`Tema visual: ${labels[theme] ?? theme}. Pulsa para alternar entre automático, claro y oscuro.`}
-            className={
-                'inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition ' +
-                'border-gray-200 bg-white text-gray-700 hover:bg-gray-50 ' +
-                'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white ' +
-                'dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900 ' +
-                'sm:min-h-0 sm:min-w-0 ' +
-                className
-            }
+            title={`Tema: ${label}. Clic para cambiar.`}
+            aria-label={`Tema visual: ${label}. Pulsa para alternar entre automático, claro y oscuro.`}
+            className={cn(
+                'inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-full',
+                'text-muted-foreground transition-colors',
+                'hover:bg-muted hover:text-foreground',
+                'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                'sm:min-h-9 sm:min-w-9',
+                className,
+            )}
         >
-            <span className="hidden sm:inline">{labels[theme] ?? theme}</span>
-            <span className="text-base leading-none" aria-hidden="true">
-                {theme === 'dark' ? '🌙' : theme === 'light' ? '☀️' : '💻'}
-            </span>
+            <ThemeIcon theme={theme} />
         </button>
     );
 }

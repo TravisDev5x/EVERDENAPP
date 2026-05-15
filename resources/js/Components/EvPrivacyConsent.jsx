@@ -32,15 +32,15 @@ export default function EvPrivacyConsent({ sale }) {
     }
 
     return (
-        <section className="rounded-xl border border-green-900/15 bg-green-50/80 p-4 shadow-xs dark:border-green-500/20 dark:bg-green-950/20">
+        <section className="rounded-xl border border-border bg-muted/40 p-4 shadow-xs dark:bg-muted/20">
             <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-green-900/70 dark:text-green-300/80">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                     Custodia Everden
                 </p>
-                <h3 className="mt-1 text-base font-semibold text-green-950 dark:text-green-50">
+                <h3 className="mt-1 text-base font-semibold text-foreground">
                     Consentimiento de privacidad
                 </h3>
-                <p className="mt-1 text-xs leading-relaxed text-green-900/75 dark:text-green-100/75">
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                     Registra al cliente solo si acepta el Aviso de Privacidad. El ticket puede seguir como venta
                     general si no se capturan datos personales.
                 </p>
@@ -97,10 +97,10 @@ export default function EvPrivacyConsent({ sale }) {
                     <InputError className="mt-1" message={form.errors.tax_id} />
                 </div>
 
-                <label className="flex items-start gap-3 rounded-lg border border-green-900/10 bg-white/70 p-3 text-sm text-green-950 dark:border-green-500/20 dark:bg-slate-950/40 dark:text-green-50">
+                <label className="flex items-start gap-3 rounded-lg border border-border bg-background p-3 text-sm text-foreground">
                     <input
                         type="checkbox"
-                        className="mt-1 rounded border-green-800 text-green-800 focus:ring-green-700 dark:border-green-400 dark:bg-slate-900"
+                        className="mt-1 rounded border-input text-primary focus:ring-ring"
                         checked={form.data.privacy_accepted}
                         onChange={(e) => form.setData('privacy_accepted', e.target.checked)}
                     />

@@ -10,7 +10,7 @@ import {
 import { TooltipProvider } from '@/Components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function MobileSidebarBridge() {
     const page = usePage();
@@ -24,7 +24,7 @@ function MobileSidebarBridge() {
 }
 
 export default function AuthenticatedLayout({ header, children }) {
-    const { props } = usePage();
+    const { props, url } = usePage();
     const user = props.auth.user;
     const isPlatformOperator = props.auth.isPlatformOperator ?? false;
     const permissionKeys = props.auth.permissionKeys ?? [];
@@ -34,6 +34,18 @@ export default function AuthenticatedLayout({ header, children }) {
     const canViewCustody = permissionKeys.includes('customer-custody.view');
     const tenantTitle = isPlatformOperator ? 'Plataforma' : (props.tenant?.name ?? 'Tu tienda');
     const flash = props.flash ?? {};
+
+    const [topBarScrolled, setTopBarScrolled] = useState(false);
+
+    useEffect(() => {
+        const threshold = 8;
+        const onScroll = () => {
+            setTopBarScrolled(window.scrollY > threshold);
+        };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, [url]);
 
     return (
         <TooltipProvider delayDuration={0}>
@@ -57,7 +69,14 @@ export default function AuthenticatedLayout({ header, children }) {
                         'bg-background outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:ring-offset-4 focus-visible:ring-offset-background',
                     )}
                 >
-                    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-border bg-background px-3">
+                    <header
+                        className={cn(
+                            'sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 px-3 transition-[background-color,box-shadow,backdrop-filter] duration-200 ease-out',
+                            topBarScrolled
+                                ? 'bg-background/70 shadow-sm backdrop-blur-md supports-[backdrop-filter]:bg-background/55'
+                                : 'bg-background',
+                        )}
+                    >
                         <SidebarTrigger className="min-h-[44px] min-w-[44px] shrink-0" />
                         <span className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground">
                             {tenantTitle}

@@ -30,7 +30,7 @@ export default function TeamUsers({ users, roles, branches, canManageUsers }) {
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-slate-100">
+                <h2 className="text-xl font-semibold leading-tight text-foreground">
                     Personas del equipo
                 </h2>
             }
@@ -39,19 +39,19 @@ export default function TeamUsers({ users, roles, branches, canManageUsers }) {
 
             <div className="py-8">
                 <div className="mx-auto max-w-6xl space-y-6 px-4 sm:px-6 lg:px-8">
-                    <div className="rounded-lg bg-white p-6 shadow-xs dark:bg-slate-900/80 dark:ring-1 dark:ring-slate-700">
-                        <p className="text-sm text-gray-600 dark:text-slate-400">
+                    <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
+                        <p className="text-sm text-muted-foreground">
                             Aquí ves quién puede entrar al sistema. Los accesos detallados se ajustan en
                             &quot;Accesos&quot; del menú.
                         </p>
                     </div>
 
                     {canManageUsers && (
-                        <div className="rounded-lg bg-white p-6 shadow-xs dark:bg-slate-900/80 dark:ring-1 dark:ring-slate-700">
-                            <h3 className="mb-3 text-lg font-semibold text-gray-900 dark:text-slate-100">
+                        <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
+                            <h3 className="mb-3 text-lg font-semibold text-foreground">
                                 Invitar a alguien
                             </h3>
-                            <p className="mb-4 text-sm text-gray-600 dark:text-slate-400">
+                            <p className="mb-4 text-sm text-muted-foreground">
                                 Crea una cuenta nueva para tu equipo (según el límite de tu plan).
                             </p>
                             <form className="grid max-w-xl gap-3" onSubmit={submitInvite}>
@@ -106,7 +106,7 @@ export default function TeamUsers({ users, roles, branches, canManageUsers }) {
                                 <div>
                                     <InputLabel value="Sucursal" />
                                     <select
-                                        className="mt-1 w-full rounded-md border-gray-300 text-sm"
+                                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground shadow-xs focus-visible:border-ring focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40"
                                         value={inviteForm.data.branch_id}
                                         onChange={(e) => inviteForm.setData('branch_id', e.target.value)}
                                         required
@@ -122,7 +122,7 @@ export default function TeamUsers({ users, roles, branches, canManageUsers }) {
                                 <div>
                                     <InputLabel value="Rol" />
                                     <select
-                                        className="mt-1 w-full rounded-md border-gray-300 text-sm"
+                                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground shadow-xs focus-visible:border-ring focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40"
                                         value={inviteForm.data.role_id}
                                         onChange={(e) => inviteForm.setData('role_id', e.target.value)}
                                         required
@@ -145,8 +145,8 @@ export default function TeamUsers({ users, roles, branches, canManageUsers }) {
                         </div>
                     )}
 
-                    <div className="rounded-lg bg-white p-6 shadow-xs dark:bg-slate-900/80 dark:ring-1 dark:ring-slate-700">
-                        <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-slate-100">
+                    <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
+                        <h3 className="mb-4 text-lg font-semibold text-foreground">
                             Quién tiene acceso
                         </h3>
                         <div className="space-y-4">
@@ -178,11 +178,11 @@ function UserRow({ user, roles, canManage, isSelf }) {
     };
 
     return (
-        <div className="flex flex-col gap-2 border-b border-gray-100 py-3 dark:border-slate-700 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 border-b border-border py-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <p className="font-medium text-gray-900 dark:text-slate-100">{user.name}</p>
-                <p className="text-sm text-gray-600 dark:text-slate-400">{user.email}</p>
-                <p className="text-xs text-gray-500 dark:text-slate-500">
+                <p className="font-medium text-foreground">{user.name}</p>
+                <p className="text-sm text-muted-foreground">{user.email}</p>
+                <p className="text-xs text-muted-foreground">
                     Perfil: {user.tenant_role?.name ?? '—'}
                 </p>
             </div>
@@ -194,7 +194,7 @@ function UserRow({ user, roles, canManage, isSelf }) {
                         </label>
                         <select
                             id={`role-${user.id}`}
-                            className="rounded-md border-gray-300 text-sm"
+                            className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground shadow-xs focus-visible:border-ring focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40"
                             value={form.data.role_id}
                             onChange={(e) => form.setData('role_id', e.target.value)}
                         >
@@ -211,7 +211,7 @@ function UserRow({ user, roles, canManage, isSelf }) {
                 </form>
             )}
             {isSelf && (
-                <span className="text-xs text-gray-500">Tu usuario (no puedes cambiar tu rol aquí)</span>
+                <span className="text-xs text-muted-foreground">Tu usuario (no puedes cambiar tu rol aquí)</span>
             )}
         </div>
     );

@@ -26,7 +26,6 @@ import {
     LockKeyhole,
     Package,
     Settings,
-    Shield,
     ShoppingBag,
     ShoppingCart,
     Tags,
@@ -64,8 +63,8 @@ export default function AppSidebar({
         <Sidebar collapsible="icon" variant="sidebar">
             {/* Borde en la fila h-14: si va en SidebarHeader, el bloque mide 56px + borde y no coincide con el header del inset (h-14 incluye borde). */}
             <SidebarHeader className="gap-0 p-0">
-                <div className="flex h-14 shrink-0 items-center gap-3 border-b border-border px-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:px-1.5">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-amber-200 group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-8">
+                <div className="flex h-14 w-full shrink-0 items-center gap-3 border-b border-border px-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:px-0">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 via-teal-600 to-green-800 shadow-md shadow-emerald-900/20 group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-8 dark:from-emerald-600 dark:via-teal-600 dark:to-green-900">
                         <ApplicationLogo className="block h-7 w-auto max-h-full max-w-full fill-white opacity-95 group-data-[collapsible=icon]:h-6 group-data-[collapsible=icon]:w-auto" />
                     </div>
                     <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
@@ -159,7 +158,7 @@ export default function AppSidebar({
                                     <NavLink
                                         href={route('reports.daily')}
                                         active={route().current('reports.daily')}
-                                        label="Actividad del día"
+                                        label="Reporte diario"
                                         icon={BarChart3}
                                     />
                                     <NavLink
@@ -184,12 +183,6 @@ export default function AppSidebar({
                                             icon={LockKeyhole}
                                         />
                                     ) : null}
-                                    <NavLink
-                                        href={route('reports.daily')}
-                                        active={route().current('reports.daily')}
-                                        label="Auditoría"
-                                        icon={Shield}
-                                    />
                                     {canViewTeamUsers ? (
                                         <NavLink
                                             href={route('team.users.page')}
@@ -219,7 +212,7 @@ export default function AppSidebar({
                 )}
             </SidebarContent>
 
-            <SidebarFooter className="border-t border-sidebar-border px-3 py-2 group-data-[collapsible=icon]:px-1.5">
+            <SidebarFooter className="border-t border-sidebar-border px-3 py-2 group-data-[collapsible=icon]:px-0">
                 <SidebarAccountMenu user={user} onNavigate={() => setOpenMobile(false)} />
             </SidebarFooter>
 
