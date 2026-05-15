@@ -1,5 +1,5 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
-import AppearanceToggle from '@/Components/AppearanceToggle';
+import DisplayChromeControls from '@/Components/DisplayChromeControls';
 import SkipToContent from '@/Components/SkipToContent';
 import { Alert, AlertDescription } from '@/Components/ui/alert';
 import { Badge } from '@/Components/ui/badge';
@@ -40,8 +40,8 @@ export default function GuestLayout({
             </div>
 
             <div className="relative">
-                <header className="border-b border-slate-200/90 bg-white/85 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85">
-                    <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+                <header className="safe-px border-b border-slate-200/90 bg-white/85 pt-[max(0px,env(safe-area-inset-top))] backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85">
+                    <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 py-3 sm:gap-4 sm:py-4 lg:px-8">
                         <Link
                             href="/"
                             className="flex min-w-0 items-center gap-3 rounded-xl outline-hidden ring-ring/0 transition focus-visible:ring-2 focus-visible:ring-ring"
@@ -62,12 +62,12 @@ export default function GuestLayout({
                             <Button variant="ghost" size="sm" asChild className="text-slate-600 dark:text-slate-400">
                                 <Link href="/">Inicio</Link>
                             </Button>
-                            <AppearanceToggle />
+                            <DisplayChromeControls />
                         </div>
                     </div>
                 </header>
 
-                <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:flex lg:items-stretch lg:gap-14 lg:px-8 lg:py-14">
+                <div className="safe-px mx-auto max-w-6xl py-8 sm:py-10 lg:flex lg:items-stretch lg:gap-14 lg:px-8 lg:py-14">
                     <div className="mb-10 hidden lg:flex lg:mb-0 lg:w-[42%] lg:flex-col lg:justify-center">
                         <Badge
                             variant="outline"
@@ -122,7 +122,7 @@ export default function GuestLayout({
                                 tabIndex={-1}
                                 className="relative gap-0 overflow-hidden rounded-2xl border-border bg-card/95 p-0 shadow-xl shadow-slate-900/5 outline-hidden ring-1 ring-border backdrop-blur-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background dark:shadow-slate-950/40"
                             >
-                                <CardContent className="p-6 sm:p-8">
+                                <CardContent className="p-4 sm:p-6 md:p-8">
                                     {flash?.error ? (
                                         <Alert variant="destructive" className="mb-6" role="alert">
                                             <AlertDescription>{flash.error}</AlertDescription>

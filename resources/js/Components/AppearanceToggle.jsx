@@ -1,4 +1,5 @@
 import { useAppearance } from '@/Contexts/AppearanceContext';
+import { displayChromeButtonClass } from '@/lib/display-chrome';
 import { cn } from '@/lib/utils';
 import { Monitor, Moon, Sun } from 'lucide-react';
 
@@ -38,14 +39,7 @@ export default function AppearanceToggle({ className = '' }) {
             onClick={rotate}
             title={`Tema: ${label}. Clic para cambiar.`}
             aria-label={`Tema visual: ${label}. Pulsa para alternar entre automático, claro y oscuro.`}
-            className={cn(
-                'inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-full',
-                'text-muted-foreground transition-colors',
-                'hover:bg-muted hover:text-foreground',
-                'focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-                'sm:min-h-9 sm:min-w-9',
-                className,
-            )}
+            className={cn(displayChromeButtonClass, className)}
         >
             <ThemeIcon theme={theme} />
         </button>

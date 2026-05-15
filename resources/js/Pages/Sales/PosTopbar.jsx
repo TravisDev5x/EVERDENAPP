@@ -4,10 +4,10 @@ export default function PosTopbar({ branches, activeBranchId, onChangeBranch, ca
     const registerName = cashSession?.cash_register?.name ?? 'Caja';
 
     return (
-        <div className="flex h-12 shrink-0 items-center gap-3 border-b border-border bg-background px-4">
+        <div className="safe-px flex h-12 shrink-0 items-center gap-2 border-b border-border bg-background sm:gap-3">
             <select
                 aria-label="Tienda activa"
-                className="h-8 rounded-md border border-border bg-background px-2 text-sm text-foreground shadow-xs focus:outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40"
+                className="h-8 min-w-0 max-w-[min(100%,14rem)] flex-1 truncate rounded-md border border-border bg-background px-2 text-sm text-foreground shadow-xs focus:outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40 sm:max-w-xs sm:flex-none"
                 value={activeBranchId}
                 onChange={onChangeBranch}
             >
@@ -19,9 +19,9 @@ export default function PosTopbar({ branches, activeBranchId, onChangeBranch, ca
                     </option>
                 ))}
             </select>
-            <div className="flex-1" />
+            <div className="hidden min-w-2 flex-1 sm:block" aria-hidden />
             {cashSession ? (
-                <Badge variant="secondary" className="gap-1.5">
+                <Badge variant="secondary" className="max-w-[11rem] shrink-0 gap-1.5 truncate sm:max-w-none">
                     <span className="inline-block size-1.5 rounded-full bg-primary" aria-hidden="true" />
                     Turno #{cashSession.id} · {registerName}
                 </Badge>

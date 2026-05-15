@@ -1,5 +1,5 @@
 import AppSidebar from '@/Components/AppSidebar';
-import AppearanceToggle from '@/Components/AppearanceToggle';
+import DisplayChromeControls from '@/Components/DisplayChromeControls';
 import SkipToContent from '@/Components/SkipToContent';
 import {
     SidebarInset,
@@ -66,12 +66,12 @@ export default function AuthenticatedLayout({ header, children }) {
                     tabIndex={-1}
                     className={cn(
                         /* Mismo lienzo que body (como Welcome): menos capas oscuras superpuestas */
-                        'bg-background outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:ring-offset-4 focus-visible:ring-offset-background',
+                        'min-h-0 min-w-0 overflow-x-clip bg-background outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40 focus-visible:ring-offset-4 focus-visible:ring-offset-background',
                     )}
                 >
                     <header
                         className={cn(
-                            'sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 px-3 transition-[background-color,box-shadow,backdrop-filter] duration-200 ease-out',
+                            'safe-px sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 transition-[background-color,box-shadow,backdrop-filter] duration-200 ease-out sm:gap-3',
                             topBarScrolled
                                 ? 'bg-background/70 shadow-sm backdrop-blur-md supports-[backdrop-filter]:bg-background/55'
                                 : 'bg-background',
@@ -81,10 +81,10 @@ export default function AuthenticatedLayout({ header, children }) {
                         <span className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground">
                             {tenantTitle}
                         </span>
-                        <AppearanceToggle />
+                        <DisplayChromeControls />
                     </header>
 
-                    <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
+                    <div className="safe-px mx-auto w-full max-w-7xl pt-3 sm:pt-4">
                         {flash?.success ? (
                             <div className="mb-4 rounded-xl border border-primary/20 bg-secondary p-3 text-sm font-medium text-secondary-foreground">
                                 {flash.success}
@@ -98,12 +98,12 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
 
                     {header ? (
-                        <div className="mx-auto max-w-7xl border-b border-border/80 px-4 pb-6 pt-2 sm:px-6 lg:px-8">
+                        <div className="safe-px mx-auto w-full max-w-7xl border-b border-border/80 pb-4 pt-2 sm:pb-6 sm:pt-2">
                             {header}
                         </div>
                     ) : null}
 
-                    {children}
+                    <div className="flex min-h-0 min-w-0 flex-1 flex-col">{children}</div>
                 </SidebarInset>
             </SidebarProvider>
         </TooltipProvider>

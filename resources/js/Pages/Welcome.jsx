@@ -1,5 +1,5 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
-import AppearanceToggle from '@/Components/AppearanceToggle';
+import DisplayChromeControls from '@/Components/DisplayChromeControls';
 import SkipToContent from '@/Components/SkipToContent';
 import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
@@ -41,104 +41,101 @@ const SECTION_SCROLL_CLASS = 'scroll-mt-28';
 
 const NAV_LINKS = [
     { href: '#mision', label: 'Misión' },
-    { href: '#ciclo', label: 'Ciclo de la Confianza' },
+    { href: '#ciclo', label: 'En qué creemos' },
     { href: '#empezar', label: 'Cómo empezar' },
-    { href: '#ecosistema', label: 'Ecosistema' },
+    { href: '#ecosistema', label: 'Qué incluye' },
     { href: '#planes', label: 'Planes' },
-    { href: '#faq', label: 'FAQ' },
+    { href: '#faq', label: 'Preguntas' },
     { href: '#contacto', label: 'Contacto' },
 ];
 
-/**
- * El Ciclo de la Confianza — los 4 pilares de la filosofía EVERDEN.
- * Cada uno mapea a una capacidad concreta del producto; acentos neutros en tarjetas.
- */
+/** Cuatro ideas que guían el producto (textos en lenguaje sencillo). */
 const TRUST_CYCLE_PILLARS = [
     {
         key: 'robustez',
         icon: ShieldCheck,
-        title: 'Robustez',
+        title: 'Tu información protegida',
         kicker: 'La base',
-        body: 'La seguridad de los datos es la base que sostiene todo el sistema. Auditoría, roles granulares y aislamiento por tenant: cada movimiento queda registrado, cada acceso está justificado.',
+        body: 'Cada venta y cada cambio queda registrado. Tú decides quién entra al sistema y qué puede hacer; tu negocio y el de otros clientes van por separado.',
         accent: 'slate',
     },
     {
         key: 'vitalidad',
         icon: Activity,
-        title: 'Vitalidad',
-        kicker: 'El flujo',
-        body: 'Impulsamos un flujo de ventas constante. Caja, inventario y catálogo respiran al mismo ritmo: cada cobro alimenta el ecosistema sin fricción.',
+        title: 'Ventas al día',
+        kicker: 'El día a día',
+        body: 'Cobras en mostrador, actualizas existencias y revisas el catálogo sin estar saltando entre programas. Lo que vendes se refleja de inmediato en caja e inventario.',
         accent: 'zinc',
     },
     {
         key: 'equilibrio',
         icon: Layers,
-        title: 'Equilibrio',
-        kicker: 'El balance',
-        body: 'Estabilidad multitenant para que cada negocio crezca a su ritmo. Una sola plataforma, infinitas razones sociales y sucursales, sin que ninguna pise a otra.',
+        title: 'Varias tiendas, un solo lugar',
+        kicker: 'Sucursales',
+        body: 'Si tienes más de una sucursal, cada una con su caja y su stock, y tú ves el panorama completo sin mezclar lo de una tienda con la otra.',
         accent: 'stone',
     },
     {
         key: 'permanencia',
         icon: Anchor,
-        title: 'Permanencia',
-        kicker: 'La duración',
-        body: 'Herramientas diseñadas para durar y proteger el patrimonio que construyes. Decisiones técnicas pensadas para acompañarte años, no temporadas.',
+        title: 'Hecho para quedarse',
+        kicker: 'A largo plazo',
+        body: 'Pensamos en comercios que llevan años en el mercado y en los que recién abren. La idea es que el sistema te acompañe mientras creces, no que lo cambies cada temporada.',
         accent: 'neutral',
     },
 ];
 
 const FAQ_ITEMS = [
     {
-        q: '¿Qué hace que EVERDEN sea una infraestructura confiable a largo plazo?',
-        a: 'Construimos sobre decisiones técnicas que envejecen bien: estándares abiertos, multitenant aislado y trazabilidad completa. Tu operación no depende de modas ni de un proveedor único.',
+        q: '¿Por qué confiar en esta plataforma a largo plazo?',
+        a: 'Usamos tecnología estable y abierta, con respaldo de la información y registro de movimientos. Tu operación no queda atada a un solo proveedor ni a modas pasajeras.',
     },
     {
-        q: '¿Cómo protegen los datos de mi negocio?',
-        a: 'Robustez es nuestra base: cada tenant queda aislado, cada acción se audita, los respaldos son automáticos y los roles permiten acceso mínimo necesario. Consulta el aviso de privacidad y los términos para detalles operativos.',
+        q: '¿Cómo cuidan la información de mi negocio?',
+        a: 'Cada negocio va en su propio espacio, con respaldos y permisos por usuario. Solo entra quien tú autorizas y puedes revisar qué se hizo en el sistema. Los detal legales están en el aviso de privacidad y los términos.',
     },
     {
-        q: '¿Pueden crecer varias sucursales sin pisarse?',
-        a: 'Sí. El pilar de Equilibrio garantiza que cada sucursal opera con su propia caja, inventario y reportes. Tu corporativo ve el conjunto; cada tienda solo lo suyo.',
+        q: '¿Puedo manejar varias sucursales?',
+        a: 'Sí. Cada sucursal tiene su caja, su inventario y sus reportes. Desde la oficina o matriz ves el total; en tienda solo se ve lo de esa sucursal.',
     },
     {
-        q: '¿Hay soporte y acompañamiento?',
-        a: 'Soporte por canal directo, materiales de adopción y, en planes Empresa, ejecutivo de cuenta. Los niveles de servicio (SLA) se acuerdan según el plan contratado.',
+        q: '¿Hay soporte en México?',
+        a: 'Sí: atención por correo y canales directos, guías para tu equipo y, en planes más amplios, una persona de seguimiento. Los tiempos de respuesta dependen del plan que contrates.',
     },
 ];
 
 const PLAN_CARDS = [
     {
         name: 'Base',
-        description: 'Para asentar la operación de un solo mostrador con orden y trazabilidad.',
+        description: 'Para un mostrador o tienda que quiere orden desde el primer día.',
         highlight: false,
         priceLabel: 'Desde — MXN',
         bullets: [
-            'Caja, ticket e inventario base',
-            'Roles y auditoría por usuario',
-            'Soporte por canal estándar',
+            'Caja, tickets e inventario',
+            'Usuarios con permisos claros',
+            'Soporte estándar',
         ],
     },
     {
-        name: 'Ecosistema',
-        description: 'Multisucursal con supervisión central. El plan diseñado para crecer en equilibrio.',
+        name: 'Crecimiento',
+        description: 'Varias sucursales con vista central. El más elegido para ir sumando tiendas.',
         highlight: true,
         priceLabel: 'Desde — MXN',
         bullets: [
-            'Inventario y caja por sucursal',
-            'Reportes consolidados y por tienda',
-            'SLA prioritario',
+            'Caja e inventario por sucursal',
+            'Reportes por tienda y en conjunto',
+            'Atención prioritaria',
         ],
     },
     {
-        name: 'Permanencia',
-        description: 'Volúmenes altos, integraciones críticas y SLA empresarial. Pensado para durar.',
+        name: 'Empresa',
+        description: 'Mucho volumen, enlaces con otros sistemas y acompañamiento cercano.',
         highlight: false,
         priceLabel: 'Cotización',
         bullets: [
-            'Integración API / ERP a medida',
-            'Ambientes dedicados',
-            'Ejecutivo de cuenta y SLA premium',
+            'Conexión con tu ERP u otros sistemas',
+            'Instalación dedicada si la necesitas',
+            'Ejecutivo de cuenta y respuesta acordada',
         ],
     },
 ];
@@ -172,8 +169,7 @@ const ACCENT_STYLES = {
 };
 
 /**
- * Landing pública — identidad EVERDEN.
- * Misión: infraestructura tecnológica sólida que convierte la complejidad en control y crecimiento.
+ * Landing pública — copy en español de México, tono cercano y sin jerga técnica.
  */
 function ziggyRouteExists(name) {
     try {
@@ -193,7 +189,7 @@ export default function Welcome({ canLogin, canRegister }) {
     const canRegisterUi = Boolean(canRegister) || ziggyRouteExists('register');
     const isPlatformOperator = auth.isPlatformOperator ?? false;
     const panelHref = isPlatformOperator ? route('platform.tenants.index') : route('dashboard');
-    const panelLabel = isPlatformOperator ? 'Entrar a plataforma' : 'Entrar al panel';
+    const panelLabel = isPlatformOperator ? 'Administración' : 'Entrar';
     const brand =
         (typeof appName === 'string' && appName) ||
         import.meta.env.VITE_APP_NAME ||
@@ -201,7 +197,7 @@ export default function Welcome({ canLogin, canRegister }) {
     const baseUrl = typeof siteUrl === 'string' ? siteUrl : '';
 
     const metaDescription =
-        `${brand} — Infraestructura tecnológica sólida para comercios. Convierte la complejidad operativa en control absoluto: caja, inventario multitenant, ventas y reportes en un ecosistema diseñado para durar.`;
+        `${brand} — Punto de venta para comercios en México. Caja, inventario, ventas y reportes en un solo lugar, por sucursal.`;
 
     const canonicalUrl = baseUrl ? `${baseUrl}/` : '';
     const ogImageUrl = baseUrl ? `${baseUrl}/images/og-placeholder.svg` : '';
@@ -209,61 +205,61 @@ export default function Welcome({ canLogin, canRegister }) {
     const features = [
         {
             icon: 'building',
-            title: 'Multitenant en equilibrio',
-            body: 'Cada negocio y cada sucursal opera con identidad propia. Cambia de tienda sin perder el contexto de caja, inventario ni reportes.',
+            title: 'Varias sucursales',
+            body: 'Cada tienda con su propia caja e inventario. Cambias de sucursal sin perder el hilo de lo que estás viendo.',
         },
         {
             icon: 'cart',
             title: 'Ventas en mostrador',
-            body: 'Cobros con caja abierta, ticket trazable y emisión térmica opcional. El flujo de mostrador alimenta al instante todo el ecosistema.',
+            body: 'Cobras con la caja abierta, generas el ticket y, si tienes impresora, puedes imprimirlo. Lo vendido se refleja al momento en tu operación.',
         },
         {
             icon: 'cash',
-            title: 'Caja con arqueo',
-            body: 'Apertura, cobros y cierre con control de efectivo y diferencias documentadas. Cada turno deja huella auditable.',
+            title: 'Caja y corte',
+            body: 'Abres turno, registras cobros y cierras con el conteo de efectivo. Si hay diferencia, queda anotada para revisarla.',
         },
         {
             icon: 'cube',
-            title: 'Stock que respira',
-            body: 'Existencias por ubicación, mínimos y alertas. El catálogo se sincroniza con la operación real para que nunca te quedes sin lo que importa.',
+            title: 'Inventario',
+            body: 'Ves existencias por tienda, mínimos y avisos cuando falta producto. El catálogo va al ritmo de lo que realmente tienes en anaquel.',
         },
         {
             icon: 'chart',
-            title: 'Cuentas alineadas',
-            body: 'Movimientos ordenados que cuadran lo vendido con tus números. Permanencia financiera, no improvisación.',
+            title: 'Tus números claros',
+            body: 'Movimientos ordenados para cuadrar ventas con lo que esperas en caja. Menos sorpresas al cerrar el día.',
         },
         {
             icon: 'report',
-            title: 'Visibilidad operativa',
-            body: 'Dashboard y reporte del día para supervisar sin abrir cada pantalla. Control absoluto en una sola vista.',
+            title: 'Resumen del día',
+            body: 'Pantalla principal y reporte diario para ver cómo va el negocio sin revisar pantalla por pantalla.',
         },
     ];
 
     const steps = [
         {
             n: '01',
-            title: 'Crea tu espacio',
-            body: 'Registro del negocio y primer usuario propietario con rol acorde. La base queda firme antes del primer ticket.',
+            title: 'Registra tu negocio',
+            body: 'Creas la cuenta, das de alta tu comercio y al primer usuario con acceso de dueño o administrador.',
         },
         {
             n: '02',
-            title: 'Configura sucursal y caja',
-            body: 'Define tienda activa, catálogo y caja física. El ecosistema queda equilibrado para empezar a operar.',
+            title: 'Arma tu tienda y caja',
+            body: 'Eliges la sucursal activa, cargas productos y asignas la caja con la que cobrarás.',
         },
         {
             n: '03',
-            title: 'Vende con orden',
-            body: 'Cobra en mostrador, imprime si tu tienda tiene agente térmico y revisa reportes al cierre con control absoluto.',
+            title: 'Empieza a vender',
+            body: 'Cobras en mostrador, imprimes ticket si lo necesitas y al cierre revisas cómo te fue el día.',
         },
     ];
 
     return (
         <>
-            <Head title={`${brand} · Infraestructura sólida para tu negocio`}>
+            <Head title={`${brand} · Punto de venta para tu negocio`}>
                 <meta name="description" content={metaDescription} />
                 {canonicalUrl ? <link rel="canonical" href={canonicalUrl} /> : null}
                 <meta property="og:type" content="website" />
-                <meta property="og:title" content={`${brand} · Control duradero para comercios`} />
+                <meta property="og:title" content={`${brand} · Caja e inventario para comercios`} />
                 <meta property="og:description" content={metaDescription} />
                 {canonicalUrl ? <meta property="og:url" content={canonicalUrl} /> : null}
                 <meta property="og:site_name" content={brand} />
@@ -272,9 +268,9 @@ export default function Welcome({ canLogin, canRegister }) {
                         <meta property="og:image" content={ogImageUrl} />
                         <meta property="og:image:width" content="1200" />
                         <meta property="og:image:height" content="630" />
-                        <meta property="og:image:alt" content={`${brand} · ecosistema operativo`} />
+                        <meta property="og:image:alt" content={`${brand} · punto de venta`} />
                         <meta name="twitter:card" content="summary_large_image" />
-                        <meta name="twitter:title" content={`${brand} · Infraestructura sólida`} />
+                        <meta name="twitter:title" content={`${brand} · Punto de venta en México`} />
                         <meta name="twitter:description" content={metaDescription} />
                         <meta name="twitter:image" content={ogImageUrl} />
                     </>
@@ -292,8 +288,8 @@ export default function Welcome({ canLogin, canRegister }) {
                 </div>
 
                 <div className="relative">
-                    <header className="sticky top-0 z-40 border-b border-slate-200/90 bg-white/92 backdrop-blur-md dark:border-white/10 dark:bg-slate-950/92 supports-[backdrop-filter]:bg-white/80 supports-[backdrop-filter]:dark:bg-slate-950/80">
-                        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 sm:px-6 lg:px-8">
+                    <header className="safe-px sticky top-0 z-40 border-b border-slate-200/90 bg-white/92 pt-[max(0px,env(safe-area-inset-top))] backdrop-blur-md dark:border-white/10 dark:bg-slate-950/92 supports-[backdrop-filter]:bg-white/80 supports-[backdrop-filter]:dark:bg-slate-950/80">
+                        <div className="mx-auto flex max-w-6xl flex-col gap-3 py-3 sm:gap-4 sm:py-4 lg:px-8">
                             <div className="flex flex-wrap items-center justify-between gap-4">
                                 <a
                                     href="#inicio"
@@ -307,16 +303,16 @@ export default function Welcome({ canLogin, canRegister }) {
                                             {brand}
                                         </p>
                                         <p className="text-xs text-slate-500 dark:text-slate-400">
-                                            Plataforma sólida
+                                            Punto de venta
                                         </p>
                                     </div>
                                 </a>
 
                                 <nav
                                     aria-label="Principal"
-                                    className="flex shrink-0 flex-wrap items-center justify-end gap-2 sm:gap-3"
+                                    className="flex w-full min-w-0 shrink-0 flex-wrap items-center justify-end gap-2 sm:w-auto sm:gap-3"
                                 >
-                                    <AppearanceToggle />
+                                    <DisplayChromeControls />
                                     {auth.user ? (
                                         <Button asChild size="lg" className="min-h-11 rounded-xl">
                                             <Link href={panelHref}>{panelLabel}</Link>
@@ -344,10 +340,10 @@ export default function Welcome({ canLogin, canRegister }) {
 
                             <nav
                                 aria-label="En esta página"
-                                className="-mx-1 flex flex-wrap justify-center gap-x-2 gap-y-2 border-t border-slate-200/80 pt-4 dark:border-white/10 lg:justify-start lg:gap-x-1"
+                                className="touch-scroll-x -mx-1 flex gap-1 overflow-x-auto border-t border-slate-200/80 pb-1 pt-3 scrollbar-hide dark:border-white/10 sm:flex-wrap sm:justify-center sm:gap-x-2 sm:gap-y-2 sm:overflow-visible sm:pb-0 sm:pt-4 lg:justify-start lg:gap-x-1"
                             >
                                 {NAV_LINKS.map((item) => (
-                                    <Button key={item.href} variant="ghost" size="sm" asChild className="text-slate-600 dark:text-slate-400">
+                                    <Button key={item.href} variant="ghost" size="sm" asChild className="shrink-0 text-slate-600 dark:text-slate-400">
                                         <a href={item.href}>{item.label}</a>
                                     </Button>
                                 ))}
@@ -363,7 +359,7 @@ export default function Welcome({ canLogin, canRegister }) {
                         {/* Hero */}
                         <section
                             id="inicio"
-                            className={`mx-auto max-w-6xl px-4 pb-16 pt-12 sm:px-6 lg:flex lg:items-center lg:gap-12 lg:px-8 lg:pb-24 lg:pt-16 ${SECTION_SCROLL_CLASS}`}
+                            className={`safe-px mx-auto max-w-6xl pb-12 pt-10 sm:pb-16 sm:pt-12 lg:flex lg:items-center lg:gap-12 lg:px-8 lg:pb-24 lg:pt-16 ${SECTION_SCROLL_CLASS}`}
                         >
                             <div className="max-w-xl flex-1 lg:max-w-none">
                                 <Badge
@@ -374,18 +370,18 @@ export default function Welcome({ canLogin, canRegister }) {
                                         className="inline-flex h-2 w-2 rounded-full bg-primary motion-safe:animate-pulse"
                                         aria-hidden
                                     />
-                                    Ecosistema activo · Infraestructura en operación
+                                    Listo para operar en tu tienda
                                 </Badge>
                                 <h1 className="mt-6 text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]">
-                                    Construye un negocio sólido con{' '}
+                                    Ordena tu tienda con{' '}
                                     <span className="bg-gradient-to-r from-slate-800 via-slate-600 to-slate-500 bg-clip-text text-transparent dark:from-slate-200 dark:via-slate-100 dark:to-white">
-                                        control duradero
+                                        caja e inventario
                                     </span>
                                 </h1>
                                 <p className="mt-6 text-lg leading-relaxed text-slate-600 dark:text-slate-400">
-                                    {brand} es la infraestructura tecnológica vital que convierte la complejidad
-                                    operativa en control absoluto y crecimiento sostenible. Caja, inventario,
-                                    ventas y reportes alineados por sucursal, en un ecosistema diseñado para durar.
+                                    {brand} reúne en un solo lugar lo que necesitas para vender en mostrador:
+                                    cobrar, llevar existencias y ver reportes por sucursal. Pensado para comercios
+                                    en México que quieren menos papelitos y más claridad al cerrar el día.
                                 </p>
                                 <div className="mt-10 flex flex-wrap items-center gap-4">
                                     {canRegisterUi && !auth.user && (
@@ -394,7 +390,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                             asChild
                                             className="h-12 rounded-xl px-7 text-base font-semibold"
                                         >
-                                            <Link href={route('register')}>Empezar mi operación</Link>
+                                            <Link href={route('register')}>Crear cuenta gratis</Link>
                                         </Button>
                                     )}
                                     {canLoginUi && !auth.user && (
@@ -409,13 +405,13 @@ export default function Welcome({ canLogin, canRegister }) {
                                             className="h-12 rounded-xl px-7 text-base font-semibold"
                                         >
                                             <Link href={panelHref}>
-                                                {isPlatformOperator ? 'Ir a administración' : 'Ir a mi panel'}
+                                                {isPlatformOperator ? 'Administración' : 'Entrar'}
                                             </Link>
                                         </Button>
                                     )}
                                 </div>
                                 <p className="mt-8 text-sm text-slate-500 dark:text-slate-500">
-                                    Auditoría · Multitenant aislado · Permanencia técnica · Aviso de privacidad y términos abajo
+                                    Registro de movimientos · Datos separados por negocio · Aviso de privacidad y términos al pie
                                 </p>
                             </div>
 
@@ -428,7 +424,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                             <div className="flex items-center gap-2">
                                                 <span className="h-2 w-2 rounded-full bg-primary" />
                                                 <CardTitle className="text-xs font-medium text-slate-600 dark:text-slate-300">
-                                                    Ecosistema en mostrador
+                                                    Venta en mostrador
                                                 </CardTitle>
                                             </div>
                                             <Badge variant="secondary" className="rounded-md px-2 py-0.5 text-[10px] font-medium">
@@ -486,31 +482,31 @@ export default function Welcome({ canLogin, canRegister }) {
                                     Nuestra misión
                                 </Badge>
                                 <h2 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">
-                                    Infraestructura tecnológica{' '}
+                                    Una herramienta{' '}
                                     <span className="bg-gradient-to-r from-white via-slate-100 to-slate-200 bg-clip-text text-transparent">
-                                        sólida y vital
+                                        hecha para el mostrador
                                     </span>
                                 </h2>
                                 <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/85">
-                                    Convertimos la complejidad operativa en control absoluto y crecimiento
-                                    sostenible. {brand} no es un sistema más: es la base tecnológica que
-                                    sostiene tu negocio hoy y lo proyecta hacia los próximos años.
+                                    Queremos que vender, cobrar y revisar tu inventario sea sencillo. {brand} no es
+                                    solo otro programa: es el lugar donde tu equipo trabaja el día a día y donde
+                                    ves si el negocio va bien.
                                 </p>
                                 <div className="mx-auto mt-10 flex max-w-md flex-wrap items-center justify-center gap-3">
                                     <Badge className="rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium text-white ring-1 ring-white/15 hover:bg-white/15">
-                                        Control duradero
+                                        Caja e inventario
                                     </Badge>
                                     <Badge className="rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium text-white ring-1 ring-white/15 hover:bg-white/15">
-                                        Ecosistema de ventas
+                                        Varias sucursales
                                     </Badge>
                                     <Badge className="rounded-full bg-white/10 px-4 py-1.5 text-xs font-medium text-white ring-1 ring-white/15 hover:bg-white/15">
-                                        Crecimiento sostenible
+                                        Reportes al cierre
                                     </Badge>
                                 </div>
                             </div>
                         </section>
 
-                        {/* El Ciclo de la Confianza */}
+                        {/* En qué creemos */}
                         <section
                             id="ciclo"
                             className={`border-b border-slate-200/80 bg-white/70 py-20 dark:border-white/10 dark:bg-slate-900/40 ${SECTION_SCROLL_CLASS}`}
@@ -521,14 +517,14 @@ export default function Welcome({ canLogin, canRegister }) {
                                         variant="outline"
                                         className="inline-flex rounded-full border-slate-600/40 bg-slate-800/30 px-3 py-1 text-xs font-medium normal-case text-slate-100 dark:border-white/15 dark:bg-white/10 dark:text-white"
                                     >
-                                        Filosofía
+                                        Lo que nos guía
                                     </Badge>
                                     <h2 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">
-                                        El Ciclo de la Confianza
+                                        En qué creemos
                                     </h2>
                                     <p className="mt-4 text-slate-600 dark:text-slate-400">
-                                        Cuatro pilares que sostienen cada decisión técnica y de producto en {brand}.
-                                        No son valores en una pared: son la lógica con la que el ecosistema respira.
+                                        Cuatro ideas que guían cómo armamos {brand}: seguridad, ventas al día,
+                                        varias tiendas sin enredo y una herramienta que se quede contigo.
                                     </p>
                                 </div>
                                 <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -583,11 +579,10 @@ export default function Welcome({ canLogin, canRegister }) {
                         >
                             <div className="mx-auto max-w-2xl text-center">
                                 <h2 className="text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">
-                                    Pon en marcha tu operación en tres pasos
+                                    Empieza en tres pasos
                                 </h2>
                                 <p className="mt-4 text-slate-600 dark:text-slate-400">
-                                    Pensado para que tu equipo recorra el ciclo completo en una sesión y empiece a
-                                    operar con orden desde el primer día.
+                                    En una tarde puedes tener la tienda lista para cobrar el primer ticket con orden.
                                 </p>
                             </div>
                             <ol className="mt-14 grid gap-8 md:grid-cols-3">
@@ -622,7 +617,7 @@ export default function Welcome({ canLogin, canRegister }) {
                             </ol>
                         </section>
 
-                        {/* Ecosistema de ventas */}
+                        {/* Qué incluye */}
                         <section
                             id="ecosistema"
                             className={`border-t border-slate-200 bg-gradient-to-b from-white to-slate-50 py-20 dark:border-white/10 dark:from-slate-950 dark:to-slate-900/80 ${SECTION_SCROLL_CLASS}`}
@@ -633,15 +628,14 @@ export default function Welcome({ canLogin, canRegister }) {
                                         variant="outline"
                                         className="inline-flex rounded-full border-primary/25 bg-primary/10 px-3 py-1 text-xs font-medium normal-case text-foreground"
                                     >
-                                        Ecosistema de ventas
+                                        Qué incluye
                                     </Badge>
                                     <h2 className="mt-4 text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">
-                                        Funciones que respiran al mismo ritmo
+                                        Todo conectado en tu tienda
                                     </h2>
                                     <p className="mt-4 text-slate-600 dark:text-slate-400">
-                                        Cada módulo alimenta al siguiente: las ventas mueven la caja, la caja
-                                        actualiza el inventario, el inventario nutre los reportes. Todo bajo la
-                                        misma sucursal activa.
+                                        Lo que vendes mueve la caja, la caja actualiza el inventario y los reportes
+                                        te dicen cómo cerró el día. Siempre en la sucursal que tengas seleccionada.
                                     </p>
                                 </div>
                                 <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -682,11 +676,11 @@ export default function Welcome({ canLogin, canRegister }) {
                         >
                             <div className="mx-auto max-w-2xl text-center">
                                 <h2 className="text-3xl font-bold text-slate-900 dark:text-white sm:text-4xl">
-                                    Planes para cada ciclo de crecimiento
+                                    Planes según el tamaño de tu negocio
                                 </h2>
                                 <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
-                                    Desde el primer mostrador hasta el ecosistema completo. Cada plan está
-                                    diseñado para acompañar una etapa real del negocio, sin ataduras a temporadas.
+                                    Desde un solo mostrador hasta varias sucursales. Precios en pesos mexicanos;
+                                    el detalle lo vemos contigo al solicitar información.
                                 </p>
                             </div>
                             <div className="mt-12 grid gap-6 lg:grid-cols-3 lg:items-stretch">
@@ -761,7 +755,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                     Preguntas frecuentes
                                 </h2>
                                 <p className="mx-auto mt-4 max-w-xl text-center text-sm text-slate-600 dark:text-slate-400">
-                                    Lo que tu equipo debería saber antes de poner en marcha la operación en {brand}.
+                                    Dudas comunes antes de usar {brand} en tu tienda.
                                 </p>
                                 <Card className="mt-10 border-slate-200 bg-white dark:border-white/10 dark:bg-slate-900/60">
                                     <CardContent className="space-y-2 px-2 pt-6 sm:px-4">
@@ -800,11 +794,11 @@ export default function Welcome({ canLogin, canRegister }) {
                                 <div className="grid lg:grid-cols-2 lg:items-stretch">
                                     <div className="flex h-full min-h-[240px] flex-col justify-center bg-gradient-to-br from-slate-100 via-slate-50 to-zinc-100 px-8 py-10 sm:px-10 dark:from-slate-900/80 dark:via-slate-950/60 dark:to-zinc-950/50">
                                         <h2 className="text-2xl font-semibold tracking-tight text-card-foreground">
-                                            Hablemos de tu ecosistema
+                                            Platiquemos de tu negocio
                                         </h2>
                                         <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
-                                            Cuéntanos cómo opera tu negocio hoy y diseñemos juntos cómo {brand}
-                                            puede ayudarte a que crezca con solidez.
+                                            Cuéntanos cómo trabajas hoy en caja e inventario y vemos si {brand} te
+                                            conviene. Atendemos desde México.
                                         </p>
                                     </div>
                                     <CardContent className="flex h-full flex-col justify-center border-t border-border bg-card px-8 py-10 sm:px-10 lg:border-l lg:border-t-0">
@@ -862,11 +856,11 @@ export default function Welcome({ canLogin, canRegister }) {
                                 <div className="pointer-events-none absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.03\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-90" />
                                 <div className="relative">
                                     <h2 className="text-3xl font-bold text-white sm:text-4xl">
-                                        ¿Listo para construir un negocio sólido?
+                                        ¿Listo para probarlo en tu tienda?
                                     </h2>
                                     <p className="mx-auto mt-5 max-w-xl text-base text-white/85">
-                                        Empieza con la cuenta de demostración o entra si ya formas parte del
-                                        ecosistema. {brand} convierte la complejidad en control absoluto.
+                                        Abre una cuenta de prueba o entra si ya te registraste. {brand} te ayuda a
+                                        llevar caja e inventario con más claridad.
                                     </p>
                                     <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
                                         {canRegisterUi && !auth.user && (
@@ -875,7 +869,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                                 asChild
                                                 className="h-12 rounded-xl px-8 text-base font-semibold"
                                             >
-                                                <Link href={route('register')}>Empezar mi operación</Link>
+                                                <Link href={route('register')}>Crear cuenta gratis</Link>
                                             </Button>
                                         )}
                                         {canLoginUi && !auth.user && (
@@ -894,7 +888,7 @@ export default function Welcome({ canLogin, canRegister }) {
                                                 asChild
                                                 className="h-12 rounded-xl px-8 text-base font-semibold"
                                             >
-                                                <Link href={panelHref}>Continuar al panel</Link>
+                                                <Link href={panelHref}>Entrar a mi cuenta</Link>
                                             </Button>
                                         )}
                                     </div>
@@ -914,9 +908,8 @@ export default function Welcome({ canLogin, canRegister }) {
                                         <span className="font-semibold text-slate-900 dark:text-white">{brand}</span>
                                     </div>
                                     <p className="mt-4 max-w-md text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                                        Infraestructura tecnológica sólida para comercios que necesitan control
-                                        absoluto y crecimiento sostenible. Robustez, vitalidad, equilibrio y
-                                        permanencia: el ciclo de la confianza, en operación.
+                                        Punto de venta para comercios en México: caja, inventario, ventas y
+                                        reportes por sucursal, en un solo lugar.
                                     </p>
                                 </div>
                                 <div>

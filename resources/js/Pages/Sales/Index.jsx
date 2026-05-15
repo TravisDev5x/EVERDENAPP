@@ -347,11 +347,12 @@ export default function SalesIndex({
                     cashSession={cashSession}
                 />
 
-                <div className="grid flex-1 overflow-hidden lg:grid-cols-[1fr_360px]">
-                    <div className="flex min-w-0 flex-col overflow-hidden">
+                <div className="grid min-h-0 flex-1 grid-cols-1 content-start overflow-y-auto touch-scroll-y lg:grid-cols-[1fr_min(100%,360px)] lg:overflow-hidden lg:content-stretch">
+                    <div className="order-2 flex min-w-0 flex-col lg:order-1 lg:min-h-0 lg:overflow-hidden">
                         <PosStepsProgress activeStep={activeStep} />
 
-                        <div className="flex-1 overflow-y-auto" data-slot="cart-list">
+                        <div className="flex max-h-[min(50dvh,28rem)] min-h-[10rem] flex-1 flex-col overflow-hidden lg:max-h-none lg:min-h-0">
+                        <div className="flex-1 overflow-y-auto touch-scroll-y" data-slot="cart-list">
                             {!sale ? (
                                 <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
                                     <ShoppingCart
@@ -383,7 +384,7 @@ export default function SalesIndex({
                                     <div className="divide-y divide-border">
                                     {sale.items.map((item) => {
                                         const itemRow = (
-                                            <div className="flex items-center gap-3 px-6 py-3 transition-colors hover:bg-muted/30">
+                                            <div className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-muted/30 sm:px-6">
                                                 <div className="min-w-0 flex-1">
                                                     <p className="truncate text-sm font-medium text-foreground">
                                                         {item.product_name}
@@ -433,8 +434,9 @@ export default function SalesIndex({
                                 </div>
                             )}
                         </div>
+                        </div>
 
-                        <div className="shrink-0 border-t border-border bg-background px-6 py-4">
+                        <div className="shrink-0 border-t border-border bg-background px-4 py-3 sm:px-6 sm:py-4">
                             <div className="mb-1 flex justify-between text-sm text-muted-foreground">
                                 <span>Subtotal</span>
                                 <span className="tabular-nums">{money(sale?.subtotal ?? 0)}</span>
@@ -446,19 +448,19 @@ export default function SalesIndex({
                             <Separator className="my-3" />
                             <div className="flex items-baseline justify-between">
                                 <span className="text-sm font-medium text-muted-foreground">Total</span>
-                                <span className="text-4xl font-semibold tracking-tight tabular-nums text-foreground">
+                                <span className="text-3xl font-semibold tracking-tight tabular-nums text-foreground sm:text-4xl">
                                     {money(sale?.total ?? 0)}
                                 </span>
                             </div>
                         </div>
 
                         {errors.payment && (
-                            <div className="shrink-0 border-t border-border bg-destructive/10 px-6 py-2">
+                            <div className="shrink-0 border-t border-border bg-destructive/10 px-4 py-2 sm:px-6">
                                 <p className="text-sm font-medium text-destructive">{errors.payment}</p>
                             </div>
                         )}
 
-                        <div className="flex shrink-0 gap-2 border-t border-border bg-background px-6 py-3">
+                        <div className="flex shrink-0 flex-wrap gap-2 border-t border-border bg-background px-4 py-3 sm:px-6">
                             {!sale && (
                                 <Button className="h-12 flex-1 text-base font-medium" onClick={createSale}>
                                     Nuevo ticket
@@ -576,7 +578,7 @@ export default function SalesIndex({
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-0 overflow-y-auto border-l border-border bg-muted/30">
+                    <div className="order-1 flex flex-col gap-0 overflow-y-auto border-b border-border bg-muted/30 touch-scroll-y lg:order-2 lg:min-h-0 lg:border-b-0 lg:border-l">
                         <div className="border-b border-border p-4">
                             <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                                 Escanear

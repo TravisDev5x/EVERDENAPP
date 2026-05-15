@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 function Table({ className, ...props }) {
     return (
-        <div data-slot="table-wrapper" className="relative w-full overflow-x-auto">
+        <div data-slot="table-wrapper" className="relative w-full touch-scroll-x">
             <table
                 data-slot="table"
                 className={cn('w-full caption-bottom text-sm', className)}

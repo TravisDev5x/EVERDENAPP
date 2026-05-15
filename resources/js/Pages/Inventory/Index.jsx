@@ -266,17 +266,17 @@ export default function InventoryIndex({
         >
             <Head title="Inventario" />
 
-            <div className="py-8">
-                <div className="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
+            <div className="py-4 sm:py-6 lg:py-8">
+                <div className="safe-px mx-auto w-full max-w-7xl space-y-6">
                     <p className="text-sm text-muted-foreground">
                         Sucursal activa · #{activeBranchId}
                     </p>
 
                     <Tabs value={tab} onValueChange={setTab} className="space-y-6">
-                        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card p-1 shadow-xs">
-                            <TabsList className="h-auto min-h-9 w-full flex-wrap justify-start sm:w-auto">
-                                <TabsTrigger value="products">Productos</TabsTrigger>
-                                <TabsTrigger value="alerts" className="gap-1.5">
+                        <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-1 shadow-xs sm:flex-row sm:flex-wrap sm:items-center">
+                            <TabsList className="touch-scroll-x h-auto min-h-9 w-full flex-nowrap justify-start overflow-x-auto scrollbar-hide sm:w-auto sm:flex-wrap">
+                                <TabsTrigger value="products" className="shrink-0">Productos</TabsTrigger>
+                                <TabsTrigger value="alerts" className="shrink-0 gap-1.5">
                                     Alertas
                                     {alerts.length > 0 ? (
                                         <Badge variant="destructive" className="h-5 min-w-5 px-1.5 text-[0.65rem]">
@@ -284,7 +284,7 @@ export default function InventoryIndex({
                                         </Badge>
                                     ) : null}
                                 </TabsTrigger>
-                                <TabsTrigger value="movements">Movimientos</TabsTrigger>
+                                <TabsTrigger value="movements" className="shrink-0">Movimientos</TabsTrigger>
                             </TabsList>
                             <Separator
                                 orientation="vertical"
@@ -300,7 +300,7 @@ export default function InventoryIndex({
                         </div>
 
                     <TabsContent value="products" className="mt-0 outline-none">
-                        <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
+                        <div className="rounded-xl border border-border bg-card p-4 shadow-xs sm:p-6">
                             <form
                                 className="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end"
                                 onSubmit={applyFilters}
@@ -337,7 +337,7 @@ export default function InventoryIndex({
                                         <TableRow className="hover:bg-transparent">
                                             <TableHead className="min-w-[200px]">Producto</TableHead>
                                             <TableHead className="text-right">Precio</TableHead>
-                                            <TableHead>SKU</TableHead>
+                                            <TableHead className="hidden sm:table-cell">SKU</TableHead>
                                             <TableHead className="text-right">Existencias</TableHead>
                                             {canManage ? (
                                                 <TableHead className="w-12 text-right pr-4"> </TableHead>
@@ -389,7 +389,7 @@ export default function InventoryIndex({
                                                         <TableCell className="text-right tabular-nums font-medium">
                                                             {formatMxn(product.price ?? 0)}
                                                         </TableCell>
-                                                        <TableCell className="font-mono text-sm text-muted-foreground">
+                                                        <TableCell className="hidden font-mono text-sm text-muted-foreground sm:table-cell">
                                                             {product.sku}
                                                         </TableCell>
                                                         <TableCell className="text-right tabular-nums">
