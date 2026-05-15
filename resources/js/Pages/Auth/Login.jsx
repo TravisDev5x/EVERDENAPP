@@ -7,7 +7,7 @@ import { Checkbox } from '@/Components/ui/checkbox';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
 import { cn } from '@/lib/utils';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 
 const linkPrimary = cn(
     'font-semibold text-primary underline-offset-2 hover:text-primary/90 hover:underline',
@@ -50,6 +50,12 @@ export default function Login({ status, canResetPassword }) {
                     role="status"
                 >
                     <AlertDescription className="text-current">{status}</AlertDescription>
+                </Alert>
+            ) : null}
+
+            {pageErrors.oauth ? (
+                <Alert variant="destructive" className="mb-6" role="alert">
+                    <AlertDescription>{pageErrors.oauth}</AlertDescription>
                 </Alert>
             ) : null}
 

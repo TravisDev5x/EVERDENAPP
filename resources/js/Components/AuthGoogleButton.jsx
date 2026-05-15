@@ -1,5 +1,6 @@
 import { Button } from '@/Components/ui/button';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 function GoogleMark({ className }) {
     return (
@@ -25,9 +26,11 @@ function GoogleMark({ className }) {
 }
 
 /**
- * Enlace GET al flujo OAuth de Google (misma ventana).
+ * Enlace GET al flujo OAuth de Google (misma ventana). Sin dominios fijos (Ziggy).
  */
 export default function AuthGoogleButton({ className }) {
+    const [navigating, setNavigating] = useState(false);
+
     return (
         <Button
             variant="outline"
@@ -40,9 +43,15 @@ export default function AuthGoogleButton({ className }) {
             )}
             asChild
         >
-            <a href={route('auth.google')}>
+            <a
+                href={route('auth.google')}
+                aria-label="Continuar con Google"
+                aria-busy={navigating}
+                data-loading={navigating ? 'true' : undefined}
+                onClick={() => setNavigating(true)}
+            >
                 <GoogleMark />
-                Continuar con Google
+                {navigating ? 'Redirigiendo…' : 'Continuar con Google'}
             </a>
         </Button>
     );

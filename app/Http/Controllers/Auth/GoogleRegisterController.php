@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Actions\Auth\RegisterTenantOwnerAction;
 use App\Http\Controllers\Controller;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -13,7 +16,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class GoogleRegisterController extends Controller
+final class GoogleRegisterController extends Controller
 {
     public function create(Request $request): Response|RedirectResponse
     {
@@ -64,16 +67,19 @@ class GoogleRegisterController extends Controller
         $sub = (string) $payload['sub'];
         $email = Str::lower((string) $payload['email']);
 
-        if (User::query()->where('google_id', $sub)->exists()) {
-            $request->session()->forget('google_register');
+        $tenantHost = currentTenant();
+        if ($tenantHost instanceof Tenant) {
+            if (User::query()->where('tenant_id', $tenantHost->id)->where('google_id', $sub)->exists()) {
+                $request->session()->forget('google_register');
 
-            return redirect()->route('login')->with('error', 'Esta cuenta de Google ya está registrada. Inicia sesión.');
-        }
+                return redirect()->route('login')->with('error', 'Esta cuenta de Google ya está registrada. Inicia sesión.');
+            }
 
-        if (User::query()->where('email', $email)->exists()) {
-            $request->session()->forget('google_register');
+            if (User::query()->where('tenant_id', $tenantHost->id)->where('email', $email)->exists()) {
+                $request->session()->forget('google_register');
 
-            return redirect()->route('login')->with('error', 'Ya existe una cuenta con este correo. Inicia sesión.');
+                return redirect()->route('login')->with('error', 'Ya existe una cuenta con este correo. Inicia sesión.');
+            }
         }
 
         $verified = (bool) ($payload['email_verified'] ?? false);
@@ -85,6 +91,7 @@ class GoogleRegisterController extends Controller
             'email' => $email,
             'password' => null,
             'google_id' => $sub,
+            'avatar' => isset($payload['avatar']) && is_string($payload['avatar']) ? $payload['avatar'] : null,
             'email_verified_at' => $verified ? now() : null,
         ]);
 
@@ -101,7 +108,6 @@ class GoogleRegisterController extends Controller
     protected function googleOAuthConfigured(): bool
     {
         return filled(config('services.google.client_id'))
-            && filled(config('services.google.client_secret'))
-            && filled(config('services.google.redirect'));
+            && filled(config('services.google.client_secret'));
     }
 }

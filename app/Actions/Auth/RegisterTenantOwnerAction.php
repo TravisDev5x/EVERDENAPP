@@ -18,7 +18,7 @@ class RegisterTenantOwnerAction
      * Crea tenant, sucursal matriz y usuario propietario (registro clásico u OAuth).
      * Todo ocurre en una sola transacción de base de datos.
      *
-     * @param  array{name: string, business_name: string, email: string, password?: string|null, google_id?: string|null, email_verified_at?: \Illuminate\Support\Carbon|null, main_branch_name?: string|null}  $data
+     * @param  array{name: string, business_name: string, email: string, password?: string|null, google_id?: string|null, avatar?: string|null, email_verified_at?: \Illuminate\Support\Carbon|null, main_branch_name?: string|null}  $data
      */
     public function execute(array $data): User
     {
@@ -67,18 +67,22 @@ class RegisterTenantOwnerAction
 
             $passwordPlain = $data['password'] ?? null;
 
-            $user = User::create([
+            $attributes = [
                 'tenant_id' => $tenant->id,
                 'branch_id' => $mainBranch->id,
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'password' => $passwordPlain !== null && $passwordPlain !== ''
-                    ? Hash::make($passwordPlain)
-                    : null,
                 'role_id' => $ownerRole->id,
                 'google_id' => $data['google_id'] ?? null,
+                'avatar' => $data['avatar'] ?? null,
                 'email_verified_at' => $data['email_verified_at'] ?? null,
-            ]);
+            ];
+
+            if ($passwordPlain !== null && $passwordPlain !== '') {
+                $attributes['password'] = Hash::make($passwordPlain);
+            }
+
+            $user = User::create($attributes);
 
             return $user;
         });

@@ -27,7 +27,7 @@ use App\Http\Controllers\TeamUserController;
 use App\Http\Controllers\TeamUserPageController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'tenant'])->group(function (): void {
+Route::middleware(['auth', 'tenant.context'])->group(function (): void {
     Route::get('/catalog/products', [ProductPageController::class, 'index'])->name('products.page');
     Route::get('/catalog/categories', [ProductCategoryPageController::class, 'index'])
         ->name('product-categories.page');

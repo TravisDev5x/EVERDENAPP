@@ -1,25 +1,46 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
+use App\Domain\Billing\TenantPlanService;
 use App\Http\Controllers\Controller;
+use App\Models\Branch;
+use App\Models\Role;
+use App\Models\Tenant;
 use App\Models\User;
+use App\Services\TenantRoleBootstrap;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 
-class GoogleAuthController extends Controller
+final class GoogleAuthController extends Controller
 {
     public function redirect(Request $request): RedirectResponse
     {
         if (! $this->googleOAuthConfigured()) {
-            return redirect()->route('login')->with('error', 'El acceso con Google no está configurado.');
+            return redirect()->route('login')->withErrors([
+                'oauth' => 'El acceso con Google no está configurado.',
+            ]);
         }
 
+        $tenant = currentTenant();
+        if (! $tenant instanceof Tenant) {
+            return redirect()->route('login')->withErrors([
+                'oauth' => 'No se pudo identificar el negocio.',
+            ]);
+        }
+
+        $callback = $request->getSchemeAndHttpHost().'/auth/google/callback';
+
         return Socialite::driver('google')
+            ->redirectUrl($callback)
             ->scopes(['openid', 'profile', 'email'])
             ->redirect();
     }
@@ -27,84 +48,148 @@ class GoogleAuthController extends Controller
     public function callback(Request $request): RedirectResponse
     {
         if (! $this->googleOAuthConfigured()) {
-            return redirect()->route('login')->with('error', 'El acceso con Google no está configurado.');
+            return redirect()->route('login')->withErrors([
+                'oauth' => 'El acceso con Google no está configurado.',
+            ]);
         }
+
+        $tenant = currentTenant();
+        if (! $tenant instanceof Tenant) {
+            return redirect()->route('login')->withErrors([
+                'oauth' => 'No se pudo identificar el negocio.',
+            ]);
+        }
+
+        $callback = $request->getSchemeAndHttpHost().'/auth/google/callback';
 
         try {
-            $googleUser = Socialite::driver('google')->user();
+            $socialUser = Socialite::driver('google')
+                ->redirectUrl($callback)
+                ->user();
         } catch (InvalidStateException) {
-            return redirect()->route('login')->with('error', 'La sesión con Google expiró o es inválida. Inténtalo de nuevo.');
+            return redirect()->route('login')->withErrors([
+                'oauth' => 'La sesión con Google expiró o es inválida. Inténtalo de nuevo.',
+            ]);
         } catch (\Throwable) {
-            return redirect()->route('login')->with('error', 'No se pudo completar el acceso con Google. Inténtalo de nuevo.');
+            return redirect()->route('login')->withErrors([
+                'oauth' => 'No se pudo completar el acceso con Google. Inténtalo de nuevo.',
+            ]);
         }
 
-        $sub = $googleUser->getId();
-        $email = $googleUser->getEmail();
-
+        $email = $socialUser->getEmail();
         if ($email === null || $email === '') {
-            return redirect()->route('login')->with(
-                'error',
-                'Google no compartió tu correo. Usa el registro con correo y contraseña o revisa los permisos de la cuenta.'
-            );
+            return redirect()->route('login')->withErrors([
+                'oauth' => 'Google no compartió tu correo. Usa el registro con correo y contraseña o revisa los permisos de la cuenta.',
+            ]);
         }
 
         $emailLower = Str::lower($email);
-        $name = $googleUser->getName() ?: Str::before($emailLower, '@');
-        $verified = (bool) data_get($googleUser->user, 'verified_email', false);
+        $sub = $socialUser->getId();
+        $name = $socialUser->getName() ?: Str::before($emailLower, '@');
+        $avatar = $socialUser->getAvatar();
 
-        $existingByGoogle = User::query()->where('google_id', $sub)->first();
-        if ($existingByGoogle !== null) {
-            return $this->finishLogin($request, $existingByGoogle);
+        $verified = (bool) data_get($socialUser->user, 'verified_email', false);
+
+        $byGoogle = User::query()
+            ->where('tenant_id', $tenant->id)
+            ->where('google_id', $sub)
+            ->first();
+
+        if ($byGoogle !== null) {
+            if ($avatar !== null && $avatar !== '') {
+                $byGoogle->forceFill(['avatar' => $avatar])->save();
+            }
+
+            return $this->finishLogin($request, $byGoogle);
         }
 
-        $sameEmail = User::query()->where('email', $emailLower)->get();
-        if ($sameEmail->count() > 1) {
-            return redirect()->route('login')->with(
-                'error',
-                'Hay varias cuentas con este correo. Inicia sesión con correo y contraseña o contacta soporte.'
-            );
-        }
+        $byEmail = User::query()
+            ->where('tenant_id', $tenant->id)
+            ->where('email', $emailLower)
+            ->first();
 
-        if ($sameEmail->count() === 1) {
-            $user = $sameEmail->first();
+        if ($byEmail !== null) {
             if (! $verified) {
-                return redirect()->route('login')->with(
-                    'error',
-                    'Confirma tu correo en Google antes de vincular la cuenta.'
-                );
+                return redirect()->route('login')->withErrors([
+                    'oauth' => 'Confirma tu correo en Google antes de vincular la cuenta.',
+                ]);
             }
 
-            if ($user->google_id !== null && $user->google_id !== $sub) {
-                return redirect()->route('login')->with(
-                    'error',
-                    'Esta cuenta ya está vinculada a otro perfil de Google.'
-                );
+            if ($byEmail->google_id !== null && $byEmail->google_id !== $sub) {
+                return redirect()->route('login')->withErrors([
+                    'oauth' => 'Esta cuenta ya está vinculada a otro perfil de Google.',
+                ]);
             }
 
-            $user->forceFill([
+            $byEmail->forceFill([
                 'google_id' => $sub,
-                'name' => $user->name !== '' && $user->name !== null ? $user->name : $name,
+                'name' => $byEmail->name !== '' && $byEmail->name !== null ? $byEmail->name : $name,
+                'avatar' => $avatar ?: $byEmail->avatar,
             ])->save();
 
-            return $this->finishLogin($request, $user);
+            return $this->finishLogin($request, $byEmail);
         }
 
-        $request->session()->put('google_register', [
-            'sub' => $sub,
-            'email' => $emailLower,
+        if (! $tenant->allow_google_self_registration) {
+            return redirect()->route('login')->withErrors([
+                'oauth' => 'Tu cuenta no está registrada en '.$tenant->name.'. Contacta al administrador del negocio.',
+            ]);
+        }
+
+        try {
+            app(TenantPlanService::class)->assertCanCreateUser($tenant);
+        } catch (ValidationException $e) {
+            return redirect()->route('login')->withErrors($e->errors());
+        }
+
+        $bootstrap = app(TenantRoleBootstrap::class);
+        $bootstrap->syncPermissionCatalog();
+        $bootstrap->ensureSystemRolesForTenant($tenant);
+
+        $cajeroRole = Role::query()
+            ->withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->where('slug', 'cajero')
+            ->first();
+
+        if ($cajeroRole === null) {
+            return redirect()->route('login')->withErrors([
+                'oauth' => 'No se pudo asignar un rol al usuario. Contacta soporte.',
+            ]);
+        }
+
+        $mainBranch = Branch::query()
+            ->where('tenant_id', $tenant->id)
+            ->where('is_active', true)
+            ->orderByDesc('is_main')
+            ->orderBy('id')
+            ->first();
+
+        if ($mainBranch === null) {
+            return redirect()->route('login')->withErrors([
+                'oauth' => 'El negocio no tiene sucursal activa. Contacta al administrador.',
+            ]);
+        }
+
+        $user = User::query()->create([
+            'tenant_id' => $tenant->id,
+            'branch_id' => $mainBranch->id,
+            'role_id' => $cajeroRole->id,
             'name' => $name,
-            'email_verified' => $verified,
+            'email' => $emailLower,
+            'google_id' => $sub,
+            'avatar' => $avatar ?: null,
+            'email_verified_at' => $verified ? now() : null,
         ]);
 
-        return redirect()->route('register.google');
+        event(new Registered($user));
+
+        return $this->finishLogin($request, $user);
     }
 
-    /**
-     * @return RedirectResponse
-     */
     protected function finishLogin(Request $request, User $user): RedirectResponse
     {
-        Auth::login($user, remember: false);
+        Auth::login($user, remember: true);
         $request->session()->regenerate();
 
         if ($user->is_platform_operator && $user->tenant_id === null) {
@@ -114,10 +199,12 @@ class GoogleAuthController extends Controller
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
+    /**
+     * Solo requiere credenciales OAuth; la URL de callback se deriva del host actual.
+     */
     protected function googleOAuthConfigured(): bool
     {
         return filled(config('services.google.client_id'))
-            && filled(config('services.google.client_secret'))
-            && filled(config('services.google.redirect'));
+            && filled(config('services.google.client_secret'));
     }
 }

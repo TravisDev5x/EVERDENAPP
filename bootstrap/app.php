@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\EnsurePlatformOperator;
 use App\Http\Middleware\EnsureTenantContext;
+use App\Http\Middleware\IdentifyTenant;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
 
         $middleware->web(prepend: [
             \App\Http\Middleware\ForceHttps::class,
+            IdentifyTenant::class,
         ]);
 
         $middleware->web(append: [
@@ -41,7 +43,8 @@ $app = Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'tenant' => EnsureTenantContext::class,
+            'tenant' => IdentifyTenant::class,
+            'tenant.context' => EnsureTenantContext::class,
             'platform' => EnsurePlatformOperator::class,
         ]);
 

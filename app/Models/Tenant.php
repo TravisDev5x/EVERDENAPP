@@ -31,6 +31,7 @@ class Tenant extends Model
         'db_port',
         'enterprise_enabled',
         'is_active',
+        'allow_google_self_registration',
         'suspended_at',
         'suspension_reason',
         'plan_slug',
@@ -46,6 +47,7 @@ class Tenant extends Model
         return [
             'enterprise_enabled' => 'boolean',
             'is_active' => 'boolean',
+            'allow_google_self_registration' => 'boolean',
             'suspended_at' => 'datetime',
         ];
     }

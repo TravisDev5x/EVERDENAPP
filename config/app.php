@@ -55,6 +55,8 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
     /*
+    | Resolución de tenant en local sin subdominio: ver config/tenant.php (DEV_TENANT_SLUG).
+    |
     |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------

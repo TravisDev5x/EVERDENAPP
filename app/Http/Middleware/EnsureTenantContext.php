@@ -34,6 +34,14 @@ class EnsureTenantContext
             abort(403, 'Tenant context is required.');
         }
 
+        if (app()->bound('currentTenant')) {
+            $hostTenant = app('currentTenant');
+            if ($hostTenant instanceof Tenant
+                && (int) $user->tenant_id !== (int) $hostTenant->id) {
+                abort(403, 'Este usuario no pertenece al negocio de este enlace.');
+            }
+        }
+
         $tenant = Tenant::query()->find($user->tenant_id);
 
         if (! $tenant || ! $tenant->is_active) {

@@ -19,12 +19,14 @@ import {
     Anchor,
     BarChart3,
     Building2,
+    Check,
     FileBarChart,
     Layers,
     Package,
     ShieldCheck,
     ShoppingCart,
     Wallet,
+    X,
 } from 'lucide-react';
 
 /** Iconos lucide-react por clave de funcionalidad (alineado al registry shadcn). */
@@ -104,42 +106,6 @@ const FAQ_ITEMS = [
     },
 ];
 
-const PLAN_CARDS = [
-    {
-        name: 'Base',
-        description: 'Para un mostrador o tienda que quiere orden desde el primer día.',
-        highlight: false,
-        priceLabel: 'Desde — MXN',
-        bullets: [
-            'Caja, tickets e inventario',
-            'Usuarios con permisos claros',
-            'Soporte estándar',
-        ],
-    },
-    {
-        name: 'Crecimiento',
-        description: 'Varias sucursales con vista central. El más elegido para ir sumando tiendas.',
-        highlight: true,
-        priceLabel: 'Desde — MXN',
-        bullets: [
-            'Caja e inventario por sucursal',
-            'Reportes por tienda y en conjunto',
-            'Atención prioritaria',
-        ],
-    },
-    {
-        name: 'Empresa',
-        description: 'Mucho volumen, enlaces con otros sistemas y acompañamiento cercano.',
-        highlight: false,
-        priceLabel: 'Cotización',
-        bullets: [
-            'Conexión con tu ERP u otros sistemas',
-            'Instalación dedicada si la necesitas',
-            'Ejecutivo de cuenta y respuesta acordada',
-        ],
-    },
-];
-
 /** Acentos neutros (slate/zinc/stone) — el verde queda solo en el contenedor del logo. */
 const ACCENT_STYLES = {
     slate: {
@@ -179,11 +145,26 @@ function ziggyRouteExists(name) {
     }
 }
 
+/** Formatea límite: -1 → 'Ilimitado', n → n */
+function formatLimit(value) {
+    return value === -1 ? 'Ilimitado' : value;
+}
+
+/** Precio MXN sin decimales */
+function formatPriceMxn(value) {
+    return new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    }).format(value);
+}
+
 /**
  * Landing servida por Laravel + @routes (Ziggy). Abrí siempre la URL de la app (p.ej. APP_URL o vhost de Laragon),
  * no el puerto de Vite (5173/5174): ahí no hay props Inertia ni Ziggy completos.
  */
-export default function Welcome({ canLogin, canRegister }) {
+export default function Welcome({ canLogin, canRegister, plans = [] }) {
     const { auth, appName, siteUrl } = usePage().props;
     const canLoginUi = Boolean(canLogin) || ziggyRouteExists('login');
     const canRegisterUi = Boolean(canRegister) || ziggyRouteExists('register');
@@ -679,70 +660,133 @@ export default function Welcome({ canLogin, canRegister }) {
                                     Planes según el tamaño de tu negocio
                                 </h2>
                                 <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">
-                                    Desde un solo mostrador hasta varias sucursales. Precios en pesos mexicanos;
-                                    el detalle lo vemos contigo al solicitar información.
+                                    Precios en pesos mexicanos, facturación mensual.
+                                    Prueba 7 días gratis con cualquier plan — cancela cuando quieras.
                                 </p>
                             </div>
-                            <div className="mt-12 grid gap-6 lg:grid-cols-3 lg:items-stretch">
-                                {PLAN_CARDS.map((plan) => (
-                                    <Card
-                                        key={plan.name}
-                                        className={cn(
-                                            'relative flex h-full flex-col overflow-visible bg-card py-6 shadow-md ring-1 ring-border',
-                                            plan.highlight
-                                                ? 'border-2 border-primary/35 bg-gradient-to-b from-primary/[0.08] to-card pt-9 dark:border-primary/30 dark:from-primary/10'
-                                                : 'border border-border',
-                                        )}
-                                    >
-                                        {plan.highlight ? (
-                                            <Badge className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 bg-primary px-3 py-1 text-xs font-semibold normal-case text-primary-foreground shadow-xs hover:bg-primary/90">
-                                                Recomendado
-                                            </Badge>
-                                        ) : null}
-                                        <CardHeader className="gap-2 pb-2">
-                                            <CardTitle className="text-xl font-semibold leading-tight text-card-foreground">
-                                                {plan.name}
-                                            </CardTitle>
-                                            <CardDescription className="text-sm leading-snug">
-                                                {plan.description}
-                                            </CardDescription>
-                                        </CardHeader>
-                                        <CardContent className="flex flex-1 flex-col gap-5 pb-4">
-                                            <p className="text-2xl font-bold tabular-nums tracking-tight text-card-foreground">
-                                                {plan.priceLabel}
-                                            </p>
-                                            <ul className="mt-auto space-y-2.5 text-sm text-muted-foreground">
-                                                {plan.bullets.map((b) => (
-                                                    <li key={b} className="flex gap-2.5 leading-snug">
-                                                        <span
-                                                            className="mt-0.5 shrink-0 text-primary"
-                                                            aria-hidden
+
+                            {plans.length === 0 ? (
+                                <p className="mt-12 text-center text-sm text-muted-foreground">
+                                    Planes disponibles próximamente.
+                                </p>
+                            ) : (
+                                <div className="mt-12 grid gap-6 lg:grid-cols-3 lg:items-stretch">
+                                    {plans.map((plan) => {
+                                        const isHighlight = plan.slug === 'pro';
+                                        return (
+                                            <Card
+                                                key={plan.id}
+                                                className={cn(
+                                                    'relative flex h-full flex-col overflow-visible bg-card py-6 shadow-md ring-1 ring-border',
+                                                    isHighlight
+                                                        ? 'border-2 border-primary/35 bg-gradient-to-b from-primary/[0.08] to-card pt-9 dark:border-primary/30 dark:from-primary/10'
+                                                        : 'border border-border',
+                                                )}
+                                            >
+                                                {isHighlight && (
+                                                    <Badge className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 bg-primary px-3 py-1 text-xs font-semibold normal-case text-primary-foreground shadow-xs hover:bg-primary/90">
+                                                        Recomendado
+                                                    </Badge>
+                                                )}
+
+                                                <CardHeader className="gap-2 pb-2">
+                                                    <CardTitle className="text-xl font-semibold leading-tight text-card-foreground">
+                                                        {plan.name}
+                                                    </CardTitle>
+                                                    <div>
+                                                        <p className="text-2xl font-bold tabular-nums tracking-tight text-card-foreground">
+                                                            {formatPriceMxn(plan.price_mxn)}
+                                                            <span className="text-base font-normal text-muted-foreground">
+                                                                /mes
+                                                            </span>
+                                                        </p>
+                                                        <p className="mt-0.5 text-xs text-muted-foreground">
+                                                            · 7 días de prueba gratis
+                                                        </p>
+                                                    </div>
+                                                </CardHeader>
+
+                                                <CardContent className="flex flex-1 flex-col gap-5 pb-4">
+                                                    <ul className="mt-auto space-y-2.5 text-sm text-muted-foreground">
+                                                        {[
+                                                            {
+                                                                label: `${formatLimit(plan.max_users)} usuarios`,
+                                                                active: true,
+                                                            },
+                                                            {
+                                                                label: `${formatLimit(plan.max_products)} productos`,
+                                                                active: true,
+                                                            },
+                                                            {
+                                                                label: `${formatLimit(plan.max_branches)} sucursal(es)`,
+                                                                active: true,
+                                                            },
+                                                            {
+                                                                label: 'Modo sin conexión',
+                                                                active: plan.has_offline_mode,
+                                                            },
+                                                            {
+                                                                label: 'Reportes avanzados',
+                                                                active: plan.has_advanced_reports,
+                                                            },
+                                                            {
+                                                                label: 'Acceso a API',
+                                                                active: plan.has_api_access,
+                                                            },
+                                                        ].map((item) => (
+                                                            <li
+                                                                key={item.label}
+                                                                className={cn(
+                                                                    'flex gap-2.5 leading-snug',
+                                                                    !item.active && 'opacity-40',
+                                                                )}
+                                                            >
+                                                                {item.active ? (
+                                                                    <Check
+                                                                        className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                                                                        aria-hidden
+                                                                    />
+                                                                ) : (
+                                                                    <X
+                                                                        className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground"
+                                                                        aria-hidden
+                                                                    />
+                                                                )}
+                                                                <span>{item.label}</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </CardContent>
+
+                                                <CardFooter className="mt-auto flex-col gap-2 border-t border-border bg-muted/30 p-4 dark:bg-muted/20">
+                                                    {isHighlight ? (
+                                                        <Button
+                                                            size="lg"
+                                                            asChild
+                                                            className="w-full rounded-xl"
                                                         >
-                                                            ✓
-                                                        </span>
-                                                        <span>{b}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </CardContent>
-                                        <CardFooter className="mt-auto flex-col gap-2 border-t border-border bg-muted/30 p-4 dark:bg-muted/20">
-                                            {plan.highlight ? (
-                                                <Button
-                                                    size="lg"
-                                                    asChild
-                                                    className="w-full rounded-xl"
-                                                >
-                                                    <Link href={route('register')}>Solicitar información</Link>
-                                                </Button>
-                                            ) : (
-                                                <Button variant="outline" size="lg" asChild className="w-full rounded-xl">
-                                                    <Link href={route('register')}>Solicitar información</Link>
-                                                </Button>
-                                            )}
-                                        </CardFooter>
-                                    </Card>
-                                ))}
-                            </div>
+                                                            <Link href={route('register')}>
+                                                                Empezar prueba gratis
+                                                            </Link>
+                                                        </Button>
+                                                    ) : (
+                                                        <Button
+                                                            variant="outline"
+                                                            size="lg"
+                                                            asChild
+                                                            className="w-full rounded-xl"
+                                                        >
+                                                            <Link href={route('register')}>
+                                                                Empezar prueba gratis
+                                                            </Link>
+                                                        </Button>
+                                                    )}
+                                                </CardFooter>
+                                            </Card>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </section>
 
                         {/* FAQ — <details> nativo evita cargar Radix Accordion en esta página */}
