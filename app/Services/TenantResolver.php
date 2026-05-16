@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\Tenant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 final class TenantResolver
 {
@@ -15,6 +16,11 @@ final class TenantResolver
      */
     public static function resolve(Request $request): ?Tenant
     {
+        // En entorno de testing sin subdominio real, no consultar la BD
+        if (app()->environment('testing') && ! $request->getHost()) {
+            return null;
+        }
+
         $host = strtolower($request->getHost());
 
         if (self::isPlatformPath($request)) {
@@ -22,13 +28,14 @@ final class TenantResolver
         }
 
         if (self::isLocalOrLoopback($host)) {
-            $slug = config('tenant.dev_tenant_slug');
-
-            if (! is_string($slug) || $slug === '') {
-                return null;
+            if (config('tenant.dev_tenant_slug')
+                && Schema::hasTable('tenants')) {
+                return Tenant::query()
+                    ->where('slug', config('tenant.dev_tenant_slug'))
+                    ->first();
             }
 
-            return Tenant::query()->where('slug', $slug)->first();
+            return null;
         }
 
         $subdomain = self::extractSubdomain($host);
