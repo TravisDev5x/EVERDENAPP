@@ -12,6 +12,7 @@ class Plan extends Model
     protected $fillable = [
         'name',
         'slug',
+        'stripe_price_id',
         'price_mxn',
         'max_users',
         'max_products',
@@ -19,6 +20,7 @@ class Plan extends Model
         'has_offline_mode',
         'has_advanced_reports',
         'has_api_access',
+        'has_cfdi',
         'is_active',
     ];
 
@@ -31,6 +33,7 @@ class Plan extends Model
             'has_offline_mode' => 'boolean',
             'has_advanced_reports' => 'boolean',
             'has_api_access' => 'boolean',
+            'has_cfdi' => 'boolean',
             'is_active' => 'boolean',
         ];
     }
