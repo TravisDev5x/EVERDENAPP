@@ -14,8 +14,10 @@ use App\Policies\CashRegisterPolicy;
 use App\Policies\CashSessionPolicy;
 use App\Policies\PaymentPolicy;
 use App\Policies\ProductPolicy;
+use App\Notifications\ResetPasswordNotification;
 use App\Policies\SalePolicy;
 use App\Services\TenantContext;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
@@ -38,6 +40,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        ResetPassword::toMailUsing(function (mixed $notifiable, string $token): \Illuminate\Notifications\Messages\MailMessage {
+            $url = url(route('password.reset', [
+                'token' => $token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ], false));
+
+            return ResetPasswordNotification::mailMessage($url);
+        });
+
         Cashier::useCustomerModel(Tenant::class);
 
         if (config('security.force_https')) {
