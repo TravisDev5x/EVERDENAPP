@@ -26,7 +26,7 @@ class SecurityHeaders
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
-        $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
+        $response->headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
         $response->headers->set('Cross-Origin-Opener-Policy', 'same-origin');
         $response->headers->set('Cross-Origin-Resource-Policy', 'same-origin');
 
@@ -64,20 +64,26 @@ class SecurityHeaders
             return '';
         }
 
-        // Inertia + Vite build: scripts y estilos del mismo origen; fonts.bunny.net en Welcome.
+        $connectExtra = ' https://api.stripe.com https://m.stripe.network https://r.stripe.com https://errors.stripe.com https://hcaptcha.com https://*.hcaptcha.com';
+
+        // Inertia + Vite + Stripe Elements + hCaptcha (fraud) en entornos con CSP activa.
         $directives = [
             "default-src 'self'",
             "base-uri 'self'",
             "form-action 'self'",
             "frame-ancestors 'self'",
             "object-src 'none'",
-            "upgrade-insecure-requests",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-            "style-src 'self' 'unsafe-inline' https://fonts.bunny.net",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' https://js.stripe.com https://m.stripe.network https://hcaptcha.com https://*.hcaptcha.com",
+            "style-src 'self' 'unsafe-inline' https://fonts.bunny.net https://js.stripe.com",
             "font-src 'self' https://fonts.bunny.net data:",
-            "img-src 'self' data: blob:",
-            "connect-src 'self'".($origin !== '' ? " {$origin}" : ''),
+            "img-src 'self' data: blob: https://*.stripe.com",
+            "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://m.stripe.network https://hcaptcha.com https://*.hcaptcha.com",
+            "connect-src 'self'".($origin !== '' ? " {$origin}" : '').$connectExtra,
         ];
+
+        if ($request->secure()) {
+            $directives[] = 'upgrade-insecure-requests';
+        }
 
         return implode('; ', $directives);
     }

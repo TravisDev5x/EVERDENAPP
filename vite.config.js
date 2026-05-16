@@ -28,6 +28,9 @@ export default defineConfig({
                     if (id.includes('lucide-react')) {
                         return 'icons-vendor';
                     }
+                    if (id.includes('@stripe')) {
+                        return 'stripe-vendor';
+                    }
                     if (id.includes('radix-ui') || id.includes('@radix-ui')) {
                         return 'radix-vendor';
                     }

@@ -14,6 +14,8 @@ const linkPrimary = cn(
 );
 
 export default function Login({ status, canResetPassword }) {
+    const sharedErrors = usePage().props.errors ?? {};
+
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -53,9 +55,9 @@ export default function Login({ status, canResetPassword }) {
                 </Alert>
             ) : null}
 
-            {pageErrors.oauth ? (
+            {sharedErrors.oauth ? (
                 <Alert variant="destructive" className="mb-6" role="alert">
-                    <AlertDescription>{pageErrors.oauth}</AlertDescription>
+                    <AlertDescription>{sharedErrors.oauth}</AlertDescription>
                 </Alert>
             ) : null}
 

@@ -21,6 +21,8 @@
         "vite": "^8.0.11"
     },
     "dependencies": {
+        "@stripe/react-stripe-js": "^3.6.0",
+        "@stripe/stripe-js": "^5.10.0",
         "axios": "^1.13.5",
         "@fontsource-variable/geist": "^5.2.8",
         "class-variance-authority": "^0.7.1",

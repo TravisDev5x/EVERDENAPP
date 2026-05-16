@@ -125,6 +125,7 @@ final class GoogleAuthController extends Controller
                 'google_id' => $sub,
                 'name' => $byEmail->name !== '' && $byEmail->name !== null ? $byEmail->name : $name,
                 'avatar' => $avatar ?: $byEmail->avatar,
+                'email_verified_at' => $byEmail->email_verified_at ?? now(),
             ])->save();
 
             return $this->finishLogin($request, $byEmail);
@@ -179,7 +180,7 @@ final class GoogleAuthController extends Controller
             'email' => $emailLower,
             'google_id' => $sub,
             'avatar' => $avatar ?: null,
-            'email_verified_at' => $verified ? now() : null,
+            'email_verified_at' => now(),
         ]);
 
         event(new Registered($user));

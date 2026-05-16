@@ -2,12 +2,13 @@
 
 namespace App\Providers;
 
-use App\Models\Product;
 use App\Models\Branch;
 use App\Models\CashRegister;
 use App\Models\CashSession;
 use App\Models\Payment;
+use App\Models\Product;
 use App\Models\Sale;
+use App\Models\Tenant;
 use App\Policies\BranchPolicy;
 use App\Policies\CashRegisterPolicy;
 use App\Policies\CashSessionPolicy;
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Cashier\Cashier;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(TenantContext::class, fn () => new TenantContext());
+        $this->app->singleton(TenantContext::class, fn () => new TenantContext);
     }
 
     /**
@@ -36,6 +38,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Cashier::useCustomerModel(Tenant::class);
+
         if (config('security.force_https')) {
             URL::forceScheme('https');
         }

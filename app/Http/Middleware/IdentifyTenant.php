@@ -61,6 +61,19 @@ final class IdentifyTenant
             return true;
         }
 
+        // Rutas de invitado (Breeze): sin tenant en vhosts tipo *.test o dominio raíz
+        if ($request->is(
+            'register',
+            'register/*',
+            'login',
+            'auth/*',
+            'forgot-password',
+            'reset-password',
+            'reset-password/*',
+        )) {
+            return true;
+        }
+
         return false;
     }
 }

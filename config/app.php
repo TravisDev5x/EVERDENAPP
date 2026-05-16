@@ -55,6 +55,13 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
     /*
+    |--------------------------------------------------------------------------
+    | Application domain (subdominios: {slug}.{domain})
+    |--------------------------------------------------------------------------
+    */
+    'domain' => env('APP_DOMAIN'),
+
+    /*
     | Resolución de tenant en local sin subdominio: ver config/tenant.php (DEV_TENANT_SLUG).
     |
     |--------------------------------------------------------------------------

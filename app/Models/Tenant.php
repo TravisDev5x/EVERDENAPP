@@ -5,11 +5,15 @@ namespace App\Models;
 use Database\Factories\TenantFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Cashier\Billable;
 
 class Tenant extends Model
 {
     /** @use HasFactory<TenantFactory> */
+    use Billable;
+
     use HasFactory;
 
     /**
@@ -37,6 +41,12 @@ class Tenant extends Model
         'plan_slug',
         'max_users',
         'max_branches',
+        'stripe_id',
+        'pm_type',
+        'pm_last_four',
+        'trial_ends_at',
+        'plan_id',
+        'status',
     ];
 
     /**
@@ -49,7 +59,30 @@ class Tenant extends Model
             'is_active' => 'boolean',
             'allow_google_self_registration' => 'boolean',
             'suspended_at' => 'datetime',
+            'trial_ends_at' => 'datetime',
         ];
+    }
+
+    public function canOperate(): bool
+    {
+        return in_array($this->status, ['trial', 'active'], true);
+    }
+
+    public function trialDaysRemaining(): int
+    {
+        if (! $this->trial_ends_at || $this->status !== 'trial') {
+            return 0;
+        }
+
+        return max(0, (int) now()->diffInDays($this->trial_ends_at, false));
+    }
+
+    /**
+     * @return BelongsTo<Plan, $this>
+     */
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(Plan::class);
     }
 
     /**
@@ -74,5 +107,10 @@ class Tenant extends Model
     public function branches(): HasMany
     {
         return $this->hasMany(Branch::class);
+    }
+
+    public function stripeEmail(): ?string
+    {
+        return $this->users()->orderBy('id')->value('email');
     }
 }
