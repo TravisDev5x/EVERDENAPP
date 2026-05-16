@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models\Concerns;
 
 use App\Services\TenantContext;
@@ -12,6 +14,10 @@ trait BelongsToTenant
     protected static function bootBelongsToTenant(): void
     {
         static::creating(function (Model $model): void {
+            if ($model->tenant_id !== null && $model->tenant_id !== '') {
+                return;
+            }
+
             $tenantId = self::resolveTenantId();
 
             if ($tenantId === null) {
@@ -20,12 +26,11 @@ trait BelongsToTenant
                         sprintf('Cannot create [%s] without a resolved tenant_id.', static::class)
                     );
                 }
+
                 return;
             }
 
-            if (! $model->tenant_id) {
-                $model->tenant_id = $tenantId;
-            }
+            $model->tenant_id = $tenantId;
         });
 
         static::addGlobalScope('tenant', function (Builder $builder): void {
