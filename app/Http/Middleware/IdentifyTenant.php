@@ -74,6 +74,10 @@ final class IdentifyTenant
             return true;
         }
 
+        if ($request->is('invitacion', 'invitacion/*')) {
+            return true;
+        }
+
         return false;
     }
 }

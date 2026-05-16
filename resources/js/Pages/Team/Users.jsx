@@ -1,30 +1,82 @@
 import Pagination from '@/Components/Pagination';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Badge } from '@/Components/ui/badge';
+import { Button } from '@/Components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Input } from '@/Components/ui/input';
+import { Label } from '@/Components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/Components/ui/select';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/Components/ui/table';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { MessageCircle } from 'lucide-react';
 
-export default function TeamUsers({ users, roles, branches, canManageUsers }) {
-    const { auth } = usePage().props;
+const INVITATION_STATUS_LABELS = {
+    pending: 'Pendiente',
+    rejected: 'Rechazada',
+};
+
+function formatDate(iso) {
+    if (!iso) {
+        return '—';
+    }
+    return new Intl.DateTimeFormat('es-MX', { dateStyle: 'medium' }).format(new Date(iso));
+}
+
+function UserStatusBadge({ user }) {
+    const suspended = Boolean(user.suspended_at);
+    return (
+        <Badge variant={suspended ? 'destructive' : 'secondary'}>
+            {suspended ? 'Suspendido' : 'Activo'}
+        </Badge>
+    );
+}
+
+function InvitationStatusBadge({ status }) {
+    const variant = status === 'rejected' ? 'destructive' : 'outline';
+    return (
+        <Badge variant={variant}>
+            {INVITATION_STATUS_LABELS[status] ?? status}
+        </Badge>
+    );
+}
+
+export default function TeamUsers({ users, roles, invitations = [], canManageUsers }) {
+    const { auth, errors: pageErrors } = usePage().props;
     const userRows = users?.data ?? [];
 
     const inviteForm = useForm({
-        name: '',
         email: '',
-        password: '',
-        password_confirmation: '',
-        role_id: roles[0]?.id ?? '',
-        branch_id: auth.user.branch_id ?? branches[0]?.id ?? '',
+        role_id: roles[0]?.id ? String(roles[0].id) : '',
     });
 
     const submitInvite = (e) => {
         e.preventDefault();
-        inviteForm.post(route('team.users.store'), {
+        inviteForm.post(route('team.invitations.store'), {
             preserveScroll: true,
-            onSuccess: () => inviteForm.reset('password', 'password_confirmation'),
+            onSuccess: () => inviteForm.reset('email'),
         });
+    };
+
+    const resendInvitation = (id) => {
+        router.post(route('team.invitations.resend', id), {}, { preserveScroll: true });
+    };
+
+    const cancelInvitation = (id) => {
+        router.delete(route('team.invitations.cancel', id), {}, { preserveScroll: true });
     };
 
     return (
@@ -39,180 +91,281 @@ export default function TeamUsers({ users, roles, branches, canManageUsers }) {
 
             <div className="py-8">
                 <div className="mx-auto max-w-6xl space-y-6 px-4 sm:px-6 lg:px-8">
-                    <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
-                        <p className="text-sm text-muted-foreground">
-                            Aquí ves quién puede entrar al sistema. Los accesos detallados se ajustan en
-                            &quot;Accesos&quot; del menú.
-                        </p>
-                    </div>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Miembros del equipo</CardTitle>
+                            <CardDescription>
+                                Usuarios con acceso al sistema. Los permisos detallados se configuran en
+                                Accesos.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Nombre</TableHead>
+                                        <TableHead>Email</TableHead>
+                                        <TableHead>Rol</TableHead>
+                                        <TableHead>Sucursal</TableHead>
+                                        <TableHead>Estado</TableHead>
+                                        {canManageUsers && <TableHead className="text-right">Acciones</TableHead>}
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {userRows.length === 0 && (
+                                        <TableRow>
+                                            <TableCell
+                                                colSpan={canManageUsers ? 6 : 5}
+                                                className="text-center text-muted-foreground"
+                                            >
+                                                No hay miembros en esta página.
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                    {userRows.map((u) => (
+                                        <MemberRow
+                                            key={u.id}
+                                            user={u}
+                                            roles={roles}
+                                            canManage={canManageUsers}
+                                            isSelf={auth.user.id === u.id}
+                                        />
+                                    ))}
+                                </TableBody>
+                            </Table>
+                            <Pagination className="mt-6" resource={users} />
+                        </CardContent>
+                    </Card>
 
                     {canManageUsers && (
-                        <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
-                            <h3 className="mb-3 text-lg font-semibold text-foreground">
-                                Invitar a alguien
-                            </h3>
-                            <p className="mb-4 text-sm text-muted-foreground">
-                                Crea una cuenta nueva para tu equipo (según el límite de tu plan).
-                            </p>
-                            <form className="grid max-w-xl gap-3" onSubmit={submitInvite}>
-                                <div>
-                                    <InputLabel value="Nombre completo" />
-                                    <TextInput
-                                        className="mt-1 w-full"
-                                        value={inviteForm.data.name}
-                                        onChange={(e) => inviteForm.setData('name', e.target.value)}
-                                        required
-                                        autoComplete="name"
-                                    />
-                                    <InputError className="mt-1" message={inviteForm.errors.name} />
-                                </div>
-                                <div>
-                                    <InputLabel value="Correo" />
-                                    <TextInput
-                                        type="email"
-                                        className="mt-1 w-full"
-                                        value={inviteForm.data.email}
-                                        onChange={(e) => inviteForm.setData('email', e.target.value)}
-                                        required
-                                        autoComplete="email"
-                                    />
-                                    <InputError className="mt-1" message={inviteForm.errors.email} />
-                                </div>
-                                <div>
-                                    <InputLabel value="Contraseña inicial" />
-                                    <TextInput
-                                        type="password"
-                                        className="mt-1 w-full"
-                                        value={inviteForm.data.password}
-                                        onChange={(e) => inviteForm.setData('password', e.target.value)}
-                                        required
-                                        autoComplete="new-password"
-                                    />
-                                    <InputError className="mt-1" message={inviteForm.errors.password} />
-                                </div>
-                                <div>
-                                    <InputLabel value="Confirmar contraseña" />
-                                    <TextInput
-                                        type="password"
-                                        className="mt-1 w-full"
-                                        value={inviteForm.data.password_confirmation}
-                                        onChange={(e) =>
-                                            inviteForm.setData('password_confirmation', e.target.value)
-                                        }
-                                        required
-                                        autoComplete="new-password"
-                                    />
-                                </div>
-                                <div>
-                                    <InputLabel value="Sucursal" />
-                                    <select
-                                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground shadow-xs focus-visible:border-ring focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40"
-                                        value={inviteForm.data.branch_id}
-                                        onChange={(e) => inviteForm.setData('branch_id', e.target.value)}
-                                        required
-                                    >
-                                        {branches.map((b) => (
-                                            <option key={b.id} value={b.id}>
-                                                {b.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <InputError className="mt-1" message={inviteForm.errors.branch_id} />
-                                </div>
-                                <div>
-                                    <InputLabel value="Rol" />
-                                    <select
-                                        className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground shadow-xs focus-visible:border-ring focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40"
-                                        value={inviteForm.data.role_id}
-                                        onChange={(e) => inviteForm.setData('role_id', e.target.value)}
-                                        required
-                                    >
-                                        {roles.map((r) => (
-                                            <option key={r.id} value={r.id}>
-                                                {r.name}
-                                                {r.is_system ? ' (sistema)' : ''}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <InputError className="mt-1" message={inviteForm.errors.role_id} />
-                                </div>
-                                <div>
-                                    <PrimaryButton type="submit" disabled={inviteForm.processing}>
-                                        Crear usuario
-                                    </PrimaryButton>
-                                </div>
-                            </form>
-                        </div>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Invitar miembro</CardTitle>
+                                <CardDescription>
+                                    Envía un enlace por correo para que la persona cree su acceso (según el
+                                    límite de tu plan, incluyendo invitaciones pendientes).
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <form
+                                    onSubmit={submitInvite}
+                                    className="grid max-w-xl gap-4 sm:grid-cols-2"
+                                >
+                                    <div className="space-y-2 sm:col-span-2">
+                                        <Label htmlFor="invite-email">Correo electrónico</Label>
+                                        <Input
+                                            id="invite-email"
+                                            type="email"
+                                            value={inviteForm.data.email}
+                                            onChange={(e) => inviteForm.setData('email', e.target.value)}
+                                            required
+                                            autoComplete="email"
+                                            placeholder="empleado@ejemplo.com"
+                                        />
+                                        <InputError message={inviteForm.errors.email} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="invite-role">Rol</Label>
+                                        <Select
+                                            value={inviteForm.data.role_id}
+                                            onValueChange={(v) => inviteForm.setData('role_id', v)}
+                                        >
+                                            <SelectTrigger id="invite-role">
+                                                <SelectValue placeholder="Selecciona un rol" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {roles.map((r) => (
+                                                    <SelectItem key={r.id} value={String(r.id)}>
+                                                        {r.name}
+                                                        {r.is_system ? ' (sistema)' : ''}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <InputError message={inviteForm.errors.role_id} />
+                                    </div>
+                                    <div className="flex items-end">
+                                        <Button type="submit" disabled={inviteForm.processing}>
+                                            Enviar invitación
+                                        </Button>
+                                    </div>
+                                </form>
+                            </CardContent>
+                        </Card>
                     )}
 
-                    <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
-                        <h3 className="mb-4 text-lg font-semibold text-foreground">
-                            Quién tiene acceso
-                        </h3>
-                        <div className="space-y-4">
-                            {userRows.map((u) => (
-                                <UserRow
-                                    key={u.id}
-                                    user={u}
-                                    roles={roles}
-                                    canManage={canManageUsers}
-                                    isSelf={auth.user.id === u.id}
-                                />
-                            ))}
-                        </div>
-                        <Pagination className="mt-6" resource={users} />
-                    </div>
+                    {canManageUsers && invitations.length > 0 && (
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Invitaciones</CardTitle>
+                                <CardDescription>
+                                    Pendientes y rechazadas. Puedes reenviar, compartir por WhatsApp o
+                                    cancelar las pendientes.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                {pageErrors?.resend && (
+                                    <p className="text-sm font-medium text-destructive" role="alert">
+                                        {pageErrors.resend}
+                                    </p>
+                                )}
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Email</TableHead>
+                                            <TableHead>Rol</TableHead>
+                                            <TableHead>Enviada por</TableHead>
+                                            <TableHead>Expira el</TableHead>
+                                            <TableHead>Estado</TableHead>
+                                            <TableHead className="text-right">Acciones</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {invitations.map((inv) => (
+                                            <TableRow key={inv.id}>
+                                                <TableCell className="font-medium">{inv.email}</TableCell>
+                                                <TableCell>{inv.role?.name ?? '—'}</TableCell>
+                                                <TableCell>{inv.invited_by?.name ?? '—'}</TableCell>
+                                                <TableCell>{formatDate(inv.expires_at)}</TableCell>
+                                                <TableCell>
+                                                    <InvitationStatusBadge status={inv.status} />
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="flex flex-wrap justify-end gap-2">
+                                                        {inv.status === 'pending' && (
+                                                            <>
+                                                                <Button
+                                                                    type="button"
+                                                                    variant="secondary"
+                                                                    size="sm"
+                                                                    disabled={!inv.can_resend}
+                                                                    onClick={() => resendInvitation(inv.id)}
+                                                                >
+                                                                    Reenviar
+                                                                </Button>
+                                                                {inv.whatsapp_url && (
+                                                                    <Button
+                                                                        type="button"
+                                                                        variant="outline"
+                                                                        size="sm"
+                                                                        asChild
+                                                                    >
+                                                                        <a
+                                                                            href={inv.whatsapp_url}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                        >
+                                                                            <MessageCircle className="mr-1 size-4" />
+                                                                            WhatsApp
+                                                                        </a>
+                                                                    </Button>
+                                                                )}
+                                                                <Button
+                                                                    type="button"
+                                                                    variant="outline"
+                                                                    size="sm"
+                                                                    onClick={() => cancelInvitation(inv.id)}
+                                                                >
+                                                                    Cancelar
+                                                                </Button>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                                {invitations
+                                    .filter((inv) => inv.status === 'rejected' && inv.rejection_reason)
+                                    .map((inv) => (
+                                        <div
+                                            key={`reason-${inv.id}`}
+                                            className="rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm"
+                                        >
+                                            <p className="font-medium text-foreground">
+                                                {inv.email} — motivo del rechazo
+                                            </p>
+                                            <p className="mt-1 text-muted-foreground">
+                                                {inv.rejection_reason}
+                                            </p>
+                                        </div>
+                                    ))}
+                            </CardContent>
+                        </Card>
+                    )}
                 </div>
             </div>
         </AuthenticatedLayout>
     );
 }
 
-function UserRow({ user, roles, canManage, isSelf }) {
-    const form = useForm({ role_id: user.role_id ?? '' });
+function MemberRow({ user, roles, canManage, isSelf }) {
+    const roleForm = useForm({
+        role_id: user.role_id ? String(user.role_id) : '',
+    });
 
-    const save = (e) => {
+    const saveRole = (e) => {
         e.preventDefault();
-        if (!user.id) return;
-        form.patch(route('team.users.update', user.id), { preserveScroll: true });
+        if (!user.id) {
+            return;
+        }
+        roleForm.patch(route('team.users.update', user.id), { preserveScroll: true });
+    };
+
+    const toggleSuspension = () => {
+        const routeName = user.suspended_at ? 'team.users.activate' : 'team.users.suspend';
+        router.patch(route(routeName, user.id), {}, { preserveScroll: true });
     };
 
     return (
-        <div className="flex flex-col gap-2 border-b border-border py-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-                <p className="font-medium text-foreground">{user.name}</p>
-                <p className="text-sm text-muted-foreground">{user.email}</p>
-                <p className="text-xs text-muted-foreground">
-                    Perfil: {user.tenant_role?.name ?? '—'}
-                </p>
-            </div>
-            {canManage && !isSelf && (
-                <form className="flex flex-wrap items-end gap-2" onSubmit={save}>
-                    <div>
-                        <label className="sr-only" htmlFor={`role-${user.id}`}>
-                            Rol
-                        </label>
-                        <select
-                            id={`role-${user.id}`}
-                            className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground shadow-xs focus-visible:border-ring focus-visible:outline-hidden focus-visible:ring-3 focus-visible:ring-ring/40"
-                            value={form.data.role_id}
-                            onChange={(e) => form.setData('role_id', e.target.value)}
-                        >
-                            {roles.map((r) => (
-                                <option key={r.id} value={r.id}>
-                                    {r.name}
-                                    {r.is_system ? ' (sistema)' : ''}
-                                </option>
-                            ))}
-                        </select>
-                        <InputError message={form.errors.role_id} className="mt-1" />
-                    </div>
-                    <PrimaryButton disabled={form.processing}>Guardar</PrimaryButton>
-                </form>
+        <TableRow>
+            <TableCell className="font-medium">{user.name}</TableCell>
+            <TableCell>{user.email}</TableCell>
+            <TableCell>{user.tenant_role?.name ?? '—'}</TableCell>
+            <TableCell>{user.branch?.name ?? '—'}</TableCell>
+            <TableCell>
+                <UserStatusBadge user={user} />
+            </TableCell>
+            {canManage && (
+                <TableCell>
+                    {isSelf ? (
+                        <span className="text-xs text-muted-foreground">Tu usuario</span>
+                    ) : (
+                        <div className="flex flex-wrap items-center justify-end gap-2">
+                            <form onSubmit={saveRole} className="flex items-center gap-2">
+                                <Select
+                                    value={roleForm.data.role_id}
+                                    onValueChange={(v) => roleForm.setData('role_id', v)}
+                                >
+                                    <SelectTrigger className="w-[160px]">
+                                        <SelectValue placeholder="Rol" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {roles.map((r) => (
+                                            <SelectItem key={r.id} value={String(r.id)}>
+                                                {r.name}
+                                                {r.is_system ? ' (sistema)' : ''}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <Button type="submit" size="sm" variant="secondary" disabled={roleForm.processing}>
+                                    Guardar
+                                </Button>
+                            </form>
+                            <Button
+                                type="button"
+                                size="sm"
+                                variant={user.suspended_at ? 'secondary' : 'outline'}
+                                onClick={toggleSuspension}
+                            >
+                                {user.suspended_at ? 'Reactivar' : 'Suspender'}
+                            </Button>
+                        </div>
+                    )}
+                </TableCell>
             )}
-            {isSelf && (
-                <span className="text-xs text-muted-foreground">Tu usuario (no puedes cambiar tu rol aquí)</span>
-            )}
-        </div>
+        </TableRow>
     );
 }

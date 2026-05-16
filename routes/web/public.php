@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InvitationPublicController;
 use App\Http\Controllers\LegalNoticeController;
 use App\Models\Plan;
 use Illuminate\Support\Facades\Route;
@@ -28,3 +29,12 @@ Route::get('/', function () {
 
 Route::get('/privacidad', [LegalNoticeController::class, 'privacy'])->name('legal.privacy');
 Route::get('/terminos', [LegalNoticeController::class, 'terms'])->name('legal.terms');
+
+Route::get('/invitacion/{token}', [InvitationPublicController::class, 'show'])
+    ->name('invitations.accept');
+Route::post('/invitacion/{token}/aceptar', [InvitationPublicController::class, 'accept'])
+    ->name('invitations.accept.store')
+    ->middleware('throttle:5,1');
+Route::post('/invitacion/{token}/rechazar', [InvitationPublicController::class, 'reject'])
+    ->name('invitations.reject')
+    ->middleware('throttle:5,1');

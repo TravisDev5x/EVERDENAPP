@@ -13,6 +13,7 @@ use App\Http\Controllers\FinancePageController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InventoryPageController;
 use App\Http\Controllers\InventoryTransferController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\InventoryTransferPageController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductCategoryController;
@@ -89,6 +90,13 @@ Route::middleware(['auth', 'tenant.context'])->group(function (): void {
     Route::get('/team/users', [TeamUserPageController::class, 'index'])->name('team.users.page');
     Route::post('/team/users', [TeamUserController::class, 'store'])->name('team.users.store');
     Route::patch('/team/users/{user}', [TeamUserController::class, 'update'])->name('team.users.update');
+    Route::patch('/team/users/{user}/suspend', [TeamUserController::class, 'suspend'])->name('team.users.suspend');
+    Route::patch('/team/users/{user}/activate', [TeamUserController::class, 'activate'])->name('team.users.activate');
+    Route::post('/team/invitations', [InvitationController::class, 'store'])->name('team.invitations.store');
+    Route::post('/team/invitations/{invitation}/resend', [InvitationController::class, 'resend'])
+        ->name('team.invitations.resend');
+    Route::delete('/team/invitations/{invitation}', [InvitationController::class, 'cancel'])
+        ->name('team.invitations.cancel');
     Route::get('/team/roles', [TeamRolePageController::class, 'index'])->name('team.roles.page');
     Route::post('/team/roles', [TeamRoleController::class, 'store'])->name('team.roles.store');
     Route::patch('/team/roles/{role}', [TeamRoleController::class, 'update'])->name('team.roles.update');

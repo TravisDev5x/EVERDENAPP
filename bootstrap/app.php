@@ -8,6 +8,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\EnsurePlatformOperator;
 use App\Http\Middleware\EnsureTenantContext;
 use App\Http\Middleware\IdentifyTenant;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 
@@ -55,7 +56,11 @@ $app = Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->withSchedule(function (Schedule $schedule): void {
+        $schedule->command('invitations:expire')->daily();
+    })
+    ->create();
 
 $app->booted(function (): void {
     Gate::policy(InventoryTransfer::class, InventoryTransferPolicy::class);
