@@ -1,4 +1,5 @@
 import AppSidebar from '@/Components/AppSidebar';
+import TrialBanner from '@/Components/TrialBanner';
 import DisplayChromeControls from '@/Components/DisplayChromeControls';
 import SkipToContent from '@/Components/SkipToContent';
 import {
@@ -32,7 +33,8 @@ export default function AuthenticatedLayout({ header, children }) {
     const canViewTeamRoles = permissionKeys.includes('team.roles.view');
     const canViewBranches = permissionKeys.includes('branches.view');
     const canViewCustody = permissionKeys.includes('customer-custody.view');
-    const tenantTitle = isPlatformOperator ? 'Plataforma' : (props.tenant?.name ?? 'Tu tienda');
+    const tenant = props.tenant ?? null;
+    const tenantTitle = isPlatformOperator ? 'Plataforma' : (tenant?.name ?? 'Tu tienda');
     const flash = props.flash ?? {};
 
     const [topBarScrolled, setTopBarScrolled] = useState(false);
@@ -83,6 +85,8 @@ export default function AuthenticatedLayout({ header, children }) {
                         </span>
                         <DisplayChromeControls />
                     </header>
+
+                    <TrialBanner tenant={tenant} isPlatformOperator={isPlatformOperator} />
 
                     <div className="safe-px mx-auto w-full max-w-7xl pt-3 sm:pt-4">
                         {flash?.success ? (

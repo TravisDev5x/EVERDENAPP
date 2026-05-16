@@ -48,23 +48,41 @@ class HandleInertiaRequests extends Middleware
                 'isPlatformOperator' => (bool) ($user?->is_platform_operator ?? false),
             ],
             'tenant' => static function () use ($request) {
-                $u = $request->user();
-                if ($u === null || $u->tenant_id === null) {
+                try {
+                    $tenant = currentTenant();
+                } catch (\Throwable) {
                     return null;
                 }
-                $tenant = Tenant::query()->find(
-                    $u->tenant_id,
-                    ['id', 'name', 'trade_name', 'slug', 'currency_code'],
-                );
+
+                if ($tenant === null) {
+                    $u = $request->user();
+                    if ($u === null || $u->tenant_id === null) {
+                        return null;
+                    }
+                    $tenant = Tenant::query()->with('plan')->find($u->tenant_id);
+                } else {
+                    $tenant->loadMissing('plan');
+                }
+
                 if ($tenant === null) {
                     return null;
                 }
+
                 $displayName = $tenant->trade_name ?: $tenant->name;
+                $isOnTrial = $tenant->status === 'trial'
+                    && $tenant->trial_ends_at?->isFuture();
+                $trialDaysLeft = $tenant->status === 'trial' && $tenant->trial_ends_at
+                    ? max(0, (int) now()->diffInDays($tenant->trial_ends_at, false))
+                    : 0;
 
                 return [
                     'name' => $displayName,
                     'slug' => $tenant->slug,
                     'currency_code' => $tenant->currency_code ?? 'MXN',
+                    'status' => $tenant->status,
+                    'is_on_trial' => $isOnTrial,
+                    'trial_days_left' => $trialDaysLeft,
+                    'plan' => $tenant->plan?->name,
                 ];
             },
             'flash' => [
