@@ -200,6 +200,12 @@ export default function AppSidebar({
                                         />
                                     ) : null}
                                     <NavLink
+                                        href={route('tenant.profile.edit')}
+                                        active={route().current('tenant.profile.edit')}
+                                        label="Mi negocio"
+                                        icon={Building2}
+                                    />
+                                    <NavLink
                                         href={route('profile.edit')}
                                         active={route().current('profile.edit')}
                                         label="Configuración"

@@ -26,6 +26,7 @@ use App\Http\Controllers\TeamRoleController;
 use App\Http\Controllers\TeamRolePageController;
 use App\Http\Controllers\TeamUserController;
 use App\Http\Controllers\TeamUserPageController;
+use App\Http\Controllers\TenantProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified', 'tenant.context'])->group(function (): void {
@@ -103,4 +104,10 @@ Route::middleware(['auth', 'verified', 'tenant.context'])->group(function (): vo
     Route::delete('/team/roles/{role}', [TeamRoleController::class, 'destroy'])->name('team.roles.destroy');
     Route::post('/team/roles/{role}/permissions', [TeamRoleController::class, 'syncPermissions'])->name('team.roles.permissions.sync');
     Route::patch('/active-branch/{branch}', [ActiveBranchController::class, 'update'])->name('active-branch.update');
+
+    Route::get('/configuracion/perfil', [TenantProfileController::class, 'edit'])
+        ->name('tenant.profile.edit');
+
+    Route::patch('/configuracion/perfil', [TenantProfileController::class, 'update'])
+        ->name('tenant.profile.update');
 });

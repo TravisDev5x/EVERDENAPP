@@ -24,6 +24,20 @@ class Tenant extends Model
     protected $fillable = [
         'name',
         'trade_name',
+        'business_type',
+        'phone',
+        'whatsapp',
+        'contact_email',
+        'website',
+        'street',
+        'neighborhood',
+        'city',
+        'state',
+        'zip_code',
+        'rfc',
+        'ticket_footer',
+        'logo_url',
+        'profile_completed_at',
         'slug',
         'country_code',
         'currency_code',
@@ -60,7 +74,28 @@ class Tenant extends Model
             'allow_google_self_registration' => 'boolean',
             'suspended_at' => 'datetime',
             'trial_ends_at' => 'datetime',
+            'profile_completed_at' => 'datetime',
         ];
+    }
+
+    public function profileCompletionPercentage(): int
+    {
+        $fields = [
+            'phone',
+            'whatsapp',
+            'street',
+            'city',
+            'state',
+            'zip_code',
+            'rfc',
+            'ticket_footer',
+        ];
+
+        $filled = collect($fields)
+            ->filter(fn ($f) => ! empty($this->{$f}))
+            ->count();
+
+        return (int) round(($filled / count($fields)) * 100);
     }
 
     public function canOperate(): bool
