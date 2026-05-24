@@ -43,6 +43,10 @@ $app = Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\SecurityHeaders::class,
         ]);
 
+        $middleware->validateCsrfTokens(except: [
+            'stripe/webhook',
+        ]);
+
         $middleware->alias([
             'tenant' => IdentifyTenant::class,
             'tenant.context' => EnsureTenantContext::class,

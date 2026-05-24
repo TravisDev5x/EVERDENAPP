@@ -33,6 +33,8 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(TenantContext::class, fn () => new TenantContext);
+
+        Cashier::ignoreRoutes();
     }
 
     /**

@@ -1,11 +1,15 @@
 <?php
 
 use App\Http\Controllers\InvitationPublicController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\LegalNoticeController;
 use App\Models\Plan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
+
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])
+    ->name('cashier.webhook');
 
 Route::get('/', function () {
     $plans = collect([]);

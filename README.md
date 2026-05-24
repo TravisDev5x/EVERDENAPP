@@ -127,6 +127,7 @@ Everden es un SaaS multi-tenant por subdominio. Cada negocio
 
     STRIPE_KEY=pk_test_...
     STRIPE_SECRET=sk_test_...
+    STRIPE_WEBHOOK_SECRET=whsec_aqui
     VITE_STRIPE_KEY="${STRIPE_KEY}"
 
     MAIL_MAILER=smtp
@@ -150,6 +151,43 @@ Everden es un SaaS multi-tenant por subdominio. Cada negocio
     app/Http/Middleware/IdentifyTenant.php      ← resolución por subdominio
     app/Services/TenantResolver.php
     tests/                                      ← ningún archivo de tests
+
+---
+
+### Probar webhooks de Stripe en local
+
+1. Instalar [Stripe CLI](https://stripe.com/docs/stripe-cli)
+2. Login: `stripe login`
+3. Escuchar webhooks y reenviar a local:
+
+       stripe listen --forward-to http://practica1.test/stripe/webhook
+
+   Copia el **webhook signing secret** que muestra la CLI (`whsec_...`) a `.env`:
+
+       STRIPE_WEBHOOK_SECRET=whsec_...
+
+4. En otra terminal, disparar eventos de prueba:
+
+       stripe trigger invoice.payment_succeeded
+       stripe trigger invoice.payment_failed
+       stripe trigger customer.subscription.deleted
+
+5. Revisa `storage/logs/laravel.log` para confirmar los handlers.
+
+### Webhooks en producción
+
+1. En [Stripe Dashboard](https://dashboard.stripe.com) → **Developers** → **Webhooks** → **Add endpoint**
+2. URL: `https://everden.mx/stripe/webhook`
+3. Eventos a escuchar:
+   - `invoice.payment_succeeded`
+   - `invoice.payment_failed`
+   - `customer.subscription.deleted`
+   - `customer.subscription.updated`
+   - `customer.subscription.trial_will_end`
+   - `payment_method.updated`
+4. Copia el **Signing secret** → `STRIPE_WEBHOOK_SECRET` en el servidor
+
+La ruta `POST /stripe/webhook` no usa auth ni tenant; Cashier valida la firma con `STRIPE_WEBHOOK_SECRET`.
 
 ---
 
@@ -201,7 +239,7 @@ La BD real usa PostgreSQL 15.
 - Módulo de invitaciones de equipo
 - Banner de trial en dashboard
 - Middleware verified en rutas tenant
-- Webhooks de Stripe
+- Webhooks de Stripe (StripeWebhookController + CSRF except)
 - Página de billing del tenant
 - Traducciones en español (validation.*)
 - Demo pre-cargada para producción

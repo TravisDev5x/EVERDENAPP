@@ -78,6 +78,10 @@ final class IdentifyTenant
             return true;
         }
 
+        if ($request->is('stripe/webhook')) {
+            return true;
+        }
+
         return false;
     }
 }

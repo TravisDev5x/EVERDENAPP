@@ -1,0 +1,51 @@
+# EVERDEN — Ver reglas detalladas en .cursor/rules/
+
+## Stack
+Laravel 13 + PHP 8.4 | React 18 + Inertia.js v2
+PostgreSQL 15 | Tailwind CSS 4 + shadcn/ui | Stripe + Cashier
+
+## Reglas críticas (resumen)
+1. declare(strict_types=1) en TODO archivo PHP
+2. shadcn/ui EXCLUSIVAMENTE para UI
+3. NUNCA query sin tenant_id en contexto autenticado
+4. NUNCA Billable en User — solo en Tenant
+5. NUNCA modificar tests sin orden explícita
+6. stripe_price_id SIEMPRE desde BD, nunca del frontend
+7. Inertia props para datos — NO fetch/axios separado
+8. 122 tests en verde — mantener siempre
+
+## Archivos críticos — NO tocar sin análisis
+app/Models/Concerns/BelongsToTenant.php
+app/Http/Middleware/EnsureTenantContext.php
+app/Http/Middleware/IdentifyTenant.php
+app/Services/TenantResolver.php
+tests/
+
+## Estado del proyecto
+✅ Multi-tenant por subdominio
+✅ Registro completo con Stripe Elements
+✅ Verificación de email + Mailpit
+✅ Billing page + banner de trial
+✅ Módulo de invitaciones completo
+✅ Traducciones en español
+✅ Webhooks de Stripe (6 eventos)
+✅ PostgreSQL 15 configurado
+✅ 122 tests en verde
+
+⏳ Middleware verified en rutas tenant
+⏳ Perfil del negocio
+⏳ Google Analytics + Meta Pixel
+⏳ Demo pre-cargada para producción
+⏳ Subir a producción (Forge + Hetzner)
+
+🔮 Futuro:
+   Cloudflare R2 (imágenes)
+   Addons por plan
+   Sistema de tickets de soporte
+   Sistema de notificaciones
+   Módulo restaurante (mesas, comandas)
+   Terminal de pago física (Clip Terminal)
+   Everden TI (ticketera IT)
+   CFDI / Facturación electrónica
+   API pública REST
+   Modo offline
