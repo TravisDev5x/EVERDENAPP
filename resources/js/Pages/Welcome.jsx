@@ -174,7 +174,7 @@ export default function Welcome({ canLogin, canRegister, plans = [] }) {
     const brand =
         (typeof appName === 'string' && appName) ||
         import.meta.env.VITE_APP_NAME ||
-        'EVERDEN';
+        'Aberden';
     const baseUrl = typeof siteUrl === 'string' ? siteUrl : '';
 
     const metaDescription =
@@ -270,8 +270,8 @@ export default function Welcome({ canLogin, canRegister, plans = [] }) {
 
                 <div className="relative">
                     <header className="safe-px sticky top-0 z-40 border-b border-slate-200/90 bg-white/92 pt-[max(0px,env(safe-area-inset-top))] backdrop-blur-md dark:border-white/10 dark:bg-slate-950/92 supports-[backdrop-filter]:bg-white/80 supports-[backdrop-filter]:dark:bg-slate-950/80">
-                        <div className="mx-auto flex max-w-6xl flex-col gap-3 py-3 sm:gap-4 sm:py-4 lg:px-8">
-                            <div className="flex flex-wrap items-center justify-between gap-4">
+                        <div className="mx-auto flex max-w-6xl flex-col gap-2 py-2 sm:gap-4 sm:py-4 lg:px-8">
+                            <div className="flex items-center justify-between gap-2 sm:gap-4">
                                 <a
                                     href="#inicio"
                                     className="flex min-w-0 items-center gap-3 rounded-xl outline-hidden ring-ring/0 transition focus-visible:ring-2 focus-visible:ring-ring"
@@ -291,26 +291,25 @@ export default function Welcome({ canLogin, canRegister, plans = [] }) {
 
                                 <nav
                                     aria-label="Principal"
-                                    className="flex w-full min-w-0 shrink-0 flex-wrap items-center justify-end gap-2 sm:w-auto sm:gap-3"
+                                    className="flex shrink-0 items-center justify-end gap-1 sm:gap-3"
                                 >
-                                    <DisplayChromeControls />
+                                    <DisplayChromeControls
+                                        className="hidden sm:inline-flex"
+                                        showDeviceViewToggle={false}
+                                    />
                                     {auth.user ? (
-                                        <Button asChild size="lg" className="min-h-11 rounded-xl">
+                                        <Button asChild size="sm" className="min-h-10 rounded-xl sm:min-h-11 sm:px-8">
                                             <Link href={panelHref}>{panelLabel}</Link>
                                         </Button>
                                     ) : (
                                         <>
                                             {canLoginUi && (
-                                                <Button variant="ghost" size="lg" asChild className="min-h-11 rounded-xl">
+                                                <Button variant="ghost" asChild size="sm" className="min-h-10 rounded-xl sm:min-h-11 sm:px-8">
                                                     <Link href={route('login')}>Iniciar sesión</Link>
                                                 </Button>
                                             )}
                                             {canRegisterUi && (
-                                                <Button
-                                                    size="lg"
-                                                    asChild
-                                                    className="min-h-11 rounded-xl"
-                                                >
+                                                <Button asChild size="sm" className="min-h-10 rounded-xl sm:min-h-11 sm:px-8">
                                                     <Link href={route('register')}>Crear cuenta</Link>
                                                 </Button>
                                             )}
@@ -319,16 +318,26 @@ export default function Welcome({ canLogin, canRegister, plans = [] }) {
                                 </nav>
                             </div>
 
-                            <nav
-                                aria-label="En esta página"
-                                className="touch-scroll-x -mx-1 flex gap-1 overflow-x-auto border-t border-slate-200/80 pb-1 pt-3 scrollbar-hide dark:border-white/10 sm:flex-wrap sm:justify-center sm:gap-x-2 sm:gap-y-2 sm:overflow-visible sm:pb-0 sm:pt-4 lg:justify-start lg:gap-x-1"
-                            >
-                                {NAV_LINKS.map((item) => (
-                                    <Button key={item.href} variant="ghost" size="sm" asChild className="shrink-0 text-slate-600 dark:text-slate-400">
-                                        <a href={item.href}>{item.label}</a>
-                                    </Button>
-                                ))}
-                            </nav>
+                            <div className="relative border-t border-slate-200/80 dark:border-white/10">
+                                <nav
+                                    aria-label="En esta página"
+                                    className="-mx-4 flex gap-0.5 overflow-x-auto px-4 pb-1 pt-2 scrollbar-hide sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-0 sm:pb-0 sm:pt-3 lg:justify-start"
+                                >
+                                    {NAV_LINKS.map((item) => (
+                                        <a
+                                            key={item.href}
+                                            href={item.href}
+                                            className="shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+                                        >
+                                            {item.label}
+                                        </a>
+                                    ))}
+                                </nav>
+                                <div
+                                    className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-white dark:from-slate-950 sm:hidden"
+                                    aria-hidden="true"
+                                />
+                            </div>
                         </div>
                     </header>
 
@@ -340,7 +349,7 @@ export default function Welcome({ canLogin, canRegister, plans = [] }) {
                         {/* Hero */}
                         <section
                             id="inicio"
-                            className={`safe-px mx-auto max-w-6xl pb-12 pt-10 sm:pb-16 sm:pt-12 lg:flex lg:items-center lg:gap-12 lg:px-8 lg:pb-24 lg:pt-16 ${SECTION_SCROLL_CLASS}`}
+                            className={`safe-px mx-auto max-w-6xl px-4 pb-10 pt-8 sm:px-6 sm:pb-16 sm:pt-12 lg:flex lg:items-center lg:gap-12 lg:px-8 lg:pb-24 lg:pt-16 ${SECTION_SCROLL_CLASS}`}
                         >
                             <div className="max-w-xl flex-1 lg:max-w-none">
                                 <Badge
@@ -860,7 +869,7 @@ export default function Welcome({ canLogin, canRegister, plans = [] }) {
                                                         asChild
                                                         className="h-auto min-h-0 p-0 text-base font-semibold text-primary hover:text-primary/90"
                                                     >
-                                                        <a href="mailto:contacto@everden.mx">contacto@everden.mx</a>
+                                                        <a href="mailto:contacto@aberden.com">contacto@aberden.com</a>
                                                     </Button>
                                                 </dd>
                                             </div>

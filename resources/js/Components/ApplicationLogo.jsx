@@ -1,5 +1,5 @@
 /**
- * EVERDEN — monograma "E" geométrico.
+ * Aberden — monograma "E" geométrico.
  * Usa `currentColor` por defecto cuando se aplica `fill-*` desde className.
  */
 export default function ApplicationLogo(props) {
@@ -9,7 +9,7 @@ export default function ApplicationLogo(props) {
             viewBox="0 0 64 64"
             xmlns="http://www.w3.org/2000/svg"
             role="img"
-            aria-label="EVERDEN"
+            aria-label="Aberden"
         >
             {/* Vertical izquierda */}
             <rect x="10" y="10" width="8" height="44" rx="2" />

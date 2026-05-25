@@ -22,10 +22,10 @@ final class InvitationMail extends Mailable
     public function envelope(): Envelope
     {
         $this->invitation->loadMissing(['tenant', 'role', 'invitedBy']);
-        $tenantName = $this->invitation->tenant?->name ?? 'EVERDEN';
+        $tenantName = $this->invitation->tenant?->name ?? 'Aberden';
 
         return new Envelope(
-            subject: "Te invitaron a {$tenantName} en EVERDEN",
+            subject: "Te invitaron a {$tenantName} en Aberden",
         );
     }
 
@@ -36,7 +36,7 @@ final class InvitationMail extends Mailable
         return new Content(
             view: 'emails.invitation',
             with: [
-                'tenantName' => $this->invitation->tenant?->name ?? 'EVERDEN',
+                'tenantName' => $this->invitation->tenant?->name ?? 'Aberden',
                 'invitedByName' => $this->invitation->invitedBy?->name ?? 'Un administrador',
                 'roleName' => $this->invitation->role?->name ?? 'Miembro',
                 'acceptUrl' => route('invitations.accept', $this->invitation->token),

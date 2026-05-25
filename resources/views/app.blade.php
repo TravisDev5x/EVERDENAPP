@@ -18,7 +18,7 @@
             })();
         </script>
 
-        <title inertia>{{ config('app.name', 'EVERDEN') }}</title>
+        <title inertia>{{ config('app.name', 'Aberden') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

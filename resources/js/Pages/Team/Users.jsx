@@ -89,7 +89,7 @@ export default function TeamUsers({ users, roles, invitations = [], canManageUse
         >
             <Head title="Equipo" />
 
-            <div className="py-8">
+            <div className="py-6 pb-24 sm:py-8 md:pb-8">
                 <div className="mx-auto max-w-6xl space-y-6 px-4 sm:px-6 lg:px-8">
                     <Card>
                         <CardHeader>
@@ -100,13 +100,14 @@ export default function TeamUsers({ users, roles, invitations = [], canManageUse
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <Table>
+                            <div className="overflow-x-auto -mx-4 sm:mx-0">
+                            <Table className="min-w-[400px]">
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Nombre</TableHead>
-                                        <TableHead>Email</TableHead>
-                                        <TableHead>Rol</TableHead>
-                                        <TableHead>Sucursal</TableHead>
+                                        <TableHead className="hidden sm:table-cell">Email</TableHead>
+                                        <TableHead className="hidden md:table-cell">Rol</TableHead>
+                                        <TableHead className="hidden sm:table-cell">Sucursal</TableHead>
                                         <TableHead>Estado</TableHead>
                                         {canManageUsers && <TableHead className="text-right">Acciones</TableHead>}
                                     </TableRow>
@@ -133,6 +134,7 @@ export default function TeamUsers({ users, roles, invitations = [], canManageUse
                                     ))}
                                 </TableBody>
                             </Table>
+                            </div>
                             <Pagination className="mt-6" resource={users} />
                         </CardContent>
                     </Card>
@@ -209,13 +211,14 @@ export default function TeamUsers({ users, roles, invitations = [], canManageUse
                                         {pageErrors.resend}
                                     </p>
                                 )}
-                                <Table>
+                                <div className="overflow-x-auto -mx-4 sm:mx-0">
+                                <Table className="min-w-[560px]">
                                     <TableHeader>
                                         <TableRow>
                                             <TableHead>Email</TableHead>
-                                            <TableHead>Rol</TableHead>
-                                            <TableHead>Enviada por</TableHead>
-                                            <TableHead>Expira el</TableHead>
+                                            <TableHead className="hidden sm:table-cell">Rol</TableHead>
+                                            <TableHead className="hidden md:table-cell">Enviada por</TableHead>
+                                            <TableHead className="hidden lg:table-cell">Expira el</TableHead>
                                             <TableHead>Estado</TableHead>
                                             <TableHead className="text-right">Acciones</TableHead>
                                         </TableRow>
@@ -223,10 +226,10 @@ export default function TeamUsers({ users, roles, invitations = [], canManageUse
                                     <TableBody>
                                         {invitations.map((inv) => (
                                             <TableRow key={inv.id}>
-                                                <TableCell className="font-medium">{inv.email}</TableCell>
-                                                <TableCell>{inv.role?.name ?? '—'}</TableCell>
-                                                <TableCell>{inv.invited_by?.name ?? '—'}</TableCell>
-                                                <TableCell>{formatDate(inv.expires_at)}</TableCell>
+                                                <TableCell className="font-medium whitespace-nowrap">{inv.email}</TableCell>
+                                                <TableCell className="hidden sm:table-cell">{inv.role?.name ?? '—'}</TableCell>
+                                                <TableCell className="hidden md:table-cell">{inv.invited_by?.name ?? '—'}</TableCell>
+                                                <TableCell className="hidden lg:table-cell">{formatDate(inv.expires_at)}</TableCell>
                                                 <TableCell>
                                                     <InvitationStatusBadge status={inv.status} />
                                                 </TableCell>
@@ -238,6 +241,7 @@ export default function TeamUsers({ users, roles, invitations = [], canManageUse
                                                                     type="button"
                                                                     variant="secondary"
                                                                     size="sm"
+                                                                    className="min-h-11"
                                                                     disabled={!inv.can_resend}
                                                                     onClick={() => resendInvitation(inv.id)}
                                                                 >
@@ -276,6 +280,7 @@ export default function TeamUsers({ users, roles, invitations = [], canManageUse
                                         ))}
                                     </TableBody>
                                 </Table>
+                                </div>
                                 {invitations
                                     .filter((inv) => inv.status === 'rejected' && inv.rejection_reason)
                                     .map((inv) => (
@@ -320,10 +325,10 @@ function MemberRow({ user, roles, canManage, isSelf }) {
 
     return (
         <TableRow>
-            <TableCell className="font-medium">{user.name}</TableCell>
-            <TableCell>{user.email}</TableCell>
-            <TableCell>{user.tenant_role?.name ?? '—'}</TableCell>
-            <TableCell>{user.branch?.name ?? '—'}</TableCell>
+            <TableCell className="font-medium whitespace-nowrap">{user.name}</TableCell>
+            <TableCell className="hidden sm:table-cell">{user.email}</TableCell>
+            <TableCell className="hidden md:table-cell">{user.tenant_role?.name ?? '—'}</TableCell>
+            <TableCell className="hidden sm:table-cell">{user.branch?.name ?? '—'}</TableCell>
             <TableCell>
                 <UserStatusBadge user={user} />
             </TableCell>
@@ -350,7 +355,7 @@ function MemberRow({ user, roles, canManage, isSelf }) {
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                <Button type="submit" size="sm" variant="secondary" disabled={roleForm.processing}>
+                                <Button type="submit" size="sm" variant="secondary" className="min-h-11" disabled={roleForm.processing}>
                                     Guardar
                                 </Button>
                             </form>
@@ -358,6 +363,7 @@ function MemberRow({ user, roles, canManage, isSelf }) {
                                 type="button"
                                 size="sm"
                                 variant={user.suspended_at ? 'secondary' : 'outline'}
+                                className="min-h-11"
                                 onClick={toggleSuspension}
                             >
                                 {user.suspended_at ? 'Reactivar' : 'Suspender'}

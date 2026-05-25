@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenido a EVERDEN</title>
+    <title>Bienvenido a Aberden</title>
 </head>
 <body style="font-family: sans-serif; max-width: 600px;
              margin: 0 auto; padding: 20px; color: #1a1a1a;">
@@ -13,7 +13,7 @@
     </h1>
 
     <p>Tu negocio <strong>{{ $tenantName }}</strong> ya está
-    registrado en EVERDEN.</p>
+    registrado en Aberden.</p>
 
     <p>Tienes <strong>7 días de prueba gratuita</strong> para
     explorar el sistema de punto de venta.</p>
@@ -25,8 +25,8 @@
                margin: 24px 0;">
 
     <p style="color: #666; font-size: 12px;">
-        EVERDEN · Punto de venta para comercios en México<br>
-        contacto@everden.mx
+        Aberden · Punto de venta para comercios en México<br>
+        contacto@aberden.com
     </p>
 </body>
 </html>

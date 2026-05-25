@@ -70,7 +70,7 @@ export default function EvScaleReader({
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                         Lectura precisa
                     </p>
-                    <h3 className="mt-1 text-base font-semibold text-foreground">Bascula Everden</h3>
+                    <h3 className="mt-1 text-base font-semibold text-foreground">Bascula Aberden</h3>
                     <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{helpText}</p>
                 </div>
                 <span

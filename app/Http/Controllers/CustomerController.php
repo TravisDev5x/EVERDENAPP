@@ -74,7 +74,7 @@ class CustomerController extends Controller
             ]
         );
 
-        return back()->with('success', 'Cliente registrado bajo Custodia Everden.');
+        return back()->with('success', 'Cliente registrado bajo Custodia Aberden.');
     }
 
     public function update(Request $request, Customer $customer, AuditLogger $auditLogger): RedirectResponse

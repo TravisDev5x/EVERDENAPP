@@ -1,4 +1,4 @@
-# EVERDEN — Sistema POS SaaS Multi-tenant
+# Aberden — Sistema POS SaaS Multi-tenant
 
 > Punto de venta para comercios en México. Caja, inventario,
 > ventas y reportes por sucursal, en un solo lugar.
@@ -23,11 +23,11 @@
 
 ## 🏢 Arquitectura Multi-tenant
 
-Everden es un SaaS multi-tenant por subdominio. Cada negocio
+Aberden es un SaaS multi-tenant por subdominio. Cada negocio
 (tenant) accede exclusivamente a través de su subdominio:
 
-    chocolateria.everden.com  → Chocolatería XYZ (tenant_id: 1)
-    restaurante.everden.com   → Restaurante ABC  (tenant_id: 2)
+    chocolateria.aberden.com  → Chocolatería XYZ (tenant_id: 1)
+    restaurante.aberden.com   → Restaurante ABC  (tenant_id: 2)
 
 ### Principios de aislamiento
 - BelongsToTenant → trait con Global Scope automático
@@ -115,7 +115,7 @@ Everden es un SaaS multi-tenant por subdominio. Cada negocio
 
 ### Variables de entorno requeridas
 
-    APP_NAME=EVERDEN
+    APP_NAME=Aberden
     APP_URL=http://localhost:8000
 
     DB_CONNECTION=pgsql
@@ -177,7 +177,7 @@ Everden es un SaaS multi-tenant por subdominio. Cada negocio
 ### Webhooks en producción
 
 1. En [Stripe Dashboard](https://dashboard.stripe.com) → **Developers** → **Webhooks** → **Add endpoint**
-2. URL: `https://everden.mx/stripe/webhook`
+2. URL: `https://aberden.com/stripe/webhook`
 3. Eventos a escuchar:
    - `invoice.payment_succeeded`
    - `invoice.payment_failed`
@@ -203,8 +203,8 @@ La BD real usa PostgreSQL 15.
 
 ## 🌐 Infraestructura de producción (planificada)
 
-    Dominio:  everden.mx
-    DNS/CDN:  Cloudflare (wildcard *.everden.mx)
+    Dominio:  aberden.com
+    DNS/CDN:  Cloudflare (wildcard *.aberden.com)
     VPS:      Hetzner CX22 (Ubuntu 24.04)
     Panel:    Laravel Forge
     SSL:      Let's Encrypt wildcard
@@ -311,4 +311,4 @@ La BD real usa PostgreSQL 15.
 
 ## 📄 Licencia
 
-Privado — todos los derechos reservados © 2026 Everden.
+Privado — todos los derechos reservados © 2026 Aberden.

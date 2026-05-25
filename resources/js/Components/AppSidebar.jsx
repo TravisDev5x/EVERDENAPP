@@ -1,5 +1,8 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import SidebarAccountMenu from '@/Components/SidebarAccountMenu';
+import { Separator } from '@/Components/ui/separator';
+import { Sheet, SheetContent } from '@/Components/ui/sheet';
+import { useSwipeToClose } from '@/hooks/use-swipe-to-close';
 import {
     Sidebar,
     SidebarContent,
@@ -14,7 +17,9 @@ import {
     SidebarRail,
     useSidebar,
 } from '@/Components/ui/sidebar';
+import { cn } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
+import { useRef } from 'react';
 import {
     ArrowLeftRight,
     BarChart3,
@@ -25,13 +30,18 @@ import {
     LayoutDashboard,
     LockKeyhole,
     Package,
+    Shield,
     Settings,
     ShoppingBag,
     ShoppingCart,
     Tags,
     TrendingUp,
+    UserCircle,
     Users,
 } from 'lucide-react';
+
+const sectionLabelClass =
+    'px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70';
 
 function NavLink({ href, active, label, icon: Icon }) {
     const { setOpenMobile } = useSidebar();
@@ -54,16 +64,25 @@ export default function AppSidebar({
     isPlatformOperator,
     canViewTeamUsers,
     canViewTeamRoles,
+    canManageTeamUsers,
     canViewBranches,
     canViewCustody,
+    forceDeviceView = false,
 }) {
-    const { setOpenMobile } = useSidebar();
+    const { openMobile, setOpenMobile } = useSidebar();
+    const sheetRef = useRef(null);
 
-    return (
-        <Sidebar collapsible="icon" variant="sidebar">
-            {/* Borde en la fila h-14: si va en SidebarHeader, el bloque mide 56px + borde y no coincide con el header del inset (h-14 incluye borde). */}
+    useSwipeToClose(
+        sheetRef,
+        () => setOpenMobile(false),
+        forceDeviceView && openMobile,
+        { side: 'left' },
+    );
+
+    const panel = (
+        <>
             <SidebarHeader className="gap-0 p-0">
-                <div className="flex h-14 w-full shrink-0 items-center gap-3 border-b border-border px-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:px-0">
+                <div className="flex h-14 w-full shrink-0 items-center gap-3 px-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:gap-0 group-data-[collapsible=icon]:px-0">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-emerald-500 via-teal-600 to-green-800 shadow-md shadow-emerald-900/20 group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-8 dark:from-emerald-600 dark:via-teal-600 dark:to-green-900">
                         <ApplicationLogo className="block h-7 w-auto max-h-full max-w-full fill-white opacity-95 group-data-[collapsible=icon]:h-6 group-data-[collapsible=icon]:w-auto" />
                     </div>
@@ -71,14 +90,19 @@ export default function AppSidebar({
                         <p className="truncate text-sm font-semibold text-sidebar-foreground">
                             {tenantTitle}
                         </p>
+                        <p className="mt-0.5 truncate text-[10px] font-medium uppercase tracking-widest text-muted-foreground opacity-80">
+                            Eberden
+                        </p>
                     </div>
                 </div>
             </SidebarHeader>
 
-            <SidebarContent>
+            <SidebarContent className="gap-2 py-2">
                 {isPlatformOperator ? (
                     <SidebarGroup>
-                        <SidebarGroupLabel>Plataforma</SidebarGroupLabel>
+                        <SidebarGroupLabel className={sectionLabelClass}>
+                            Plataforma
+                        </SidebarGroupLabel>
                         <SidebarGroupContent>
                             <SidebarMenu>
                                 <NavLink
@@ -102,7 +126,9 @@ export default function AppSidebar({
                 ) : (
                     <>
                         <SidebarGroup>
-                            <SidebarGroupLabel>Herramientas</SidebarGroupLabel>
+                            <SidebarGroupLabel className={sectionLabelClass}>
+                                Herramientas
+                            </SidebarGroupLabel>
                             <SidebarGroupContent>
                                 <SidebarMenu>
                                     <NavLink
@@ -171,8 +197,14 @@ export default function AppSidebar({
                             </SidebarGroupContent>
                         </SidebarGroup>
 
+                        <div className="px-3 py-1">
+                            <Separator className="opacity-50" />
+                        </div>
+
                         <SidebarGroup>
-                            <SidebarGroupLabel>Sistema</SidebarGroupLabel>
+                            <SidebarGroupLabel className={sectionLabelClass}>
+                                Sistema
+                            </SidebarGroupLabel>
                             <SidebarGroupContent>
                                 <SidebarMenu>
                                     {canViewCustody ? (
@@ -206,6 +238,20 @@ export default function AppSidebar({
                                         icon={Building2}
                                     />
                                     <NavLink
+                                        href={route('user.profile.edit')}
+                                        active={route().current('user.profile.edit')}
+                                        label="Mi perfil"
+                                        icon={UserCircle}
+                                    />
+                                    {canManageTeamUsers ? (
+                                        <NavLink
+                                            href={route('tenant.pin.config.edit')}
+                                            active={route().current('tenant.pin.config.edit')}
+                                            label="Config. PIN"
+                                            icon={Shield}
+                                        />
+                                    ) : null}
+                                    <NavLink
                                         href={route('profile.edit')}
                                         active={route().current('profile.edit')}
                                         label="Configuración"
@@ -218,10 +264,45 @@ export default function AppSidebar({
                 )}
             </SidebarContent>
 
-            <SidebarFooter className="border-t border-sidebar-border px-3 py-2 group-data-[collapsible=icon]:px-0">
+            <SidebarFooter
+                className={cn(
+                    'border-t border-sidebar-border/50 bg-sidebar/50 px-3 py-2 group-data-[collapsible=icon]:px-0',
+                )}
+            >
                 <SidebarAccountMenu user={user} onNavigate={() => setOpenMobile(false)} />
             </SidebarFooter>
 
+        </>
+    );
+
+    if (forceDeviceView) {
+        return (
+            <Sheet open={openMobile} onOpenChange={setOpenMobile}>
+                <SheetContent
+                    side="left"
+                    showCloseButton
+                    data-slot="sheet-content"
+                    data-mobile="true"
+                    className="w-[18rem] max-w-[85vw] border-r border-sidebar-border/50 bg-sidebar p-0 text-sidebar-foreground"
+                >
+                    <div ref={sheetRef} className="flex h-full w-full flex-col">
+                        {panel}
+                    </div>
+                </SheetContent>
+            </Sheet>
+        );
+    }
+
+    return (
+        <Sidebar
+            collapsible="icon"
+            variant="sidebar"
+            className={cn(
+                'border-sidebar-border/50 bg-sidebar/95 backdrop-blur-sm',
+                forceDeviceView && 'md:hidden',
+            )}
+        >
+            {panel}
             <SidebarRail />
         </Sidebar>
     );

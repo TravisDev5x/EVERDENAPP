@@ -5,7 +5,7 @@
              margin:0 auto;padding:20px;color:#1a1a1a;">
     <h1>Te invitaron a {{ $tenantName }}</h1>
     <p><strong>{{ $invitedByName }}</strong> te invitó a unirte
-    a <strong>{{ $tenantName }}</strong> en EVERDEN como
+    a <strong>{{ $tenantName }}</strong> en Aberden como
     <strong>{{ $roleName }}</strong>.</p>
     <p style="margin:32px 0;">
         <a href="{{ $acceptUrl }}"
@@ -21,7 +21,7 @@
     </p>
     <hr style="border:none;border-top:1px solid #e5e5e5;margin:24px 0;">
     <p style="color:#999;font-size:11px;">
-        EVERDEN · Punto de venta para comercios en México
+        Aberden · Punto de venta para comercios en México
     </p>
 </body>
 </html>

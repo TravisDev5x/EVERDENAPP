@@ -249,15 +249,14 @@ export default function InventoryIndex({
                         {canCreateProduct ? (
                             <Button
                                 type="button"
-                                size="sm"
-                                className="w-full sm:w-auto"
+                                className="min-h-11 w-full sm:w-auto"
                                 onClick={() => setCreateOpen(true)}
                             >
                                 <Plus className="size-4" />
                                 Crear producto
                             </Button>
                         ) : null}
-                        <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
+                        <Button asChild variant="outline" className="min-h-11 w-full sm:w-auto">
                             <Link href={route('products.page')}>Ir al catálogo</Link>
                         </Button>
                     </div>
@@ -266,17 +265,18 @@ export default function InventoryIndex({
         >
             <Head title="Inventario" />
 
-            <div className="py-4 sm:py-6 lg:py-8">
+            <div className="py-4 pb-24 sm:py-6 md:pb-8 lg:py-8">
                 <div className="safe-px mx-auto w-full max-w-7xl space-y-6">
                     <p className="text-sm text-muted-foreground">
                         Sucursal activa · #{activeBranchId}
                     </p>
 
                     <Tabs value={tab} onValueChange={setTab} className="space-y-6">
-                        <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-1 shadow-xs sm:flex-row sm:flex-wrap sm:items-center">
-                            <TabsList className="touch-scroll-x h-auto min-h-9 w-full flex-nowrap justify-start overflow-x-auto scrollbar-hide sm:w-auto sm:flex-wrap">
-                                <TabsTrigger value="products" className="shrink-0">Productos</TabsTrigger>
-                                <TabsTrigger value="alerts" className="shrink-0 gap-1.5">
+                        <div className="overflow-x-auto rounded-xl border border-border bg-card p-1 shadow-xs scrollbar-hide sm:overflow-visible">
+                            <div className="flex min-w-max flex-nowrap items-center gap-1 sm:min-w-0 sm:flex-wrap">
+                            <TabsList className="flex h-auto w-full flex-nowrap gap-1 rounded-lg bg-muted p-1 sm:w-auto sm:flex-wrap">
+                                <TabsTrigger value="products" className="flex-1 shrink-0 text-xs sm:flex-none sm:text-sm">Productos</TabsTrigger>
+                                <TabsTrigger value="alerts" className="flex-1 shrink-0 gap-1.5 text-xs sm:flex-none sm:text-sm">
                                     Alertas
                                     {alerts.length > 0 ? (
                                         <Badge variant="destructive" className="h-5 min-w-5 px-1.5 text-[0.65rem]">
@@ -284,19 +284,20 @@ export default function InventoryIndex({
                                         </Badge>
                                     ) : null}
                                 </TabsTrigger>
-                                <TabsTrigger value="movements" className="shrink-0">Movimientos</TabsTrigger>
+                                <TabsTrigger value="movements" className="flex-1 shrink-0 text-xs sm:flex-none sm:text-sm">Movimientos</TabsTrigger>
                             </TabsList>
                             <Separator
                                 orientation="vertical"
                                 decorative
                                 className="mx-1 hidden h-6 w-px shrink-0 bg-border sm:block"
                             />
-                            <Button variant="ghost" size="sm" className="rounded-full" asChild>
+                            <Button variant="ghost" size="sm" className="shrink-0 rounded-full" asChild>
                                 <Link href={route('product-categories.page')}>Categorías</Link>
                             </Button>
-                            <Button variant="ghost" size="sm" className="rounded-full" asChild>
+                            <Button variant="ghost" size="sm" className="shrink-0 rounded-full" asChild>
                                 <Link href={route('inventory.transfers.page')}>Transferencias</Link>
                             </Button>
+                            </div>
                         </div>
 
                     <TabsContent value="products" className="mt-0 outline-none">
@@ -331,12 +332,13 @@ export default function InventoryIndex({
                                 </Button>
                             </form>
 
-                            <div className="rounded-lg border border-border">
-                                <Table>
+                            <div className="overflow-x-auto -mx-4 sm:mx-0">
+                                <div className="rounded-lg border border-border">
+                                <Table className="min-w-[500px]">
                                     <TableHeader>
                                         <TableRow className="hover:bg-transparent">
-                                            <TableHead className="min-w-[200px]">Producto</TableHead>
-                                            <TableHead className="text-right">Precio</TableHead>
+                                            <TableHead className="min-w-[140px]">Producto</TableHead>
+                                            <TableHead className="hidden text-right sm:table-cell">Precio</TableHead>
                                             <TableHead className="hidden sm:table-cell">SKU</TableHead>
                                             <TableHead className="text-right">Existencias</TableHead>
                                             {canManage ? (
@@ -386,7 +388,7 @@ export default function InventoryIndex({
                                                                 </div>
                                                             </div>
                                                         </TableCell>
-                                                        <TableCell className="text-right tabular-nums font-medium">
+                                                        <TableCell className="hidden text-right tabular-nums font-medium sm:table-cell">
                                                             {formatMxn(product.price ?? 0)}
                                                         </TableCell>
                                                         <TableCell className="hidden font-mono text-sm text-muted-foreground sm:table-cell">
@@ -405,7 +407,7 @@ export default function InventoryIndex({
                                                                         <Button
                                                                             variant="ghost"
                                                                             size="icon-sm"
-                                                                            className="text-muted-foreground"
+                                                                            className="min-h-11 min-w-11 text-muted-foreground"
                                                                             aria-label={`Acciones para ${product.name}`}
                                                                         >
                                                                             <MoreHorizontal className="size-4" />
@@ -432,6 +434,7 @@ export default function InventoryIndex({
                                         )}
                                     </TableBody>
                                 </Table>
+                                </div>
                             </div>
                         </div>
                     </TabsContent>
@@ -486,13 +489,14 @@ export default function InventoryIndex({
                                 Últimos movimientos (kardex)
                             </h3>
                             <p className="mb-4 text-xs text-muted-foreground">{movementSummary}</p>
+                            <div className="overflow-x-auto -mx-4 sm:mx-0">
                             <div className="rounded-lg border border-border">
-                                <Table>
+                                <Table className="min-w-[520px]">
                                     <TableHeader>
                                         <TableRow className="hover:bg-transparent">
-                                            <TableHead>ID</TableHead>
+                                            <TableHead className="hidden sm:table-cell">ID</TableHead>
                                             <TableHead>Producto</TableHead>
-                                            <TableHead>Tipo</TableHead>
+                                            <TableHead className="hidden sm:table-cell">Tipo</TableHead>
                                             <TableHead className="text-right">Delta</TableHead>
                                             <TableHead className="text-right">Saldo</TableHead>
                                         </TableRow>
@@ -510,14 +514,14 @@ export default function InventoryIndex({
                                         ) : (
                                             movements.data.map((movement) => (
                                                 <TableRow key={movement.id}>
-                                                    <TableCell className="font-mono text-xs">
+                                                    <TableCell className="hidden font-mono text-xs sm:table-cell">
                                                         #{movement.id}
                                                     </TableCell>
                                                     <TableCell className="text-muted-foreground">
                                                         {productNameById[movement.product_id] ??
                                                             `#${movement.product_id}`}
                                                     </TableCell>
-                                                    <TableCell>{movement.type}</TableCell>
+                                                    <TableCell className="hidden sm:table-cell">{movement.type}</TableCell>
                                                     <TableCell className="text-right tabular-nums">
                                                         {movement.quantity_delta}
                                                     </TableCell>
@@ -529,6 +533,7 @@ export default function InventoryIndex({
                                         )}
                                     </TableBody>
                                 </Table>
+                            </div>
                             </div>
                             <div className="mt-4 flex flex-wrap gap-2">
                                 <Button

@@ -45,7 +45,7 @@ function buildAddress(branch) {
 export default function EvReceiptTemplate({ receipt }) {
     if (!receipt) return null;
 
-    const tradeName = receipt.tenant?.trade_name ?? 'Comercio Everden';
+    const tradeName = receipt.tenant?.trade_name ?? 'Comercio Aberden';
     const legalName =
         receipt.tenant?.legal_name && receipt.tenant.legal_name !== tradeName
             ? receipt.tenant.legal_name
@@ -66,7 +66,7 @@ export default function EvReceiptTemplate({ receipt }) {
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground/80">
-                            Robustez Perenne · Comprobante Everden
+                            Robustez Perenne · Comprobante Aberden
                         </p>
                         <h1 className="mt-2 text-2xl font-bold">{tradeName}</h1>
                         {legalName ? (

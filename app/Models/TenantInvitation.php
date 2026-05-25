@@ -92,7 +92,7 @@ class TenantInvitation extends Model
         $this->loadMissing('tenant');
 
         $tenantName = $this->tenant?->name ?? 'tu negocio';
-        $text = "Te invité a {$tenantName} en EVERDEN. Acepta aquí: "
+        $text = "Te invité a {$tenantName} en Aberden. Acepta aquí: "
             .route('invitations.accept', $this->token);
 
         return 'https://wa.me/?text='.urlencode($text);

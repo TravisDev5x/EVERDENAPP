@@ -36,6 +36,7 @@ class Tenant extends Model
         'zip_code',
         'rfc',
         'ticket_footer',
+        'pin_required_actions',
         'logo_url',
         'profile_completed_at',
         'slug',
@@ -75,6 +76,31 @@ class Tenant extends Model
             'suspended_at' => 'datetime',
             'trial_ends_at' => 'datetime',
             'profile_completed_at' => 'datetime',
+            'pin_required_actions' => 'array',
+        ];
+    }
+
+    public function requiresPinFor(string $action): bool
+    {
+        if (empty($this->pin_required_actions)) {
+            return false;
+        }
+
+        return in_array($action, $this->pin_required_actions, true);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function availablePinActions(): array
+    {
+        return [
+            'discount' => 'Aplicar descuentos',
+            'cancel_sale' => 'Cancelar ventas',
+            'refund' => 'Devoluciones',
+            'manual_stock_adjust' => 'Ajuste manual de inventario',
+            'cash_open_without_sale' => 'Abrir caja sin venta',
+            'close_cash_session' => 'Cerrar turno de caja',
         ];
     }
 

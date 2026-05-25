@@ -59,9 +59,9 @@ final class TenantResolver
     }
 
     /**
-     * Ej.: "chocolateria.everden.com" → "chocolateria".
-     * "everden.com", "localhost" → null.
-     * "www.everden.com" → null.
+     * Ej.: "chocolateria.aberden.com" → "chocolateria".
+     * "aberden.com", "localhost" → null.
+     * "www.aberden.com" → null.
      */
     private static function extractSubdomain(string $host): ?string
     {

@@ -2,7 +2,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "everden/everden",
     "type": "project",
-    "description": "EVERDEN — Sistema operativo para tu negocio (POS, inventario y caja).",
+    "description": "Aberden — Sistema operativo para tu negocio (POS, inventario y caja).",
     "keywords": ["everden", "pos", "inventory", "laravel"],
     "license": "MIT",
     "require": {

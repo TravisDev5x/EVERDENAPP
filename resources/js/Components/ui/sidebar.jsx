@@ -150,9 +150,9 @@ function Sidebar({
         <SheetContent
           dir={dir}
           data-sidebar="sidebar"
-          data-slot="sidebar"
+          data-slot="sheet-content"
           data-mobile="true"
-          className="bg-sidebar text-sidebar-foreground w-[var(--sidebar-width)] p-0 [&>button]:hidden"
+          className="w-[var(--sidebar-width)] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
           style={{ "--sidebar-width": SIDEBAR_WIDTH_MOBILE }}
           side={side}
         >

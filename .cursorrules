@@ -1,4 +1,4 @@
-# EVERDEN — Ver reglas detalladas en .cursor/rules/
+# Aberden — Ver reglas detalladas en .cursor/rules/
 
 ## Stack
 Laravel 13 + PHP 8.4 | React 18 + Inertia.js v2
@@ -45,7 +45,7 @@ tests/
    Sistema de notificaciones
    Módulo restaurante (mesas, comandas)
    Terminal de pago física (Clip Terminal)
-   Everden TI (ticketera IT)
+   Aberden TI (ticketera IT)
    CFDI / Facturación electrónica
    API pública REST
    Modo offline

@@ -23,7 +23,7 @@ final class WelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Bienvenido a {$this->tenantName} en EVERDEN",
+            subject: "Bienvenido a {$this->tenantName} en Aberden",
         );
     }
 

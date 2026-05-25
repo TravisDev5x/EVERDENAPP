@@ -35,7 +35,7 @@ export default function EvPrivacyConsent({ sale }) {
         <section className="rounded-xl border border-border bg-muted/40 p-4 shadow-xs dark:bg-muted/20">
             <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                    Custodia Everden
+                    Custodia Aberden
                 </p>
                 <h3 className="mt-1 text-base font-semibold text-foreground">
                     Consentimiento de privacidad

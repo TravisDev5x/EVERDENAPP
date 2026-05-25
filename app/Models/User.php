@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['tenant_id', 'branch_id', 'role_id', 'name', 'email', 'password', 'google_id', 'avatar', 'is_platform_operator', 'suspended_at', 'suspension_reason'])]
-#[Hidden(['password', 'remember_token'])]
+#[Fillable(['tenant_id', 'branch_id', 'role_id', 'name', 'email', 'password', 'google_id', 'avatar', 'phone', 'whatsapp', 'employee_number', 'birth_date', 'hire_date', 'cash_pin', 'pin_set_at', 'is_platform_operator', 'suspended_at', 'suspension_reason'])]
+#[Hidden(['password', 'remember_token', 'cash_pin'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
@@ -29,9 +29,42 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'birth_date' => 'date',
+            'hire_date' => 'date',
+            'pin_set_at' => 'datetime',
             'is_platform_operator' => 'boolean',
             'suspended_at' => 'datetime',
         ];
+    }
+
+    public function hasPin(): bool
+    {
+        return ! empty($this->cash_pin);
+    }
+
+    public function verifyPin(string $pin): bool
+    {
+        if (! $this->cash_pin) {
+            return false;
+        }
+
+        return \Illuminate\Support\Facades\Hash::check($pin, $this->cash_pin);
+    }
+
+    public function setPin(string $pin): void
+    {
+        $this->update([
+            'cash_pin' => \Illuminate\Support\Facades\Hash::make($pin),
+            'pin_set_at' => now(),
+        ]);
+    }
+
+    public function clearPin(): void
+    {
+        $this->update([
+            'cash_pin' => null,
+            'pin_set_at' => null,
+        ]);
     }
 
     /**

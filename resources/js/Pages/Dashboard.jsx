@@ -1,5 +1,10 @@
+import DashboardGreeting from '@/Components/DashboardGreeting';
+import DashboardSkeleton from '@/Components/DashboardSkeleton';
+import KpiCard from '@/Components/KpiCard';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { AlertTriangle, Coins, Landmark, ShoppingCart, Ticket } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 function formatMoney(amount, currency = 'MXN') {
     return new Intl.NumberFormat('es-MX', {
@@ -78,7 +83,7 @@ function PeriodPills({ options, active }) {
                     href={`${route('dashboard')}?period=${p}`}
                     preserveScroll
                     className={
-                        'rounded-full px-3 py-1 text-xs font-semibold transition-colors ' +
+                        'rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors sm:px-3 sm:text-xs ' +
                         (active === p
                             ? 'bg-indigo-600 text-white shadow-xs dark:bg-indigo-500'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700')
@@ -108,9 +113,19 @@ export default function Dashboard({
     operations,
     flags,
 }) {
-    const { tenant } = usePage().props;
+    const { tenant, auth } = usePage().props;
     const currency = tenant?.currency_code ?? 'MXN';
     const slug = tenant?.slug ?? '';
+    const [isNavigating, setIsNavigating] = useState(false);
+
+    useEffect(() => {
+        const removeStart = router.on('start', () => setIsNavigating(true));
+        const removeFinish = router.on('finish', () => setIsNavigating(false));
+        return () => {
+            removeStart();
+            removeFinish();
+        };
+    }, []);
 
     const revenues = chartSales?.map((d) => d.revenue) ?? [];
     const maxChart = Math.max(...revenues, 1);
@@ -140,19 +155,26 @@ export default function Dashboard({
             ? `${route('reports.daily')}?date=${encodeURIComponent(todayDate)}`
             : null;
 
+    const openStockAlerts = summary?.open_stock_alerts_count ?? 0;
+    const cashSessionOpen = Boolean(cash?.open);
+
     return (
         <AuthenticatedLayout>
             <Head title="Dashboard" />
 
-            <div className="mx-auto max-w-7xl px-4 pb-14 pt-6 sm:px-6 lg:px-8">
-                <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                    <div>
-                        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-slate-50">
-                            Dashboard
-                        </h1>
-                        <p className="mt-1 text-sm font-medium uppercase tracking-wider text-gray-400 dark:text-slate-500">
-                            {slug}
-                        </p>
+            <div className="mx-auto max-w-7xl px-3 pt-4 sm:px-6 sm:pt-6 lg:px-8 pb-4 lg:pb-14">
+                {isNavigating ? (
+                    <DashboardSkeleton />
+                ) : (
+                    <>
+                <div className="mb-4 flex flex-col gap-2 sm:mb-6 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0 flex-1">
+                        <DashboardGreeting user={auth?.user} tenant={tenant} />
+                        {slug ? (
+                            <p className="mt-2 text-sm font-medium uppercase tracking-wider text-muted-foreground">
+                                {slug}
+                            </p>
+                        ) : null}
                     </div>
                     <div className="flex flex-col items-stretch gap-3 sm:items-end">
                         <PeriodPills options={periodOptions} active={kpis?.period_days ?? 30} />
@@ -165,11 +187,11 @@ export default function Dashboard({
                     </div>
                 </div>
 
-                <div className="mb-8 rounded-xl border border-gray-200/80 bg-white p-4 shadow-xs dark:border-slate-700 dark:bg-slate-900 sm:p-5">
+                <div className="mb-6 rounded-xl border border-gray-200/80 bg-white p-3 shadow-xs dark:border-slate-700 dark:bg-slate-900 sm:mb-8 sm:p-5">
                     <h2 className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-slate-500">
                         Operación
                     </h2>
-                    <div className="grid gap-4 lg:grid-cols-3">
+                    <div className="grid gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3">
                         <div className="rounded-lg border border-gray-100 bg-gray-50/80 p-4 dark:border-slate-700 dark:bg-slate-800/50">
                             <h3 className="text-sm font-semibold text-gray-900 dark:text-slate-100">
                                 Caja
@@ -376,77 +398,68 @@ export default function Dashboard({
                     <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 dark:text-slate-500">
                         Finanzas
                     </h2>
-                    <div className="grid gap-4 lg:grid-cols-3">
-                        <div className="relative overflow-hidden rounded-xl border border-gray-200/80 bg-white p-5 shadow-xs dark:border-slate-700 dark:bg-slate-900">
-                            <div className="absolute right-4 top-4 h-10 w-10 rounded-lg bg-gray-100 dark:bg-slate-800" aria-hidden />
-                            <p className="text-sm font-medium text-gray-500 dark:text-slate-400">
-                                Ticket promedio
-                            </p>
-                            <p className="mt-2 text-3xl font-bold tabular-nums text-gray-900 dark:text-slate-50">
-                                {kpis?.avg_ticket_period != null
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5 lg:gap-4">
+                        <KpiCard
+                            title="Ingresos del periodo"
+                            value={formatMoney(kpis?.revenue_period ?? 0, currency)}
+                            variant="default"
+                            icon={Coins}
+                            hint={`Hoy: ${formatMoney(kpis?.revenue_today ?? 0, currency)} · ${kpis?.paid_sales_today ?? 0} cobros`}
+                            trend={revPrevLine ?? undefined}
+                        />
+                        <KpiCard
+                            title="Ventas cobradas"
+                            value={formatCompact(kpis?.paid_sales_period ?? 0)}
+                            variant="default"
+                            icon={ShoppingCart}
+                            hint={`Últimos ${kpis?.period_days ?? 30} días (tickets cobrados)`}
+                        />
+                        <KpiCard
+                            title="Ticket promedio"
+                            value={
+                                kpis?.avg_ticket_period != null
                                     ? formatMoney(kpis.avg_ticket_period, currency)
-                                    : '—'}
-                            </p>
-                            <p className="mt-2 text-xs text-gray-500 dark:text-slate-400">
-                                Últimos {kpis?.period_days ?? 30} días (ventas cobradas)
-                            </p>
-                            <p className="mt-1 text-xs text-gray-600 dark:text-slate-400">{pctLine}</p>
-                        </div>
-
-                        <div className="overflow-hidden rounded-xl border border-gray-200/80 bg-white p-5 shadow-xs dark:border-slate-700 dark:bg-slate-900">
-                            <p className="text-sm font-medium text-gray-500 dark:text-slate-400">
-                                Ventas cobradas (tickets)
-                            </p>
-                            <p className="mt-2 text-3xl font-bold tabular-nums text-gray-900 dark:text-slate-50">
-                                {formatCompact(kpis?.paid_sales_period ?? 0)}
-                            </p>
-                            <p className="mt-2 text-xs text-gray-500 dark:text-slate-400">
-                                Número de cobros en el periodo · tendencia 7 días (cobros / día)
-                            </p>
-                            <div className="mt-4 flex h-10 items-end gap-1">
-                                {spark.map((v, i) => (
-                                    <div
-                                        key={i}
-                                        title={`${v} cobros`}
-                                        className="flex-1 rounded-sm bg-gray-200 dark:bg-slate-600"
-                                        style={{
-                                            height: `${Math.max(12, (v / maxSpark) * 100)}%`,
-                                        }}
-                                    />
-                                ))}
-                            </div>
-                            <p className="mt-3 text-xs text-gray-500 dark:text-slate-500">
-                                Mix: el volumen de tickets explica junto al ticket medio los ingresos del
-                                periodo.
-                            </p>
-                        </div>
-
-                        <div className="overflow-hidden rounded-xl border border-gray-200/80 bg-white p-5 shadow-xs dark:border-slate-700 dark:bg-slate-900">
-                            <p className="text-sm font-medium text-gray-500 dark:text-slate-400">
-                                Ingresos del periodo
-                            </p>
-                            <p className="mt-2 text-3xl font-bold tabular-nums text-gray-900 dark:text-slate-50">
-                                {formatMoney(kpis?.revenue_period ?? 0, currency)}
-                            </p>
-                            <p className="mt-2 text-xs text-gray-500 dark:text-slate-400">
-                                vs. periodo anterior ({formatMoney(kpis?.revenue_previous_period ?? 0, currency)})
-                            </p>
-                            {revPrevLine && (
-                                <p className="mt-1 text-xs font-medium text-gray-700 dark:text-slate-300">
-                                    {revPrevLine}
-                                </p>
-                            )}
-                            <div className="mt-4 rounded-lg bg-muted px-3 py-2">
-                                <p className="text-xs font-medium text-muted-foreground">
-                                    Hoy
-                                </p>
-                                <p className="text-lg font-semibold tabular-nums text-foreground">
-                                    {formatMoney(kpis?.revenue_today ?? 0, currency)}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                    {kpis?.paid_sales_today ?? 0} cobros registrados
-                                </p>
-                            </div>
+                                    : '—'
+                            }
+                            variant="default"
+                            icon={Ticket}
+                            hint={`Últimos ${kpis?.period_days ?? 30} días`}
+                            trend={pctLine}
+                        />
+                        <KpiCard
+                            title="Alertas de stock"
+                            value={openStockAlerts}
+                            variant={openStockAlerts > 0 ? 'warning' : 'default'}
+                            icon={AlertTriangle}
+                            hint="Alertas abiertas en la sucursal activa"
+                        />
+                        <KpiCard
+                            title="Caja sin cerrar"
+                            value={cashSessionOpen ? 'Abierta' : 'Cerrada'}
+                            variant={cashSessionOpen ? 'danger' : 'default'}
+                            icon={Landmark}
+                            hint={
+                                cashSessionOpen
+                                    ? (cash.open.register_name ?? 'Sesión activa')
+                                    : 'No hay sesión de caja abierta'
+                            }
+                        />
+                    </div>
+                    <div className="mt-4 overflow-hidden rounded-xl border border-gray-200/80 bg-white p-5 shadow-xs dark:border-slate-700 dark:bg-slate-900">
+                        <p className="text-sm font-medium text-gray-500 dark:text-slate-400">
+                            Tendencia 7 días (cobros / día)
+                        </p>
+                        <div className="mt-4 flex h-10 items-end gap-1">
+                            {spark.map((v, i) => (
+                                <div
+                                    key={i}
+                                    title={`${v} cobros`}
+                                    className="flex-1 rounded-sm bg-gray-200 dark:bg-slate-600"
+                                    style={{
+                                        height: `${Math.max(12, (v / maxSpark) * 100)}%`,
+                                    }}
+                                />
+                            ))}
                         </div>
                     </div>
                 </section>
@@ -740,6 +753,8 @@ export default function Dashboard({
                         </span>
                     </div>
                 </div>
+                    </>
+                )}
             </div>
         </AuthenticatedLayout>
     );

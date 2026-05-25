@@ -26,7 +26,9 @@ use App\Http\Controllers\TeamRoleController;
 use App\Http\Controllers\TeamRolePageController;
 use App\Http\Controllers\TeamUserController;
 use App\Http\Controllers\TeamUserPageController;
+use App\Http\Controllers\TenantPinConfigController;
 use App\Http\Controllers\TenantProfileController;
+use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified', 'tenant.context'])->group(function (): void {
@@ -110,4 +112,22 @@ Route::middleware(['auth', 'verified', 'tenant.context'])->group(function (): vo
 
     Route::patch('/configuracion/perfil', [TenantProfileController::class, 'update'])
         ->name('tenant.profile.update');
+
+    Route::get('/mi-perfil', [UserProfileController::class, 'edit'])
+        ->name('user.profile.edit');
+
+    Route::patch('/mi-perfil', [UserProfileController::class, 'update'])
+        ->name('user.profile.update');
+
+    Route::post('/mi-perfil/pin', [UserProfileController::class, 'setPin'])
+        ->name('user.profile.pin.set');
+
+    Route::delete('/mi-perfil/pin', [UserProfileController::class, 'clearPin'])
+        ->name('user.profile.pin.clear');
+
+    Route::get('/configuracion/pin', [TenantPinConfigController::class, 'edit'])
+        ->name('tenant.pin.config.edit');
+
+    Route::patch('/configuracion/pin', [TenantPinConfigController::class, 'update'])
+        ->name('tenant.pin.config.update');
 });

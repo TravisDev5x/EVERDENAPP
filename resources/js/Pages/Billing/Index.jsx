@@ -69,12 +69,12 @@ export default function BillingIndex({ tenant, subscription, billing_portal_url 
         >
             <Head title="Facturación" />
 
-            <div className="py-8">
-                <div className="mx-auto max-w-3xl space-y-6 px-4 sm:px-6 lg:px-8">
+            <div className="py-6 pb-24 sm:py-8 md:pb-8">
+                <div className="mx-auto max-w-3xl space-y-4 px-4 sm:space-y-6 sm:px-6 lg:px-8">
                     <Card>
                         <CardHeader>
                             <CardTitle>Tu suscripción</CardTitle>
-                            <CardDescription>Estado actual de tu cuenta en EVERDEN</CardDescription>
+                            <CardDescription>Estado actual de tu cuenta en Aberden</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex flex-wrap items-center gap-2">
@@ -141,7 +141,7 @@ export default function BillingIndex({ tenant, subscription, billing_portal_url 
                                         Desde el portal de Stripe puedes actualizar tu método de pago, cambiar de plan o
                                         cancelar tu suscripción.
                                     </p>
-                                    <Button asChild>
+                                    <Button asChild className="min-h-11">
                                         <a href={billing_portal_url} target="_blank" rel="noreferrer">
                                             Gestionar suscripción en Stripe
                                         </a>
@@ -151,10 +151,10 @@ export default function BillingIndex({ tenant, subscription, billing_portal_url 
                                 <p className="text-sm leading-relaxed text-muted-foreground">
                                     Portal de facturación no disponible. Contacta a soporte en{' '}
                                     <a
-                                        href="mailto:contacto@everden.mx"
+                                        href="mailto:contacto@aberden.com"
                                         className="font-medium text-primary underline-offset-2 hover:underline"
                                     >
-                                        contacto@everden.mx
+                                        contacto@aberden.com
                                     </a>
                                 </p>
                             )}
@@ -167,7 +167,7 @@ export default function BillingIndex({ tenant, subscription, billing_portal_url 
                         </CardHeader>
                         <CardContent>
                             <Button variant="link" asChild className={cn('h-auto p-0 text-primary')}>
-                                <Link href="mailto:contacto@everden.mx">contacto@everden.mx</Link>
+                                <Link href="mailto:contacto@aberden.com">contacto@aberden.com</Link>
                             </Button>
                         </CardContent>
                     </Card>

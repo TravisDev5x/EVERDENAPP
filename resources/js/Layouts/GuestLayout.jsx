@@ -24,7 +24,7 @@ export default function GuestLayout({
     const brand =
         (typeof appName === 'string' && appName) ||
         import.meta.env.VITE_APP_NAME ||
-        'EVERDEN';
+        'Aberden';
 
     const linkClass = cn(
         'font-medium text-primary underline-offset-4 hover:text-primary/90 hover:underline',
@@ -62,7 +62,7 @@ export default function GuestLayout({
                             <Button variant="ghost" size="sm" asChild className="text-slate-600 dark:text-slate-400">
                                 <Link href="/">Inicio</Link>
                             </Button>
-                            <DisplayChromeControls />
+                            <DisplayChromeControls showDeviceViewToggle={false} />
                         </div>
                     </div>
                 </header>
