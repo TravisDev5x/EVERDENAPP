@@ -1,4 +1,4 @@
-import InputError from '@/Components/InputError';
+import { FormFieldError } from '@/Components/FormField';
 import { Alert, AlertDescription, AlertTitle } from '@/Components/ui/alert';
 import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
@@ -75,7 +75,7 @@ export default function PinConfig({ pin_required_actions = [], available_actions
                                     </Label>
                                 </div>
                             ))}
-                            <InputError message={errors.pin_required_actions} />
+                            <FormFieldError message={errors.pin_required_actions} />
                         </CardContent>
                     </Card>
 

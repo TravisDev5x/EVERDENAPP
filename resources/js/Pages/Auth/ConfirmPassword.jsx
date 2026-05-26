@@ -1,8 +1,7 @@
-import InputError from '@/Components/InputError';
+import FormField from '@/Components/FormField';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
-import { Label } from '@/Components/ui/label';
 import { Head, useForm } from '@inertiajs/react';
 
 export default function ConfirmPassword() {
@@ -30,8 +29,7 @@ export default function ConfirmPassword() {
             </p>
 
             <form onSubmit={submit} className="space-y-5">
-                <div className="space-y-2">
-                    <Label htmlFor="password">Contraseña</Label>
+                <FormField id="password" label="Contraseña" error={errors.password}>
                     <Input
                         id="password"
                         type="password"
@@ -42,8 +40,7 @@ export default function ConfirmPassword() {
                         autoFocus
                         onChange={(e) => setData('password', e.target.value)}
                     />
-                    <InputError message={errors.password} />
-                </div>
+                </FormField>
 
                 <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
                     <Button

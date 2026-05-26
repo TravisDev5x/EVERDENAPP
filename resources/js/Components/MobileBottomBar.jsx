@@ -1,16 +1,18 @@
+import { useIsMobile } from '@/hooks/use-is-mobile';
+import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { cn } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
 import { LayoutDashboard, Menu, Package, ShoppingCart } from 'lucide-react';
 
 const glassBarClass =
-    'border border-white/25 bg-background/45 shadow-[0_8px_32px_rgba(15,23,42,0.14)] ring-1 ring-white/20 backdrop-blur-2xl backdrop-saturate-150 dark:border-white/10 dark:bg-background/35 dark:shadow-[0_8px_32px_rgba(0,0,0,0.45)] dark:ring-white/5';
+    'border border-border/70 bg-background/95 shadow-lg ring-1 ring-border/50 backdrop-blur-md dark:bg-background/90';
 
 function navItemClass(active) {
     return cn(
         'flex h-full w-full flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 transition-all duration-200',
         active
-            ? 'bg-primary/15 text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.35)] ring-1 ring-primary/25 backdrop-blur-sm'
-            : 'text-muted-foreground hover:bg-white/20 hover:text-foreground dark:hover:bg-white/5',
+            ? 'bg-primary/15 text-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.35)] ring-1 ring-primary/25'
+            : 'text-muted-foreground hover:bg-muted/80 hover:text-foreground',
     );
 }
 
@@ -25,23 +27,47 @@ function NavItem({ href, label, icon: Icon, active }) {
     );
 }
 
-export default function MobileBottomBar({ visible, onOpenMenu }) {
+export default function MobileBottomBar({
+    visible,
+    onOpenMenu,
+    suppressScrollHide = false,
+    placement = 'bottom',
+}) {
+    const isMobile = useIsMobile();
+    const { isHidden } = useScrollDirection();
+    const hideOnScroll = !isMobile && isHidden && !suppressScrollHide;
+    const isOffScreen = !visible || hideOnScroll;
+    const isTop = placement === 'top';
+
     const isDashboard = route().current('dashboard');
     const isSales = route().current('sales.page');
     const isInventory = route().current('inventory.page');
 
     return (
         <div
+            aria-hidden={isOffScreen}
             className={cn(
-                'pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))]',
-                visible ? 'flex' : 'flex md:hidden',
+                'pointer-events-none fixed inset-x-0 z-50',
+                'flex justify-center px-4',
+                'will-change-[transform,opacity]',
+                'transition-[transform,opacity] duration-200 ease-out',
+                'motion-reduce:transition-none',
+                isTop
+                    ? 'top-11 pt-1'
+                    : 'bottom-0 pb-[max(1rem,env(safe-area-inset-bottom))]',
+                isOffScreen
+                    ? isTop
+                        ? '-translate-y-full opacity-0'
+                        : 'translate-y-full opacity-0'
+                    : 'translate-y-0 opacity-100',
             )}
         >
             <nav
                 aria-label="Navegación rápida"
                 className={cn(
-                    'pointer-events-auto grid h-[4.25rem] w-full max-w-lg grid-cols-4 items-stretch gap-1.5 rounded-[1.5rem] px-2.5 py-2',
+                    'grid h-[4.25rem] w-full max-w-lg grid-cols-4 items-stretch gap-1.5 rounded-[1.5rem] px-2.5 py-2',
                     glassBarClass,
+                    isOffScreen ? 'pointer-events-none' : 'pointer-events-auto',
                 )}
             >
                 <NavItem

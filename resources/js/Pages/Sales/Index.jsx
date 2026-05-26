@@ -1,4 +1,9 @@
+import KeyboardHint from '@/Components/KeyboardHint';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { useDeviceView } from '@/hooks/use-device-view';
+import { useHoverNearBottom } from '@/hooks/use-hover-near-bottom';
+import { useIsMobile } from '@/hooks/use-is-mobile';
+import { useKeyboardToggle } from '@/hooks/use-keyboard-toggle';
 import EvBarcodeScanner from '@/Components/EvBarcodeScanner';
 import EvNumpadField from '@/Components/EvNumpadField';
 import EvOperationalAlert from '@/Components/EvOperationalAlert';
@@ -46,6 +51,17 @@ export default function SalesIndex({
     store_vertical: storeVertical,
 }) {
     const { errors } = usePage().props;
+    const { forceDeviceView } = useDeviceView();
+    const isMobile = useIsMobile();
+    const isPhoneMode = forceDeviceView || isMobile;
+    /** Solo vista móvil forzada en desktop (toggle del header), no móvil real ni desktop normal. */
+    const isDesktopPhoneMode = forceDeviceView && !isMobile;
+    const isHovering = useHoverNearBottom(
+        isDesktopPhoneMode,
+        isDesktopPhoneMode ? 'top' : 'bottom',
+    );
+    const [isToggled] = useKeyboardToggle('m', isDesktopPhoneMode, false);
+    const showBottomBar = isMobile || isHovering || isToggled;
     const openCashInputRef = useRef(null);
     const scannerRef = useRef(null);
     const shouldFocusOpenCash = Boolean(ui?.focus_open_cash) && !cashSession;
@@ -336,7 +352,11 @@ export default function SalesIndex({
               : 1;
 
     return (
-        <AuthenticatedLayout>
+        <>
+        <AuthenticatedLayout
+            hideBottomBar={!showBottomBar}
+            bottomBarPlacement={isDesktopPhoneMode ? 'top' : 'bottom'}
+        >
             <Head title="Punto de venta" />
 
             <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
@@ -347,11 +367,33 @@ export default function SalesIndex({
                     cashSession={cashSession}
                 />
 
-                <div className="grid min-h-0 flex-1 grid-cols-1 content-start overflow-y-auto touch-scroll-y lg:grid-cols-[1fr_min(100%,360px)] lg:overflow-hidden lg:content-stretch">
-                    <div className="order-2 flex min-w-0 flex-col lg:order-1 lg:min-h-0 lg:overflow-hidden">
+                <div
+                    className={cn(
+                        'grid min-h-0 flex-1 grid-cols-1',
+                        'content-start overflow-y-auto touch-scroll-y',
+                        !isPhoneMode && [
+                            'lg:grid-cols-[1fr_min(100%,360px)]',
+                            'lg:overflow-hidden',
+                            'lg:content-stretch',
+                        ],
+                    )}
+                >
+                    <div
+                        className={cn(
+                            'order-2 flex min-w-0 flex-col',
+                            !isPhoneMode && 'lg:order-1 lg:min-h-0 lg:overflow-hidden',
+                        )}
+                    >
                         <PosStepsProgress activeStep={activeStep} />
 
-                        <div className="flex max-h-[min(50dvh,28rem)] min-h-[10rem] flex-1 flex-col overflow-hidden lg:max-h-none lg:min-h-0">
+                        <div
+                            className={cn(
+                                'flex min-h-[10rem] flex-1 flex-col overflow-hidden',
+                                isPhoneMode
+                                    ? 'max-h-[min(50dvh,28rem)]'
+                                    : 'max-h-[min(50dvh,28rem)] lg:max-h-none lg:min-h-0',
+                            )}
+                        >
                         <div className="flex-1 overflow-y-auto touch-scroll-y" data-slot="cart-list">
                             {!sale ? (
                                 <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
@@ -460,7 +502,14 @@ export default function SalesIndex({
                             </div>
                         )}
 
-                        <div className="flex shrink-0 flex-wrap gap-2 border-t border-border bg-background px-4 py-3 sm:px-6">
+                        <div
+                            className={cn(
+                                'flex shrink-0 flex-wrap gap-2',
+                                'border-t border-border bg-background',
+                                'px-4 py-3 sm:px-6',
+                                isMobile && 'pb-24',
+                            )}
+                        >
                             {!sale && (
                                 <Button className="h-12 flex-1 text-base font-medium" onClick={createSale}>
                                     Nuevo ticket
@@ -578,7 +627,13 @@ export default function SalesIndex({
                         </div>
                     </div>
 
-                    <div className="order-1 flex flex-col gap-0 overflow-y-auto border-b border-border bg-muted/30 touch-scroll-y lg:order-2 lg:min-h-0 lg:border-b-0 lg:border-l">
+                    <div
+                        className={cn(
+                            'order-1 flex flex-col gap-0 overflow-y-auto border-b border-border bg-muted/30 touch-scroll-y',
+                            isMobile && 'pb-24',
+                            !isPhoneMode && 'lg:order-2 lg:min-h-0 lg:border-b-0 lg:border-l',
+                        )}
+                    >
                         <div className="border-b border-border p-4">
                             <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                                 Escanear
@@ -1070,5 +1125,10 @@ export default function SalesIndex({
                 </div>
             </div>
         </AuthenticatedLayout>
+        <KeyboardHint
+            visible={isDesktopPhoneMode && !showBottomBar}
+            placement="top"
+        />
+        </>
     );
 }

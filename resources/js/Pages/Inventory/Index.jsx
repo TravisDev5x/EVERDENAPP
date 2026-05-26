@@ -1,3 +1,4 @@
+import FormField from '@/Components/FormField';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
@@ -41,17 +42,6 @@ import { MoreHorizontal, Package, Plus, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 const CATEGORY_NONE_VALUE = '__none__';
-
-function FormFieldError({ message }) {
-    if (!message) {
-        return null;
-    }
-    return (
-        <p role="alert" className="text-sm font-medium text-destructive">
-            {message}
-        </p>
-    );
-}
 
 function asArray(value) {
     return Array.isArray(value) ? value : [];
@@ -580,28 +570,28 @@ export default function InventoryIndex({
                                 onSubmit={submitCreateProduct}
                             >
                                 <div className="grid gap-4 sm:grid-cols-2">
-                                    <div className="grid gap-2 sm:col-span-2">
-                                        <Label htmlFor="cp-name">Nombre</Label>
+                                    <FormField
+                                        id="cp-name"
+                                        label="Nombre"
+                                        error={createForm.errors.name}
+                                        className="sm:col-span-2"
+                                    >
                                         <Input
                                             id="cp-name"
                                             value={createForm.data.name}
                                             onChange={(e) => createForm.setData('name', e.target.value)}
                                             required
                                         />
-                                        <FormFieldError message={createForm.errors.name} />
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="cp-sku">SKU</Label>
+                                    </FormField>
+                                    <FormField id="cp-sku" label="SKU" error={createForm.errors.sku}>
                                         <Input
                                             id="cp-sku"
                                             value={createForm.data.sku}
                                             onChange={(e) => createForm.setData('sku', e.target.value)}
                                             required
                                         />
-                                        <FormFieldError message={createForm.errors.sku} />
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="cp-price">Precio</Label>
+                                    </FormField>
+                                    <FormField id="cp-price" label="Precio" error={createForm.errors.price}>
                                         <Input
                                             id="cp-price"
                                             type="number"
@@ -611,19 +601,19 @@ export default function InventoryIndex({
                                             onChange={(e) => createForm.setData('price', e.target.value)}
                                             required
                                         />
-                                        <FormFieldError message={createForm.errors.price} />
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="cp-barcode">Código de barras (opcional)</Label>
+                                    </FormField>
+                                    <FormField
+                                        id="cp-barcode"
+                                        label="Código de barras (opcional)"
+                                        error={createForm.errors.barcode}
+                                    >
                                         <Input
                                             id="cp-barcode"
                                             value={createForm.data.barcode}
                                             onChange={(e) => createForm.setData('barcode', e.target.value)}
                                         />
-                                        <FormFieldError message={createForm.errors.barcode} />
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="cp-unit">Unidad</Label>
+                                    </FormField>
+                                    <FormField id="cp-unit" label="Unidad" error={createForm.errors.unit}>
                                         <Select
                                             value={createForm.data.unit}
                                             onValueChange={(v) => createForm.setData('unit', v)}
@@ -641,10 +631,13 @@ export default function InventoryIndex({
                                                 <SelectItem value="caja">Caja</SelectItem>
                                             </SelectContent>
                                         </Select>
-                                        <FormFieldError message={createForm.errors.unit} />
-                                    </div>
-                                    <div className="grid gap-2 sm:col-span-2">
-                                        <Label htmlFor="cp-cat">Categoría (opcional)</Label>
+                                    </FormField>
+                                    <FormField
+                                        id="cp-cat"
+                                        label="Categoría (opcional)"
+                                        error={createForm.errors.category_id}
+                                        className="sm:col-span-2"
+                                    >
                                         <Select
                                             value={
                                                 createForm.data.category_id == null
@@ -672,10 +665,13 @@ export default function InventoryIndex({
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        <FormFieldError message={createForm.errors.category_id} />
-                                    </div>
-                                    <div className="grid gap-2 sm:col-span-2">
-                                        <Label htmlFor="cp-stock">Stock inicial en sucursal (opcional)</Label>
+                                    </FormField>
+                                    <FormField
+                                        id="cp-stock"
+                                        label="Stock inicial en sucursal (opcional)"
+                                        error={createForm.errors.initial_branch_quantity}
+                                        className="sm:col-span-2"
+                                    >
                                         <Input
                                             id="cp-stock"
                                             type="number"
@@ -686,8 +682,7 @@ export default function InventoryIndex({
                                                 createForm.setData('initial_branch_quantity', e.target.value)
                                             }
                                         />
-                                        <FormFieldError message={createForm.errors.initial_branch_quantity} />
-                                    </div>
+                                    </FormField>
                                 </div>
                             </form>
                             <DialogFooter className="border-t-0 bg-transparent p-0 pt-2 sm:justify-end">
@@ -715,8 +710,11 @@ export default function InventoryIndex({
                                 </DialogDescription>
                             </DialogHeader>
                             <form id="inventory-adjust-form" className="grid gap-4" onSubmit={submitAdjust}>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="adj-qty">Nuevo stock</Label>
+                                <FormField
+                                    id="adj-qty"
+                                    label="Nuevo stock"
+                                    error={adjustForm.errors.new_quantity}
+                                >
                                     <Input
                                         id="adj-qty"
                                         value={adjustForm.data.new_quantity}
@@ -724,17 +722,14 @@ export default function InventoryIndex({
                                             adjustForm.setData('new_quantity', e.target.value)
                                         }
                                     />
-                                    <FormFieldError message={adjustForm.errors.new_quantity} />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="adj-reason">Motivo</Label>
+                                </FormField>
+                                <FormField id="adj-reason" label="Motivo" error={adjustForm.errors.reason}>
                                     <Input
                                         id="adj-reason"
                                         value={adjustForm.data.reason}
                                         onChange={(e) => adjustForm.setData('reason', e.target.value)}
                                     />
-                                    <FormFieldError message={adjustForm.errors.reason} />
-                                </div>
+                                </FormField>
                             </form>
                             <DialogFooter className="border-t-0 bg-transparent p-0 pt-2 sm:justify-end">
                                 <Button type="button" variant="outline" onClick={() => setAdjustOpen(false)}>
@@ -761,8 +756,11 @@ export default function InventoryIndex({
                                 </DialogDescription>
                             </DialogHeader>
                             <form id="inventory-policy-form" className="grid gap-4" onSubmit={submitPolicy}>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="pol-min">Umbral mínimo</Label>
+                                <FormField
+                                    id="pol-min"
+                                    label="Umbral mínimo"
+                                    error={policyForm.errors.min_threshold}
+                                >
                                     <Input
                                         id="pol-min"
                                         type="number"
@@ -776,10 +774,12 @@ export default function InventoryIndex({
                                             )
                                         }
                                     />
-                                    <FormFieldError message={policyForm.errors.min_threshold} />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="pol-cool">Cooldown (minutos)</Label>
+                                </FormField>
+                                <FormField
+                                    id="pol-cool"
+                                    label="Cooldown (minutos)"
+                                    error={policyForm.errors.cooldown_minutes}
+                                >
                                     <Input
                                         id="pol-cool"
                                         type="number"
@@ -793,8 +793,7 @@ export default function InventoryIndex({
                                             )
                                         }
                                     />
-                                    <FormFieldError message={policyForm.errors.cooldown_minutes} />
-                                </div>
+                                </FormField>
                                 <div className="flex items-center gap-2">
                                     <Checkbox
                                         id="pol-enabled"

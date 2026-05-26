@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import EvReceiptTemplate from '@/Components/EvReceiptTemplate';
-import SecondaryButton from '@/Components/SecondaryButton';
+import { Button } from '@/Components/ui/button';
 import { Head, Link } from '@inertiajs/react';
 
 export default function ReceiptPreview({ receipt, thermalUrl }) {
@@ -31,9 +31,9 @@ export default function ReceiptPreview({ receipt, thermalUrl }) {
                                     Ver version termica
                                 </Link>
                             ) : null}
-                            <SecondaryButton type="button" onClick={() => window.print()}>
+                            <Button type="button" variant="outline" onClick={() => window.print()}>
                                 Imprimir / Guardar PDF
-                            </SecondaryButton>
+                            </Button>
                         </div>
                     </div>
 

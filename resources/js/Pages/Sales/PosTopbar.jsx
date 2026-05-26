@@ -1,6 +1,9 @@
+import { usePhoneMode } from '@/Layouts/AuthenticatedLayout';
 import { Badge } from '@/Components/ui/badge';
+import { cn } from '@/lib/utils';
 
 export default function PosTopbar({ branches, activeBranchId, onChangeBranch, cashSession }) {
+    const isPhoneMode = usePhoneMode();
     const registerName = cashSession?.cash_register?.name ?? 'Caja';
 
     return (
@@ -19,9 +22,18 @@ export default function PosTopbar({ branches, activeBranchId, onChangeBranch, ca
                     </option>
                 ))}
             </select>
-            <div className="hidden min-w-2 flex-1 sm:block" aria-hidden />
+            <div
+                className={cn(!isPhoneMode && 'hidden min-w-2 flex-1 sm:block')}
+                aria-hidden
+            />
             {cashSession ? (
-                <Badge variant="secondary" className="max-w-[11rem] shrink-0 gap-1.5 truncate sm:max-w-none">
+                <Badge
+                    variant="secondary"
+                    className={cn(
+                        'shrink-0 gap-1.5 truncate',
+                        isPhoneMode ? 'max-w-[9rem]' : 'max-w-[11rem] sm:max-w-none',
+                    )}
+                >
                     <span className="inline-block size-1.5 rounded-full bg-primary" aria-hidden="true" />
                     Turno #{cashSession.id} · {registerName}
                 </Badge>

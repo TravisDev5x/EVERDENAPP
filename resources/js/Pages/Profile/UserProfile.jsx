@@ -1,9 +1,8 @@
-import InputError from '@/Components/InputError';
+import FormField from '@/Components/FormField';
 import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
-import { Label } from '@/Components/ui/label';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router, useForm } from '@inertiajs/react';
 
@@ -20,24 +19,6 @@ function formatDateTime(iso) {
         dateStyle: 'long',
         timeStyle: 'short',
     }).format(new Date(iso));
-}
-
-function PinField({ id, label, value, onChange, error }) {
-    return (
-        <div className="space-y-2">
-            <Label htmlFor={id}>{label}</Label>
-            <Input
-                id={id}
-                type="password"
-                inputMode="numeric"
-                autoComplete="off"
-                maxLength={4}
-                value={value}
-                onChange={(e) => onChange(digitsOnly(e.target.value))}
-            />
-            <InputError message={error} />
-        </div>
-    );
 }
 
 export default function UserProfile({ user }) {
@@ -106,58 +87,82 @@ export default function UserProfile({ user }) {
                         </CardHeader>
                         <CardContent>
                             <form onSubmit={submitProfile} className="grid gap-4 sm:grid-cols-2">
-                                <div className="space-y-2 sm:col-span-2">
-                                    <Label htmlFor="email">Correo electrónico</Label>
+                                <FormField
+                                    id="email"
+                                    label="Correo electrónico"
+                                    className="sm:col-span-2"
+                                >
                                     <Input id="email" value={user.email ?? ''} disabled />
-                                </div>
+                                </FormField>
 
-                                <div className="space-y-2 sm:col-span-2">
-                                    <Label htmlFor="name">Nombre completo *</Label>
+                                <FormField
+                                    id="name"
+                                    label="Nombre completo *"
+                                    error={profileForm.errors.name}
+                                    className="sm:col-span-2"
+                                >
                                     <Input
                                         id="name"
                                         value={profileForm.data.name}
-                                        onChange={(e) => profileForm.setData('name', e.target.value)}
+                                        onChange={(e) =>
+                                            profileForm.setData('name', e.target.value)
+                                        }
                                         required
                                     />
-                                    <InputError message={profileForm.errors.name} />
-                                </div>
+                                </FormField>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="phone">Teléfono personal</Label>
+                                <FormField
+                                    id="phone"
+                                    label="Teléfono personal"
+                                    error={profileForm.errors.phone}
+                                >
                                     <Input
                                         id="phone"
                                         value={profileForm.data.phone}
-                                        onChange={(e) => profileForm.setData('phone', e.target.value)}
+                                        onChange={(e) =>
+                                            profileForm.setData('phone', e.target.value)
+                                        }
                                         placeholder="+52 55 1234 5678"
                                     />
-                                    <InputError message={profileForm.errors.phone} />
-                                </div>
+                                </FormField>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="whatsapp">WhatsApp personal</Label>
+                                <FormField
+                                    id="whatsapp"
+                                    label="WhatsApp personal"
+                                    error={profileForm.errors.whatsapp}
+                                >
                                     <Input
                                         id="whatsapp"
                                         value={profileForm.data.whatsapp}
-                                        onChange={(e) => profileForm.setData('whatsapp', e.target.value)}
+                                        onChange={(e) =>
+                                            profileForm.setData('whatsapp', e.target.value)
+                                        }
                                         placeholder="+52 55 1234 5678"
                                     />
-                                    <InputError message={profileForm.errors.whatsapp} />
-                                </div>
+                                </FormField>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="employee_number">Número de empleado</Label>
+                                <FormField
+                                    id="employee_number"
+                                    label="Número de empleado"
+                                    error={profileForm.errors.employee_number}
+                                >
                                     <Input
                                         id="employee_number"
                                         value={profileForm.data.employee_number}
                                         onChange={(e) =>
-                                            profileForm.setData('employee_number', e.target.value)
+                                            profileForm.setData(
+                                                'employee_number',
+                                                e.target.value,
+                                            )
                                         }
                                     />
-                                    <InputError message={profileForm.errors.employee_number} />
-                                </div>
+                                </FormField>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="birth_date">Fecha de nacimiento</Label>
+                                <FormField
+                                    id="birth_date"
+                                    label="Fecha de nacimiento"
+                                    error={profileForm.errors.birth_date}
+                                >
                                     <Input
                                         id="birth_date"
                                         type="date"
@@ -166,11 +171,14 @@ export default function UserProfile({ user }) {
                                             profileForm.setData('birth_date', e.target.value)
                                         }
                                     />
-                                    <InputError message={profileForm.errors.birth_date} />
-                                </div>
+                                </FormField>
 
-                                <div className="space-y-2 sm:col-span-2">
-                                    <Label htmlFor="hire_date">Fecha de ingreso</Label>
+                                <FormField
+                                    id="hire_date"
+                                    label="Fecha de ingreso"
+                                    error={profileForm.errors.hire_date}
+                                    className="sm:col-span-2"
+                                >
                                     <Input
                                         id="hire_date"
                                         type="date"
@@ -179,12 +187,13 @@ export default function UserProfile({ user }) {
                                             profileForm.setData('hire_date', e.target.value)
                                         }
                                     />
-                                    <InputError message={profileForm.errors.hire_date} />
-                                </div>
+                                </FormField>
 
                                 <div className="sm:col-span-2">
                                     <Button type="submit" disabled={profileForm.processing}>
-                                        {profileForm.processing ? 'Guardando…' : 'Guardar cambios'}
+                                        {profileForm.processing
+                                            ? 'Guardando…'
+                                            : 'Guardar cambios'}
                                     </Button>
                                 </div>
                             </form>
@@ -215,33 +224,65 @@ export default function UserProfile({ user }) {
                             ) : null}
 
                             <form onSubmit={submitPin} className="grid max-w-md gap-4">
-                                <PinField
+                                <FormField
                                     id="pin"
                                     label={user.has_pin ? 'PIN nuevo' : 'PIN'}
-                                    value={pinForm.data.pin}
-                                    onChange={(value) => pinForm.setData('pin', value)}
                                     error={pinForm.errors.pin}
-                                />
-                                <PinField
+                                >
+                                    <Input
+                                        id="pin"
+                                        type="password"
+                                        inputMode="numeric"
+                                        autoComplete="off"
+                                        maxLength={4}
+                                        value={pinForm.data.pin}
+                                        onChange={(e) =>
+                                            pinForm.setData('pin', digitsOnly(e.target.value))
+                                        }
+                                    />
+                                </FormField>
+                                <FormField
                                     id="pin_confirmation"
-                                    label={user.has_pin ? 'Confirmar PIN nuevo' : 'Confirmar PIN'}
-                                    value={pinForm.data.pin_confirmation}
-                                    onChange={(value) => pinForm.setData('pin_confirmation', value)}
+                                    label={
+                                        user.has_pin
+                                            ? 'Confirmar PIN nuevo'
+                                            : 'Confirmar PIN'
+                                    }
                                     error={pinForm.errors.pin_confirmation}
-                                />
-                                <div className="space-y-2">
-                                    <Label htmlFor="current_password_pin">Contraseña actual</Label>
+                                >
+                                    <Input
+                                        id="pin_confirmation"
+                                        type="password"
+                                        inputMode="numeric"
+                                        autoComplete="off"
+                                        maxLength={4}
+                                        value={pinForm.data.pin_confirmation}
+                                        onChange={(e) =>
+                                            pinForm.setData(
+                                                'pin_confirmation',
+                                                digitsOnly(e.target.value),
+                                            )
+                                        }
+                                    />
+                                </FormField>
+                                <FormField
+                                    id="current_password_pin"
+                                    label="Contraseña actual"
+                                    error={pinForm.errors.current_password}
+                                >
                                     <Input
                                         id="current_password_pin"
                                         type="password"
                                         autoComplete="current-password"
                                         value={pinForm.data.current_password}
                                         onChange={(e) =>
-                                            pinForm.setData('current_password', e.target.value)
+                                            pinForm.setData(
+                                                'current_password',
+                                                e.target.value,
+                                            )
                                         }
                                     />
-                                    <InputError message={pinForm.errors.current_password} />
-                                </div>
+                                </FormField>
                                 <Button type="submit" disabled={pinForm.processing}>
                                     {pinForm.processing
                                         ? 'Procesando…'
@@ -256,10 +297,11 @@ export default function UserProfile({ user }) {
                                     onSubmit={submitClearPin}
                                     className="grid max-w-md gap-4 border-t border-border pt-6"
                                 >
-                                    <div className="space-y-2">
-                                        <Label htmlFor="current_password_clear">
-                                            Contraseña actual para eliminar PIN
-                                        </Label>
+                                    <FormField
+                                        id="current_password_clear"
+                                        label="Contraseña actual para eliminar PIN"
+                                        error={clearPinForm.errors.current_password}
+                                    >
                                         <Input
                                             id="current_password_clear"
                                             type="password"
@@ -272,10 +314,7 @@ export default function UserProfile({ user }) {
                                                 )
                                             }
                                         />
-                                        <InputError
-                                            message={clearPinForm.errors.current_password}
-                                        />
-                                    </div>
+                                    </FormField>
                                     <Button
                                         type="submit"
                                         variant="destructive"

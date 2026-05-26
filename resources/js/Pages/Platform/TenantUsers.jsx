@@ -1,7 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Pagination from '@/Components/Pagination';
-import PrimaryButton from '@/Components/PrimaryButton';
-import SecondaryButton from '@/Components/SecondaryButton';
+import { Button } from '@/Components/ui/button';
 import { Head, Link, router } from '@inertiajs/react';
 
 export default function TenantUsers({ tenant, users }) {
@@ -100,21 +99,22 @@ export default function TenantUsers({ tenant, users }) {
                                     <td className="px-4 py-3">
                                         <div className="flex flex-wrap gap-2">
                                             {!u.suspended_at ? (
-                                                <SecondaryButton
+                                                <Button
                                                     type="button"
-                                                    className="text-xs"
+                                                    variant="outline"
+                                                    size="sm"
                                                     onClick={() => suspendUser(u)}
                                                 >
                                                     Suspender
-                                                </SecondaryButton>
+                                                </Button>
                                             ) : (
-                                                <PrimaryButton
+                                                <Button
                                                     type="button"
-                                                    className="text-xs"
+                                                    size="sm"
                                                     onClick={() => activateUser(u)}
                                                 >
                                                     Reactivar
-                                                </PrimaryButton>
+                                                </Button>
                                             )}
                                         </div>
                                     </td>

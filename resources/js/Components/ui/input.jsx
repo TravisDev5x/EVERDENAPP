@@ -28,9 +28,13 @@ const inputVariants = cva(
  * Se extrae `size` del spread para que React no intente reenviarla al DOM
  * como atributo nativo (que esperaria un numero).
  */
-function Input({ className, type, size = "default", ...props }) {
+const Input = React.forwardRef(function Input(
+  { className, type, size = "default", ...props },
+  ref,
+) {
   return (
     <input
+      ref={ref}
       type={type}
       data-slot="input"
       data-size={size}
@@ -38,6 +42,6 @@ function Input({ className, type, size = "default", ...props }) {
       {...props}
     />
   )
-}
+})
 
 export { Input, inputVariants }

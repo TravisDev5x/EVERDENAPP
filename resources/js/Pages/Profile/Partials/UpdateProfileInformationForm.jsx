@@ -1,7 +1,6 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import FormField from '@/Components/FormField';
+import { Button } from '@/Components/ui/button';
+import { Input } from '@/Components/ui/input';
 import { Transition } from '@headlessui/react';
 import { Link, useForm, usePage } from '@inertiajs/react';
 
@@ -37,37 +36,27 @@ export default function UpdateProfileInformation({
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
-                <div>
-                    <InputLabel htmlFor="name" value="Nombre" />
-
-                    <TextInput
+                <FormField id="name" label="Nombre" error={errors.name}>
+                    <Input
                         id="name"
-                        className="mt-1 block w-full"
                         value={data.name}
                         onChange={(e) => setData('name', e.target.value)}
                         required
-                        isFocused
+                        autoFocus
                         autoComplete="name"
                     />
+                </FormField>
 
-                    <InputError className="mt-2" message={errors.name} />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="email" value="Correo electrónico" />
-
-                    <TextInput
+                <FormField id="email" label="Correo electrónico" error={errors.email}>
+                    <Input
                         id="email"
                         type="email"
-                        className="mt-1 block w-full"
                         value={data.email}
                         onChange={(e) => setData('email', e.target.value)}
                         required
                         autoComplete="username"
                     />
-
-                    <InputError className="mt-2" message={errors.email} />
-                </div>
+                </FormField>
 
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
@@ -92,7 +81,9 @@ export default function UpdateProfileInformation({
                 )}
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Guardar</PrimaryButton>
+                    <Button type="submit" disabled={processing}>
+                        Guardar
+                    </Button>
 
                     <Transition
                         show={recentlySuccessful}

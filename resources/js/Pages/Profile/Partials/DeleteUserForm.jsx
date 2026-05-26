@@ -1,15 +1,20 @@
-import DangerButton from '@/Components/DangerButton';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import Modal from '@/Components/Modal';
-import SecondaryButton from '@/Components/SecondaryButton';
-import TextInput from '@/Components/TextInput';
+import FormField from '@/Components/FormField';
+import { Button } from '@/Components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/Components/ui/dialog';
+import { Input } from '@/Components/ui/input';
 import { useForm } from '@inertiajs/react';
 import { useRef, useState } from 'react';
 
 export default function DeleteUserForm({ className = '' }) {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
-    const passwordInput = useRef();
+    const passwordInput = useRef(null);
 
     const {
         data,
@@ -33,7 +38,7 @@ export default function DeleteUserForm({ className = '' }) {
         destroy(route('profile.destroy'), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
-            onError: () => passwordInput.current.focus(),
+            onError: () => passwordInput.current?.focus(),
             onFinish: () => reset(),
         });
     };
@@ -58,56 +63,66 @@ export default function DeleteUserForm({ className = '' }) {
                 </p>
             </header>
 
-            <DangerButton onClick={confirmUserDeletion}>Eliminar cuenta</DangerButton>
+            <Button type="button" variant="destructive" onClick={confirmUserDeletion}>
+                Eliminar cuenta
+            </Button>
 
-            <Modal show={confirmingUserDeletion} onClose={closeModal}>
-                <form onSubmit={deleteUser} className="p-6">
-                    <h2 className="text-lg font-semibold text-foreground">
-                        ¿Seguro que quieres eliminar tu cuenta?
-                    </h2>
+            <Dialog
+                open={confirmingUserDeletion}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        closeModal();
+                    }
+                }}
+            >
+                <DialogContent className="sm:max-w-lg" showCloseButton>
+                    <form onSubmit={deleteUser}>
+                        <DialogHeader>
+                            <DialogTitle>
+                                ¿Seguro que quieres eliminar tu cuenta?
+                            </DialogTitle>
+                            <DialogDescription>
+                                Esta acción es permanente. Escribe tu contraseña para confirmar.
+                            </DialogDescription>
+                        </DialogHeader>
 
-                    <p className="mt-1 text-sm text-muted-foreground">
-                        Esta acción es permanente. Escribe tu contraseña para confirmar.
-                    </p>
-
-                    <div className="mt-6">
-                        <InputLabel
-                            htmlFor="password"
-                            value="Contraseña"
-                            className="sr-only"
-                        />
-
-                        <TextInput
+                        <FormField
                             id="password"
-                            type="password"
-                            name="password"
-                            ref={passwordInput}
-                            value={data.password}
-                            onChange={(e) =>
-                                setData('password', e.target.value)
-                            }
-                            className="mt-1 block w-full max-w-sm"
-                            isFocused
-                            placeholder="Contraseña"
-                        />
+                            label="Contraseña"
+                            labelClassName="sr-only"
+                            error={errors.password}
+                            className="py-4"
+                        >
+                            <Input
+                                id="password"
+                                type="password"
+                                name="password"
+                                ref={passwordInput}
+                                value={data.password}
+                                onChange={(e) =>
+                                    setData('password', e.target.value)
+                                }
+                                className="max-w-sm"
+                                autoFocus
+                                placeholder="Contraseña"
+                            />
+                        </FormField>
 
-                        <InputError
-                            message={errors.password}
-                            className="mt-2"
-                        />
-                    </div>
-
-                    <div className="mt-6 flex justify-end gap-3">
-                        <SecondaryButton type="button" onClick={closeModal}>
-                            Cancelar
-                        </SecondaryButton>
-
-                        <DangerButton type="submit" disabled={processing}>
-                            Eliminar cuenta
-                        </DangerButton>
-                    </div>
-                </form>
-            </Modal>
+                        <DialogFooter className="border-t-0 bg-transparent p-0 sm:justify-end">
+                            <Button type="button" variant="outline" onClick={closeModal}>
+                                Cancelar
+                            </Button>
+                            <Button
+                                type="submit"
+                                variant="destructive"
+                                disabled={processing}
+                            >
+                                Eliminar cuenta
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </section>
     );
 }

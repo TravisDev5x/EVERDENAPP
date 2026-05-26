@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import SecondaryButton from '@/Components/SecondaryButton';
+import { Button } from '@/Components/ui/button';
 import axios from 'axios';
 import { Head, router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
@@ -100,9 +100,14 @@ export default function Daily({
                                     value={date ?? ''}
                                     onChange={onDateChange}
                                 />
-                                <SecondaryButton type="button" onClick={queueRebuild} disabled={waitingReport}>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={queueRebuild}
+                                    disabled={waitingReport}
+                                >
                                     {waitingReport ? 'Regenerando…' : 'Regenerar (cola)'}
-                                </SecondaryButton>
+                                </Button>
                             </div>
                         </div>
                         {waitingReport && (

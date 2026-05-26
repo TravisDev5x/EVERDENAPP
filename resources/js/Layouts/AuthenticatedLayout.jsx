@@ -20,7 +20,13 @@ import {
 import { TooltipProvider } from '@/Components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { usePage } from '@inertiajs/react';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
+
+export const PhoneModeContext = createContext(false);
+
+export function usePhoneMode() {
+    return useContext(PhoneModeContext);
+}
 
 function MobileSidebarBridge() {
     const page = usePage();
@@ -52,15 +58,25 @@ function MobileSidebarSwipeBridge() {
     return null;
 }
 
-function LayoutMobileBottomBar({ visible }) {
+function LayoutMobileBottomBar({ visible, suppressScrollHide, placement }) {
     const { setOpenMobile } = useSidebar();
 
     return (
-        <MobileBottomBar visible={visible} onOpenMenu={() => setOpenMobile(true)} />
+        <MobileBottomBar
+            visible={visible}
+            suppressScrollHide={suppressScrollHide}
+            placement={placement}
+            onOpenMenu={() => setOpenMobile(true)}
+        />
     );
 }
 
-export default function AuthenticatedLayout({ header, children }) {
+export default function AuthenticatedLayout({
+    header,
+    children,
+    hideBottomBar = false,
+    bottomBarPlacement = 'bottom',
+}) {
     const { props, url } = usePage();
     const user = props.auth.user;
     const isPlatformOperator = props.auth.isPlatformOperator ?? false;
@@ -107,6 +123,7 @@ export default function AuthenticatedLayout({ header, children }) {
         tenant?.status === 'suspended' && !isPlatformOperator;
 
     return (
+        <PhoneModeContext.Provider value={isPhoneMode}>
         <TooltipProvider delayDuration={0}>
             {showSuspendedOverlay ? (
                 <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background/80 backdrop-blur-md">
@@ -226,8 +243,13 @@ export default function AuthenticatedLayout({ header, children }) {
                         aria-hidden="true"
                     />
                 </SidebarInset>
-                <LayoutMobileBottomBar visible={isPhoneMode} />
+                <LayoutMobileBottomBar
+                    visible={isPhoneMode && !hideBottomBar}
+                    suppressScrollHide={isPhoneMode && !hideBottomBar}
+                    placement={bottomBarPlacement}
+                />
             </SidebarProvider>
         </TooltipProvider>
+        </PhoneModeContext.Provider>
     );
 }
